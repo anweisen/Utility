@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public interface DatabaseQuery {
 

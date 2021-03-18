@@ -1,12 +1,12 @@
 package net.anweisen.utilities.database;
 
-import net.codingarea.challenges.plugin.utils.config.Propertyable;
+import net.anweisen.utilities.commons.config.Propertyable;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public final class DatabaseConfig {
 

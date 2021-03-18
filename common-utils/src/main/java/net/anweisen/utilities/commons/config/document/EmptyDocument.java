@@ -4,6 +4,7 @@ import net.anweisen.utilities.commons.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
@@ -44,10 +45,21 @@ public class EmptyDocument implements Document {
 		throw new UnsupportedOperationException("EmptyDocument.write(Writer)");
 	}
 
+	@Override
+	public void save(@Nonnull File file) throws IOException {
+		throw new UnsupportedOperationException("EmptyDocument.save(File)");
+	}
+
 	@Nullable
 	@Override
 	public Object getObject(@Nonnull String path) {
 		return null;
+	}
+
+	@Nonnull
+	@Override
+	public Object getObject(@Nonnull String path, @Nonnull Object def) {
+		return def;
 	}
 
 	@Nullable
@@ -169,6 +181,18 @@ public class EmptyDocument implements Document {
 	@Nonnull
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
+		return def;
+	}
+
+	@Nullable
+	@Override
+	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public <T> T getSerializable(@Nonnull String path, @Nonnull T def) {
 		return def;
 	}
 

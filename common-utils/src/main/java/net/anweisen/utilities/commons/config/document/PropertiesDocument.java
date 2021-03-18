@@ -15,12 +15,12 @@ import java.util.function.BiConsumer;
 
 /**
  * This document only supports basic objects like {@link Number numbers}, {@link String strings}, {@link Character characters} and {@link Boolean booleans}.
- * You may use more advanced documents which are fully supported like {@link YamlDocument} or {@link GsonDocument}
+ * You may use more advanced documents which are fully supported like {@link GsonDocument}
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class PropertiesDocument implements Document {
+public class PropertiesDocument extends AbstractDocument {
 
 	protected final Properties properties;
 
@@ -45,20 +45,6 @@ public class PropertiesDocument implements Document {
 		throw new UnsupportedOperationException("PropertiesDocument.getList(String)");
 	}
 
-	@Override
-	public char getChar(@Nonnull String path) {
-		return getChar(path, (char) 0);
-	}
-
-	@Override
-	public char getChar(@Nonnull String path, char def) {
-		try {
-			return getString(path).charAt(0);
-		} catch (NullPointerException | StringIndexOutOfBoundsException ex) {
-			return def;
-		}
-	}
-
 	@Nullable
 	@Override
 	public Object getObject(@Nonnull String path) {
@@ -71,17 +57,6 @@ public class PropertiesDocument implements Document {
 		return properties.getProperty(path);
 	}
 
-	@Nonnull
-	@Override
-	public String getString(@Nonnull String path, @Nonnull String def) {
-		return properties.getProperty(path, def);
-	}
-
-	@Override
-	public long getLong(@Nonnull String path) {
-		return getLong(path, 0);
-	}
-
 	@Override
 	public long getLong(@Nonnull String path, long def) {
 		try {
@@ -90,12 +65,6 @@ public class PropertiesDocument implements Document {
 			return def;
 		}
 	}
-
-	@Override
-	public int getInt(@Nonnull String path) {
-		return getInt(path, 0);
-	}
-
 	@Override
 	public int getInt(@Nonnull String path, int def) {
 		try {
@@ -103,11 +72,6 @@ public class PropertiesDocument implements Document {
 		} catch (Exception ex) {
 			return def;
 		}
-	}
-
-	@Override
-	public short getShort(@Nonnull String path) {
-		return getShort(path, (short) 0);
 	}
 
 	@Override
@@ -120,22 +84,12 @@ public class PropertiesDocument implements Document {
 	}
 
 	@Override
-	public byte getByte(@Nonnull String path) {
-		return getByte(path, (byte) 0);
-	}
-
-	@Override
 	public byte getByte(@Nonnull String path, byte def) {
 		try {
 			return Byte.parseByte(getString(path));
 		} catch (Exception ex) {
 			return def;
 		}
-	}
-
-	@Override
-	public float getFloat(@Nonnull String path) {
-		return getFloat(path, 0);
 	}
 
 	@Override
@@ -148,22 +102,12 @@ public class PropertiesDocument implements Document {
 	}
 
 	@Override
-	public double getDouble(@Nonnull String path) {
-		return getDouble(path, 0);
-	}
-
-	@Override
 	public double getDouble(@Nonnull String path, double def) {
 		try {
 			return Double.parseDouble(getString(path));
 		} catch (Exception ex) {
 			return def;
 		}
-	}
-
-	@Override
-	public boolean getBoolean(@Nonnull String path) {
-		return Boolean.getBoolean(getString(path));
 	}
 
 	@Override
@@ -182,13 +126,6 @@ public class PropertiesDocument implements Document {
 		}
 	}
 
-	@Nonnull
-	@Override
-	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
-		UUID value = getUUID(path);
-		return value == null ? def : value;
-	}
-
 	@Nullable
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
@@ -199,13 +136,6 @@ public class PropertiesDocument implements Document {
 		} catch (Throwable ex) {
 			return null;
 		}
-	}
-
-	@Nonnull
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
-		E value = getEnum(path, (Class<E>) def.getClass());
-		return value == null ? def : value;
 	}
 
 	@Override

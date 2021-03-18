@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database;
 
-import net.codingarea.challenges.plugin.utils.config.Document;
+import net.anweisen.utilities.commons.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,7 +9,7 @@ import java.io.Writer;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public interface Result extends Document {
 

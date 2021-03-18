@@ -1,5 +1,6 @@
 package net.anweisen.utilities.database;
 
+import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
@@ -8,9 +9,11 @@ import java.util.Map;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public interface Database {
+
+	ILogger LOGGER = ILogger.forThisClass();
 
 	boolean isConnected();
 

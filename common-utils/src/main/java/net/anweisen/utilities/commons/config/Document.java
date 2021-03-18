@@ -31,11 +31,6 @@ public interface Document extends Config, Json {
 
 	void write(@Nonnull Writer writer) throws IOException;
 
-	default void save(@Nonnull File file) throws IOException {
-		Writer writer = FileUtils.newBufferedWriter(file);
-		write(writer);
-		writer.flush();
-		writer.close();
-	}
+	void save(@Nonnull File file) throws IOException;
 
 }

@@ -21,7 +21,8 @@ public enum LogLevel {
 
 	private final Level level;
 
-	public Level getLevel() {
+	@Nonnull
+	public Level getJavaUtilLevel() {
 		return level;
 	}
 
@@ -31,15 +32,11 @@ public enum LogLevel {
 
 	@Nonnull
 	public static LogLevel fromJavaUtilLevel(@Nonnull Level level) {
-		if (level == Level.WARNING) {
-			return WARN;
-		} else if (level == Level.SEVERE) {
-			return ERROR;
-		} else if (level == Level.CONFIG) {
-			return DEBUG;
-		} else {
-			return INFO;
+		for (LogLevel logLevel : values()) {
+			if (logLevel.getJavaUtilLevel().intValue() == level.intValue())
+				return logLevel;
 		}
+		return INFO;
 	}
 
 }

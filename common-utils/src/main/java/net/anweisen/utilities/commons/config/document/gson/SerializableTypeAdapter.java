@@ -6,12 +6,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.misc.GsonUtils;
+import net.anweisen.utilities.commons.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -20,44 +19,19 @@ import java.util.Map;
  */
 public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 
-	public static final String KEY = "classOfType",
-							   SERIALIZE_METHOD = "serialize",
-							   DESERIALIZE_METHOD = "deserialize";
-	protected static final ILogger logger = ILogger.forThisClass();
-
-	public static boolean isSerializable(@Nonnull Class<?> clazz) {
-		try {
-			clazz.getMethod(SERIALIZE_METHOD);
-			return true;
-		} catch (NoSuchMethodException e) {
-			return false;
-		}
-	}
+	public static final String KEY = "classOfType";
 
 	@Override
 	public void write(@Nonnull Gson gson, @Nonnull JsonWriter writer, @Nonnull Object object) throws IOException {
 
-		Class<?> classOfObject = object.getClass();
+		Map<String, Object> map = SerializationUtils.serializeObject(object);
+		if (map == null) return;
+
 		JsonObject json = new JsonObject();
+		GsonUtils.setDocumentProperties(gson, json, map);
+		json.addProperty(KEY, object.getClass().getName());
+		TypeAdapters.JSON_ELEMENT.write(writer, json);
 
-		try {
-
-			Method method = classOfObject.getMethod(SERIALIZE_METHOD);
-			method.setAccessible(true);
-			Object serialized = method.invoke(object);
-
-			if (!(serialized instanceof Map)) throw new IllegalArgumentException(method + " does not return a Map");
-
-			@SuppressWarnings("unchecked")
-			Map<String, Object> map = (Map<String, Object>) serialized;
-
-			GsonUtils.setDocumentProperties(gson, json, map);
-			json.addProperty(KEY, classOfObject.getName());
-			TypeAdapters.JSON_ELEMENT.write(writer, json);
-
-		} catch (Throwable ex) {
-			logger.error("Could not serialize object of type {}", classOfObject, ex);
-		}
 	}
 
 	@Override
@@ -71,16 +45,15 @@ public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 
 		Map<String, Object> map = GsonUtils.convertJsonObjectToMap(json);
 
+		Class<?> clazz;
 		try {
-			Class<?> clazz = Class.forName(classOfType);
-
-			Method method = clazz.getMethod(DESERIALIZE_METHOD, Map.class);
-			method.setAccessible(true);
-			return method.invoke(null, map);
-		} catch (Throwable ex) {
-			logger.error("Could not deserialize object of type {}", classOfType);
+			clazz = Class.forName(classOfType);
+		} catch (ClassNotFoundException | NullPointerException ex) {
 			return null;
 		}
+
+		return SerializationUtils.deserializeObject(map, clazz);
+
 	}
 
 }

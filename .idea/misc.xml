@@ -5,10 +5,14 @@
       <list>
         <option value="$PROJECT_DIR$/commons/pom.xml" />
         <option value="$PROJECT_DIR$/database-api/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils/pom.xml" />
+        <option value="$PROJECT_DIR$/database-sql/pom.xml" />
+        <option value="$PROJECT_DIR$/database-mongodb/pom.xml" />
+        <option value="$PROJECT_DIR$/bukkit-utils/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

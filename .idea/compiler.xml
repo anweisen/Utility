@@ -6,13 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="database-sql" />
+        <module name="bukkit-utils" />
         <module name="common-utils" />
         <module name="database-api" />
+        <module name="database-mongodb" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="common-utils" target="1.5" />
-      <module name="database-api" target="1.5" />
+      <module name="bukkit-utils" target="8" />
+      <module name="common-utils" target="8" />
+      <module name="database" target="8" />
+      <module name="database-api" target="8" />
+      <module name="database-mongodb" target="8" />
+      <module name="database-sql" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

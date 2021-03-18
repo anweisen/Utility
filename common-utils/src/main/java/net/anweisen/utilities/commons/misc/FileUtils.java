@@ -15,8 +15,7 @@ import java.util.Optional;
  */
 public final class FileUtils {
 
-	private FileUtils() {
-	}
+	private FileUtils() {}
 
 	@Nonnull
 	public static BufferedWriter newBufferedWriter(@Nonnull File file) throws IOException {

@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.config;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -16,6 +17,9 @@ public interface Propertyable {
 
 	@Nullable
 	Object getObject(@Nonnull String path);
+
+	@Nonnull
+	Object getObject(@Nonnull String path, @Nonnull Object def);
 
 	@Nullable
 	String getString(@Nonnull String path);
@@ -70,10 +74,17 @@ public interface Propertyable {
 	@Nonnull
 	<E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def);
 
+	@Nullable
+	<T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT);
+
+	@Nonnull
+	<T> T getSerializable(@Nonnull String path, @Nonnull T def);
+
 	boolean contains(@Nonnull String path);
 
 	boolean isEmpty();
 
+	@Nonnegative
 	int size();
 
 	@Nonnull

@@ -4,13 +4,19 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.anweisen.utilites</groupId>
+	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>common-utils</artifactId>
 	<version>1.0</version>
 
+	<properties>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<dependencies>
 
-		<!-- Java JSON api -->
+		<!-- Good Java JSON api -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -25,5 +31,13 @@
 		</dependency>
 
 	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub anweisen Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
+		</repository>
+	</distributionManagement>
 
 </project>

@@ -5,6 +5,7 @@ import net.anweisen.utilities.commons.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -59,6 +60,11 @@ public abstract class DocumentWrapper implements Document {
 		document.write(writer);
 	}
 
+	@Override
+	public void save(@Nonnull File file) throws IOException {
+		document.save(file);
+	}
+
 	@Nonnull
 	@Override
 	public String toJson() {
@@ -69,6 +75,12 @@ public abstract class DocumentWrapper implements Document {
 	@Override
 	public Object getObject(@Nonnull String path) {
 		return document.getObject(path);
+	}
+
+	@Nonnull
+	@Override
+	public Object getObject(@Nonnull String path, @Nonnull Object def) {
+		return document.getObject(path, def);
 	}
 
 	@Nullable
@@ -191,6 +203,18 @@ public abstract class DocumentWrapper implements Document {
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
 		return document.getEnum(path, def);
+	}
+
+	@Nullable
+	@Override
+	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return document.getSerializable(path, classOfT);
+	}
+
+	@Nonnull
+	@Override
+	public <T> T getSerializable(@Nonnull String path, @Nonnull T def) {
+		return document.getSerializable(path, def);
 	}
 
 	@Override

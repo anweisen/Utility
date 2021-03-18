@@ -16,8 +16,7 @@ import java.util.Map.Entry;
  */
 public final class GsonUtils {
 
-	private GsonUtils() {
-	}
+	private GsonUtils() {}
 
 	@Nullable
 	public static Object unpackJsonElement(@Nullable JsonElement element) {

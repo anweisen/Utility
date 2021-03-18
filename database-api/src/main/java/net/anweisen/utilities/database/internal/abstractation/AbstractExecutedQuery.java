@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database.internal.abstractation;
 
-import net.codingarea.challenges.plugin.utils.database.ExecutedQuery;
-import net.codingarea.challenges.plugin.utils.database.Result;
+import net.anweisen.utilities.database.ExecutedQuery;
+import net.anweisen.utilities.database.Result;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public abstract class AbstractExecutedQuery implements ExecutedQuery {
 

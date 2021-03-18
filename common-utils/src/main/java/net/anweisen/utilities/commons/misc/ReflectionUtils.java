@@ -1,15 +1,13 @@
 package net.anweisen.utilities.commons.misc;
 
-import sun.reflect.CallerSensitive;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -19,8 +17,7 @@ import java.util.function.Consumer;
  */
 public final class ReflectionUtils {
 
-	private ReflectionUtils() {
-	}
+	private ReflectionUtils() {}
 
 	@Nonnull
 	public static Collection<Method> getDeclaredMethodsAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> classOfAnnotation) {
@@ -34,7 +31,7 @@ public final class ReflectionUtils {
 
 	@Nonnull
 	private static Collection<Method> filterMethodsAnnotatedWith(@Nonnull Method[] methods, @Nonnull Class<? extends Annotation> classOfAnnotation) {
-		List<Method> annotatedMethods = new LinkedList<>();
+		List<Method> annotatedMethods = new ArrayList<>();
 		for (Method method : methods) {
 			if (!method.isAnnotationPresent(classOfAnnotation)) continue;
 			annotatedMethods.add(method);
@@ -42,14 +39,18 @@ public final class ReflectionUtils {
 		return annotatedMethods;
 	}
 
+	/**
+	 * @param classOfEnum The class containing the enum constants
+	 * @return The first enum found by the given names
+	 */
 	@Nonnull
-	public static <E extends Enum<E>> E getEnumByNames(@Nonnull Class<E> clazz, @Nonnull String... names) {
+	public static <E extends Enum<E>> E getEnumByNames(@Nonnull Class<E> classOfEnum, @Nonnull String... names) {
 		for (String name : names) {
 			try {
-				return Enum.valueOf(clazz, name);
+				return Enum.valueOf(classOfEnum, name);
 			} catch (IllegalArgumentException | NoSuchFieldError ex) { }
 		}
-		throw new IllegalArgumentException("No enum found in " + clazz.getName() + " for " + Arrays.toString(names));
+		throw new IllegalArgumentException("No enum found in " + classOfEnum.getName() + " for " + Arrays.toString(names));
 	}
 
 	/**
@@ -74,21 +75,19 @@ public final class ReflectionUtils {
 		}
 	}
 
-	@CallerSensitive
 	@CheckReturnValue
 	public static Class<?> getCaller(int index) {
 		try {
-			return new PublicSecurityManager().getPublicClassContext()[index - 2];
+			return new PublicSecurityManager().getPublicClassContext()[index + 2];
 		} catch (Exception ignored) {
 			return null;
 		}
 	}
 
-	@CallerSensitive
 	@CheckReturnValue
 	public static Class<?> getCaller() {
 		try {
-			return getCaller(0);
+			return getCaller(2);
 		} catch (Exception ignored) {
 			return null;
 		}

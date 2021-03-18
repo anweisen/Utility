@@ -7,6 +7,7 @@ import net.anweisen.utilities.commons.config.document.gson.GsonTypeAdapter;
 import net.anweisen.utilities.commons.config.document.gson.SerializableTypeAdapter;
 import net.anweisen.utilities.commons.misc.FileUtils;
 import net.anweisen.utilities.commons.misc.GsonUtils;
+import net.anweisen.utilities.commons.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,13 +23,13 @@ import java.util.function.BiConsumer;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class GsonDocument implements Document {
+public class GsonDocument extends AbstractDocument {
 
 	public static final Gson GSON = new GsonBuilder()
 			.disableHtmlEscaping()
 			.setPrettyPrinting()
+			.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializationUtils::isSerializable, new SerializableTypeAdapter()))
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(GsonDocument.class, new GsonDocumentTypeAdapter()))
-			.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializableTypeAdapter::isSerializable, new SerializableTypeAdapter()))
 			.create();
 
 	protected JsonObject jsonObject;
@@ -65,13 +66,6 @@ public class GsonDocument implements Document {
 		return GsonUtils.convertJsonElementToString(element);
 	}
 
-	@Nonnull
-	@Override
-	public String getString(@Nonnull String path, @Nonnull String def) {
-		String string = getString(path);
-		return string == null ? def : string;
-	}
-
 	@Nullable
 	@Override
 	public Object getObject(@Nonnull String path) {
@@ -85,10 +79,10 @@ public class GsonDocument implements Document {
 		return GSON.fromJson(element, classOfType);
 	}
 
-	@Nonnull
-	public <T> T get(@Nonnull String path, @Nonnull T def, @Nonnull Class<T> classOfType) {
-		T value = get(path, classOfType);
-		return value == null ? def : value;
+	@Nullable
+	@Override
+	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return get(path, classOfT);
 	}
 
 	@Nonnull
@@ -111,18 +105,8 @@ public class GsonDocument implements Document {
 	}
 
 	@Override
-	public long getLong(@Nonnull String path) {
-		return getLong(path, 0);
-	}
-
-	@Override
 	public long getLong(@Nonnull String path, long def) {
 		return getElement(path).orElse(new JsonPrimitive(def)).getAsLong();
-	}
-
-	@Override
-	public int getInt(@Nonnull String path) {
-		return getInt(path, 0);
 	}
 
 	@Override
@@ -131,18 +115,8 @@ public class GsonDocument implements Document {
 	}
 
 	@Override
-	public short getShort(@Nonnull String path) {
-		return getShort(path, (short) 0);
-	}
-
-	@Override
 	public short getShort(@Nonnull String path, short def) {
 		return getElement(path).orElse(new JsonPrimitive(def)).getAsShort();
-	}
-
-	@Override
-	public byte getByte(@Nonnull String path) {
-		return getByte(path, (byte) 0);
 	}
 
 	@Override
@@ -151,28 +125,13 @@ public class GsonDocument implements Document {
 	}
 
 	@Override
-	public double getDouble(@Nonnull String path) {
-		return getDouble(path, 0);
-	}
-
-	@Override
 	public double getDouble(@Nonnull String path, double def) {
 		return getElement(path).orElse(new JsonPrimitive(def)).getAsDouble();
 	}
 
 	@Override
-	public float getFloat(@Nonnull String path) {
-		return getFloat(path, 0);
-	}
-
-	@Override
 	public float getFloat(@Nonnull String path, float def) {
 		return getElement(path).orElse(new JsonPrimitive(def)).getAsFloat();
-	}
-
-	@Override
-	public boolean getBoolean(@Nonnull String path) {
-		return getBoolean(path, false);
 	}
 
 	@Override
@@ -193,22 +152,10 @@ public class GsonDocument implements Document {
 		return get(path, UUID.class);
 	}
 
-	@Nonnull
-	@Override
-	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
-		return get(path, def, UUID.class);
-	}
-
 	@Nullable
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
 		return get(path, classOfEnum);
-	}
-
-	@Nonnull
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
-		return get(path, def, (Class<E>) def.getClass());
 	}
 
 	@Override

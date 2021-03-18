@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database;
 
-import net.codingarea.challenges.plugin.utils.database.exceptions.DatabaseException;
+import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public interface DatabaseDeletion {
 
