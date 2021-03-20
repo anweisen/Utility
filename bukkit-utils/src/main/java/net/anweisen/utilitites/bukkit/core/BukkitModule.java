@@ -7,6 +7,7 @@ import net.anweisen.utilities.commons.logging.LogLevel;
 import net.anweisen.utilities.commons.logging.internal.JavaLoggerWrapperFactory;
 import net.anweisen.utilities.commons.version.Version;
 import net.anweisen.utilities.commons.version.VersionInfo;
+import net.anweisen.utilitites.bukkit.utils.MinecraftVersion;
 import net.anweisen.utilitites.commons.config.document.readonly.ReadOnlyYamlDocument;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -29,9 +30,9 @@ public abstract class BukkitModule extends JavaPlugin {
 	private final Map<String, CommandExecutor> commands = new HashMap<>();
 	private final List<Listener> listeners = new ArrayList<>();
 
-	private Version version;
-	private Version serverVersion;
 	private Document config;
+	private Version version;
+	private MinecraftVersion serverVersion;
 	private boolean devMode;
 	private boolean firstInstall;
 	private boolean isReload;
@@ -41,7 +42,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	public void onLoad() {
 		ILogger.setFactory(new JavaLoggerWrapperFactory(super.getLogger()));
 		version = VersionInfo.parse(getDescription().getVersion());
-		serverVersion = VersionInfo.parseFromCraftBukkit(getServer().getClass());
+		serverVersion = VersionInfo.findNearest(VersionInfo.parseFromCraftBukkit(getServer().getClass()), MinecraftVersion.values());
 		getLogger().info("Detected server version {}", serverVersion);
 		if (wasShutdown) isReload = true;
 		if (firstInstall = !getDataFolder().exists()) {
@@ -102,7 +103,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	}
 
 	@Nonnull
-	public Version getServerVersion() {
+	public MinecraftVersion getServerVersion() {
 		return serverVersion;
 	}
 

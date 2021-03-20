@@ -1,6 +1,7 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.query;
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.document.AbstractDocument;
 import net.anweisen.utilities.commons.config.document.EmptyDocument;
 import net.anweisen.utilities.commons.config.document.GsonDocument;
 import net.anweisen.utilities.commons.config.document.readonly.ReadOnlyGsonDocument;
@@ -15,7 +16,7 @@ import java.util.function.BiConsumer;
  * @author anweisen | https://github.com/anweisen
  * @since 2.0
  */
-public final class SQLResult implements Result {
+public final class SQLResult extends AbstractDocument implements Result {
 
 	private final Map<String, Object> values;
 
@@ -36,32 +37,6 @@ public final class SQLResult implements Result {
 		return value == null ? null : value.toString();
 	}
 
-	@Nonnull
-	@Override
-	public String getString(@Nonnull String path, @Nonnull String def) {
-		String value = getString(path);
-		return value == null ? def : value;
-	}
-
-	@Override
-	public char getChar(@Nonnull String path) {
-		return getChar(path, (char) 0);
-	}
-
-	@Override
-	public char getChar(@Nonnull String path, char def) {
-		try {
-			return getString(path).charAt(0);
-		} catch (Exception ex) {
-			return def;
-		}
-	}
-
-	@Override
-	public long getLong(@Nonnull String path) {
-		return getLong(path, 0);
-	}
-
 	@Override
 	public long getLong(@Nonnull String path, long def) {
 		try {
@@ -69,11 +44,6 @@ public final class SQLResult implements Result {
 		} catch (Exception ex) {
 			return def;
 		}
-	}
-
-	@Override
-	public int getInt(@Nonnull String path) {
-		return getInt(path, 0);
 	}
 
 	@Override
@@ -86,22 +56,12 @@ public final class SQLResult implements Result {
 	}
 
 	@Override
-	public short getShort(@Nonnull String path) {
-		return getShort(path, (short) 0);
-	}
-
-	@Override
 	public short getShort(@Nonnull String path, short def) {
 		try {
 			return Short.parseShort(getString(path));
 		} catch (Exception ex) {
 			return def;
 		}
-	}
-
-	@Override
-	public byte getByte(@Nonnull String path) {
-		return getByte(path, (byte) 0);
 	}
 
 	@Override
@@ -114,11 +74,6 @@ public final class SQLResult implements Result {
 	}
 
 	@Override
-	public float getFloat(@Nonnull String path) {
-		return getFloat(path, 0);
-	}
-
-	@Override
 	public float getFloat(@Nonnull String path, float def) {
 		try {
 			return Float.parseFloat(getString(path));
@@ -128,22 +83,12 @@ public final class SQLResult implements Result {
 	}
 
 	@Override
-	public double getDouble(@Nonnull String path) {
-		return getDouble(path, 0);
-	}
-
-	@Override
 	public double getDouble(@Nonnull String path, double def) {
 		try {
 			return Double.parseDouble(getString(path));
 		} catch (Exception ex) {
 			return def;
 		}
-	}
-
-	@Override
-	public boolean getBoolean(@Nonnull String path) {
-		return getBoolean(path, false);
 	}
 
 	@Override
@@ -161,7 +106,6 @@ public final class SQLResult implements Result {
 		throw new UnsupportedOperationException("SQLResult.getList(String)");
 	}
 
-
 	@Nullable
 	@Override
 	public UUID getUUID(@Nonnull String path) {
@@ -170,26 +114,6 @@ public final class SQLResult implements Result {
 		} catch (Exception ex) {
 			return null;
 		}
-	}
-
-	@Nonnull
-	@Override
-	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
-		UUID value = getUUID(path);
-		return value == null ? def : value;
-	}
-
-	@Nullable
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
-		E value = getEnum(path, (Class<E>) def.getClass());
-		return value == null ? def : value;
 	}
 
 	@Override

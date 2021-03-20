@@ -55,8 +55,8 @@ public final class MongoUtils {
 		} else if (value instanceof Json) {
 			String json = ((Json) value).toJson();
 			return Document.parse(json);
-		} else if (SerializableTypeAdapter.isSerializable(value.getClass())) {
-			Map<String, Object> values = SerializableTypeAdapter.serializeObject(value);
+		} else if (SerializationUtils.isSerializable(value.getClass())) {
+			Map<String, Object> values = SerializationUtils.serializeObject(value);
 			if (values == null) return null;
 			BsonDocument bson = new BsonDocument();
 			BsonUtils.setDocumentProperties(bson, values);

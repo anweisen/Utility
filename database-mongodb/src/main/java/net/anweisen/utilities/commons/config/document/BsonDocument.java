@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BsonDocument implements Document {
+public class BsonDocument extends AbstractDocument {
 
 	protected org.bson.Document bsonDocument;
 
@@ -48,28 +48,11 @@ public class BsonDocument implements Document {
 		return bsonDocument.getString(path);
 	}
 
-	@Nonnull
-	@Override
-	public String getString(@Nonnull String path, @Nonnull String def) {
-		String value = getString(path);
-		return value == null ? def : value;
-	}
-
-	@Override
-	public long getLong(@Nonnull String path) {
-		return getLong(path, 0);
-	}
-
 	@Override
 	public long getLong(@Nonnull String path, long def) {
 		Long value = bsonDocument.getLong(path);
 		if (value == null) return def;
 		return value;
-	}
-
-	@Override
-	public int getInt(@Nonnull String path) {
-		return getInt(path, 0);
 	}
 
 	@Override
@@ -80,20 +63,10 @@ public class BsonDocument implements Document {
 	}
 
 	@Override
-	public short getShort(@Nonnull String path) {
-		return getShort(path, (short) 0);
-	}
-
-	@Override
 	public short getShort(@Nonnull String path, short def) {
 		Number value = bsonDocument.getInteger(path);
 		if (value == null) return def;
 		return value.shortValue();
-	}
-
-	@Override
-	public byte getByte(@Nonnull String path) {
-		return getByte(path, (byte) 0);
 	}
 
 	@Override
@@ -104,11 +77,6 @@ public class BsonDocument implements Document {
 	}
 
 	@Override
-	public double getDouble(@Nonnull String path) {
-		return getDouble(path, 0);
-	}
-
-	@Override
 	public double getDouble(@Nonnull String path, double def) {
 		Double value = bsonDocument.getDouble(path);
 		if (value == null) return def;
@@ -116,34 +84,10 @@ public class BsonDocument implements Document {
 	}
 
 	@Override
-	public float getFloat(@Nonnull String path) {
-		return getFloat(path, 0);
-	}
-
-	@Override
 	public float getFloat(@Nonnull String path, float def) {
 		Double value = bsonDocument.getDouble(path);
 		if (value == null) return def;
 		return (float) (double) value;
-	}
-
-	@Override
-	public char getChar(@Nonnull String path) {
-		return getChar(path, (char) 0);
-	}
-
-	@Override
-	public char getChar(@Nonnull String path, char def) {
-		try {
-			return getString(path).charAt(0);
-		} catch (Exception ex) {
-			return def;
-		}
-	}
-
-	@Override
-	public boolean getBoolean(@Nonnull String path) {
-		return getBoolean(path, false);
 	}
 
 	@Override
@@ -173,23 +117,6 @@ public class BsonDocument implements Document {
 	@Override
 	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
 		return bsonDocument.get(path, def);
-	}
-
-	@Nullable
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		try {
-			return Enum.valueOf(classOfEnum, getString(path));
-		} catch (Exception ex) {
-			return null;
-		}
-	}
-
-	@Nonnull
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
-		E value = getEnum(path, (Class<E>) def.getClass());
-		return value == null ? def : value;
 	}
 
 	@Override
