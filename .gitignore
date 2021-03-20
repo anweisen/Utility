@@ -25,9 +25,7 @@
 .idea/**/mongoSettings.xml
 
 # Test Sources
-plugin/src/test
-language/src/test
-mongo-connector/src/test
+**/src/test
 
 # Compiled files
 **/out
