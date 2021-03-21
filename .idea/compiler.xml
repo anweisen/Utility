@@ -10,6 +10,7 @@
         <module name="bukkit-utils" />
         <module name="common-utils" />
         <module name="database-api" />
+        <module name="jda-commandmanager" />
         <module name="database-mongodb" />
       </profile>
     </annotationProcessing>
@@ -18,8 +19,9 @@
       <module name="common-utils" target="1.8" />
       <module name="database" target="8" />
       <module name="database-api" target="1.8" />
-      <module name="database-mongodb" target="8" />
+      <module name="database-mongodb" target="1.8" />
       <module name="database-sql" target="1.8" />
+      <module name="jda-commandmanager" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
