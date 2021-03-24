@@ -164,7 +164,7 @@ public class YamlDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
+	public List<String> getStringList(@Nonnull String path) {
 		return config.getStringList(path);
 	}
 

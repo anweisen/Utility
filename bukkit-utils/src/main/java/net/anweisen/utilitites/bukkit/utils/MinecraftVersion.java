@@ -16,7 +16,7 @@ public enum MinecraftVersion implements Version {
 	V1_5,       // 1.5
 	V1_6,       // 1.6
 	V1_7,       // 1.7
-	V1_7_2,     // 17.2
+	V1_7_2,     // 1.7.2
 	V1_8,       // 1.8
 	V1_9,       // 1.9
 	V1_10,      // 1.10
