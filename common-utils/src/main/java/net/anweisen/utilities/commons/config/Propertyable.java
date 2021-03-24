@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -60,7 +61,37 @@ public interface Propertyable {
 	boolean getBoolean(@Nonnull String path, boolean def);
 
 	@Nonnull
-	List<String> getList(@Nonnull String path);
+	List<String> getStringList(@Nonnull String path);
+
+	@Nonnull
+	<T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper);
+
+	@Nonnull
+	<E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum);
+
+	@Nonnull
+	List<UUID> getUUIDList(@Nonnull String path);
+
+	@Nonnull
+	List<Character> getCharacterList(@Nonnull String path);
+
+	@Nonnull
+	List<Byte> getByteList(@Nonnull String path);
+
+	@Nonnull
+	List<Short> getShortList(@Nonnull String path);
+
+	@Nonnull
+	List<Integer> getIntegerList(@Nonnull String path);
+
+	@Nonnull
+	List<Long> getLongList(@Nonnull String path);
+
+	@Nonnull
+	List<Float> getFloatList(@Nonnull String path);
+
+	@Nonnull
+	List<Double> getDoubleList(@Nonnull String path);
 
 	@Nullable
 	UUID getUUID(@Nonnull String path);

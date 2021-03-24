@@ -16,21 +16,21 @@ public interface Result extends Document {
 	@Nonnull
 	@Override
 	@Deprecated
-	default Result set(@Nonnull String path, @Nullable Object value) {
+	default Document set(@Nonnull String path, @Nullable Object value) {
 		throw new UnsupportedOperationException("Result.set(String, Object)");
 	}
 
 	@Nonnull
 	@Override
 	@Deprecated
-	default Result remove(@Nonnull String path) {
+	default Document remove(@Nonnull String path) {
 		throw new UnsupportedOperationException("Result.remove(String)");
 	}
 
 	@Nonnull
 	@Override
 	@Deprecated
-	default Result clear() {
+	default Document clear() {
 		throw new UnsupportedOperationException("Result.clear()");
 	}
 

@@ -35,13 +35,13 @@ public class PropertiesDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path) {
 		throw new UnsupportedOperationException("PropertiesDocument.getDocument(String)");
 	}
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
+	public List<String> getStringList(@Nonnull String path) {
 		throw new UnsupportedOperationException("PropertiesDocument.getList(String)");
 	}
 
@@ -65,6 +65,7 @@ public class PropertiesDocument extends AbstractDocument {
 			return def;
 		}
 	}
+
 	@Override
 	public int getInt(@Nonnull String path, int def) {
 		try {
@@ -174,25 +175,19 @@ public class PropertiesDocument extends AbstractDocument {
 		values().forEach(action);
 	}
 
-	@Nonnull
 	@Override
-	public Document set(@Nonnull String path, @Nullable Object value) {
+	public void set0(@Nonnull String path, @Nullable Object value) {
 		properties.setProperty(path, String.valueOf(value));
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document clear() {
+	public void clear0() {
 		properties.clear();
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document remove(@Nonnull String path) {
+	public void remove0(@Nonnull String path) {
 		properties.remove(path);
-		return this;
 	}
 
 	@Override

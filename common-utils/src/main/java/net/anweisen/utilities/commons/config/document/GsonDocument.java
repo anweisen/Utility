@@ -87,7 +87,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path) {
 		JsonElement element = getElement(path).orElse(null);
 		JsonObject object = element == null ? new JsonObject() : element.getAsJsonObject();
 		if (element == null) setElement(path, object);
@@ -141,7 +141,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
+	public List<String> getStringList(@Nonnull String path) {
 		JsonArray array = jsonObject.getAsJsonArray(path);
 		return GsonUtils.convertJsonArrayToStringList(array);
 	}
@@ -173,25 +173,19 @@ public class GsonDocument extends AbstractDocument {
 		return jsonObject.size();
 	}
 
-	@Nonnull
 	@Override
-	public Document set(@Nonnull String path, @Nullable Object value) {
+	public void set0(@Nonnull String path, @Nullable Object value) {
 		setElement(path, value);
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document clear() {
+	public void clear0() {
 		jsonObject = new JsonObject();
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document remove(@Nonnull String path) {
+	public void remove0(@Nonnull String path) {
 		setElement(path, null);
-		return this;
 	}
 
 	@Nonnull

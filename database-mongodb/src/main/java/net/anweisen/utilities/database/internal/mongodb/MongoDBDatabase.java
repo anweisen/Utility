@@ -65,7 +65,7 @@ public class MongoDBDatabase extends AbstractDatabase {
 
 			MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
 			MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
-					.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : 27017))))
+					.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
 					.build();
 
 			client = MongoClients.create(settings);

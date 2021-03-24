@@ -18,6 +18,7 @@ public final class GsonDocumentTypeAdapter implements GsonTypeAdapter<GsonDocume
 
 	@Override
 	public void write(@Nonnull Gson gson, @Nonnull JsonWriter writer, @Nonnull GsonDocument document) throws IOException {
+		if (document.isEmpty()) return;
 		TypeAdapters.JSON_ELEMENT.write(writer, document.getJsonObject());
 	}
 

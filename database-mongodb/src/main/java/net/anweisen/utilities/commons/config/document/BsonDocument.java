@@ -38,7 +38,7 @@ public class BsonDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path) {
 		return new BsonDocument(bsonDocument.get(path, org.bson.Document.class));
 	}
 
@@ -103,7 +103,7 @@ public class BsonDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
+	public List<String> getStringList(@Nonnull String path) {
 		return bsonDocument.getList(path, String.class);
 	}
 
@@ -134,25 +134,19 @@ public class BsonDocument extends AbstractDocument {
 		return bsonDocument.size();
 	}
 
-	@Nonnull
 	@Override
-	public Document clear() {
+	public void clear0() {
 		bsonDocument.clear();
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document set(@Nonnull String path, @Nullable Object value) {
+	public void set0(@Nonnull String path, @Nullable Object value) {
 		bsonDocument.put(path, value);
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document remove(@Nonnull String path) {
+	public void remove0(@Nonnull String path) {
 		bsonDocument.remove(path);
-		return this;
 	}
 
 	@Override

@@ -320,11 +320,8 @@ public class JavaLoggerWrapper extends JavaILogger {
 
 	@Nonnull
 	protected Level mapLevel(@Nonnull Level level) {
-		if (isLoggable(level) && level.intValue() < Level.INFO.intValue())
-			return Level.INFO;
 		return level;
 	}
-
 
 	@Nonnull
 	@Override

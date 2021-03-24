@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -177,8 +178,68 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
-		return document.getList(path);
+	public List<String> getStringList(@Nonnull String path) {
+		return document.getStringList(path);
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+		return document.getList(path, mapper);
+	}
+
+	@Nonnull
+	@Override
+	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
+		return document.getEnumList(path, classOfEnum);
+	}
+
+	@Nonnull
+	@Override
+	public List<UUID> getUUIDList(@Nonnull String path) {
+		return document.getUUIDList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Character> getCharacterList(@Nonnull String path) {
+		return document.getCharacterList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Byte> getByteList(@Nonnull String path) {
+		return document.getByteList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Short> getShortList(@Nonnull String path) {
+		return document.getShortList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Integer> getIntegerList(@Nonnull String path) {
+		return document.getIntegerList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Long> getLongList(@Nonnull String path) {
+		return document.getLongList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Float> getFloatList(@Nonnull String path) {
+		return document.getFloatList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Double> getDoubleList(@Nonnull String path) {
+		return document.getDoubleList(path);
 	}
 
 	@Nullable

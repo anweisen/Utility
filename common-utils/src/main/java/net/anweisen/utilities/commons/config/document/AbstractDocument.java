@@ -1,9 +1,12 @@
 package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.document.readonly.ReadOnlyDocumentWrapper;
+import net.anweisen.utilities.commons.config.exceptions.ConfigReadOnlyException;
 import net.anweisen.utilities.commons.misc.FileUtils;
 import net.anweisen.utilities.commons.misc.SerializationUtils;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
@@ -31,5 +34,51 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 		writer.flush();
 		writer.close();
 	}
+
+	@Nonnull
+	@Override
+	public Document getDocument(@Nonnull String path) {
+		Document document = getDocument0(path);
+		return isReadonly() ? new ReadOnlyDocumentWrapper(document) : document;
+	}
+
+	@Nonnull
+	@Override
+	public Document set(@Nonnull String path, @Nullable Object value) {
+		if (isReadonly()) throw new ConfigReadOnlyException("set");
+		set0(path, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public Document remove(@Nonnull String path) {
+		if (isReadonly()) throw new ConfigReadOnlyException("set");
+		remove0(path);
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public Document clear() {
+		if (isReadonly()) throw new ConfigReadOnlyException("set");
+		clear0();
+		return this;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public Document readonly() {
+		return isReadonly() ? this : new ReadOnlyDocumentWrapper(this);
+	}
+
+	@Nonnull
+	protected abstract Document getDocument0(@Nonnull String path);
+
+	protected abstract void set0(@Nonnull String path, @Nullable Object value);
+
+	protected abstract void remove0(@Nonnull String path);
+
+	protected abstract void clear0();
 
 }

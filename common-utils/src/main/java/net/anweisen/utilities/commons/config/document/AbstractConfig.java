@@ -1,21 +1,24 @@
 package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Config;
-import net.anweisen.utilities.commons.misc.FileUtils;
+import net.anweisen.utilities.commons.logging.ILogger;
+import net.anweisen.utilities.commons.misc.ReflectionUtils;
 import net.anweisen.utilities.commons.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
 public abstract class AbstractConfig implements Config {
+
+	protected static final ILogger logger = ILogger.forThisClass();
 
 	@Nonnull
 	@Override
@@ -90,13 +93,7 @@ public abstract class AbstractConfig implements Config {
 	@Nullable
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		try {
-			String name = getString(path);
-			if (name == null) return null;
-			return Enum.valueOf(classOfEnum, name);
-		} catch (Throwable ex) {
-			return null;
-		}
+		return ReflectionUtils.getEnumOrNull(getString(path), classOfEnum);
 	}
 
 	@Nonnull
@@ -111,6 +108,75 @@ public abstract class AbstractConfig implements Config {
 	public <T> T getSerializable(@Nonnull String path, @Nonnull T def) {
 		T value = getSerializable(path, (Class<T>) def.getClass());
 		return value == null ? def : value;
+	}
+
+	@Nonnull
+	@Override
+	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
+		return getList(path, name -> ReflectionUtils.getEnumOrNull(name, classOfEnum));
+	}
+
+	@Nonnull
+	@Override
+	public List<Character> getCharacterList(@Nonnull String path) {
+		return getList(path, string -> string == null || string.length() == 0 ? (char) 0 : string.charAt(0));
+	}
+
+	@Nonnull
+	@Override
+	public List<UUID> getUUIDList(@Nonnull String path) {
+		return getList(path, UUID::fromString);
+	}
+
+	@Nonnull
+	@Override
+	public List<Byte> getByteList(@Nonnull String path) {
+		return getList(path, Byte::parseByte);
+	}
+
+	@Nonnull
+	@Override
+	public List<Short> getShortList(@Nonnull String path) {
+		return getList(path, Short::parseShort);
+	}
+
+	@Nonnull
+	@Override
+	public List<Integer> getIntegerList(@Nonnull String path) {
+		return getList(path, Integer::parseInt);
+	}
+
+	@Nonnull
+	@Override
+	public List<Long> getLongList(@Nonnull String path) {
+		return getList(path, Long::parseLong);
+	}
+
+	@Nonnull
+	@Override
+	public List<Float> getFloatList(@Nonnull String path) {
+		return getList(path, Float::parseFloat);
+	}
+
+	@Nonnull
+	@Override
+	public List<Double> getDoubleList(@Nonnull String path) {
+		return getList(path, Double::parseDouble);
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+		List<String> list = getStringList(path);
+		List<T> result = new ArrayList<>(list.size());
+		for (String string : list) {
+			try {
+				result.add(mapper.apply(string));
+			} catch (Exception ex) {
+				logger.error("Could not map '{}'", string, ex);
+			}
+		}
+		return result;
 	}
 
 	@Override

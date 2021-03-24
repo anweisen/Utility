@@ -1,7 +1,5 @@
 package net.anweisen.utilities.commons.config;
 
-import net.anweisen.utilities.commons.misc.FileUtils;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
@@ -28,6 +26,10 @@ public interface Document extends Config, Json {
 	@Nonnull
 	@Override
 	Document remove(@Nonnull String path);
+
+	@Nonnull
+	@Override
+	Document readonly();
 
 	void write(@Nonnull Writer writer) throws IOException;
 

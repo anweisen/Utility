@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -156,7 +157,25 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
+	public List<String> getStringList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		return Collections.emptyList();
 	}
 
