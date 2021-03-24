@@ -310,4 +310,10 @@ public abstract class DocumentWrapper implements Document {
 		document.forEach(action);
 	}
 
+	@Nonnull
+	@Override
+	public Document readonly() {
+		return document.readonly();
+	}
+
 }

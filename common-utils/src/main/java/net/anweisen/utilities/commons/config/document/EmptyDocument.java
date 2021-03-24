@@ -174,8 +174,55 @@ public class EmptyDocument implements Document {
 	}
 
 	@Nonnull
-	@Override
 	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<UUID> getUUIDList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Character> getCharacterList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Byte> getByteList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Short> getShortList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Integer> getIntegerList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Long> getLongList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Float> getFloatList(@Nonnull String path) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public List<Double> getDoubleList(@Nonnull String path) {
 		return Collections.emptyList();
 	}
 
@@ -255,6 +302,12 @@ public class EmptyDocument implements Document {
 	@Override
 	public boolean isReadonly() {
 		return true;
+	}
+
+	@Nonnull
+	@Override
+	public Document readonly() {
+		return this;
 	}
 
 }
