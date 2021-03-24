@@ -10,7 +10,7 @@ import net.anweisen.utilities.commons.logging.internal.ConstantLoggerFactory;
 import net.anweisen.utilities.commons.version.Version;
 import net.anweisen.utilities.commons.version.VersionInfo;
 import net.anweisen.utilitites.bukkit.utils.MinecraftVersion;
-import net.anweisen.utilitites.commons.config.document.readonly.ReadOnlyYamlDocument;
+import net.anweisen.utilitites.commons.config.document.YamlDocument;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -98,7 +98,7 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	@Nonnull
 	public Document getConfigDocument() {
-		return config != null ? config : (config = new ReadOnlyYamlDocument(super.getConfig()));
+		return config != null ? config : (config = new YamlDocument(super.getConfig()).readonly());
 	}
 
 	@Nonnull
