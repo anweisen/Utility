@@ -1,10 +1,12 @@
 package net.anweisen.utilitites.bukkit.core;
 
+import net.anweisen.utilities.commons.anntations.ReplaceWith;
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.logging.JavaILogger;
 import net.anweisen.utilities.commons.logging.LogLevel;
-import net.anweisen.utilities.commons.logging.internal.JavaLoggerWrapperFactory;
+import net.anweisen.utilities.commons.logging.internal.BukkitLoggerWrapper;
+import net.anweisen.utilities.commons.logging.internal.ConstantLoggerFactory;
 import net.anweisen.utilities.commons.version.Version;
 import net.anweisen.utilities.commons.version.VersionInfo;
 import net.anweisen.utilitites.bukkit.utils.MinecraftVersion;
@@ -18,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -30,6 +33,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	private final Map<String, CommandExecutor> commands = new HashMap<>();
 	private final List<Listener> listeners = new ArrayList<>();
 
+	private JavaILogger logger;
 	private Document config;
 	private Version version;
 	private MinecraftVersion serverVersion;
@@ -40,7 +44,7 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
-		ILogger.setFactory(new JavaLoggerWrapperFactory(super.getLogger()));
+		ILogger.setFactory(new ConstantLoggerFactory(this.getLogger()));
 		version = VersionInfo.parse(getDescription().getVersion());
 		serverVersion = VersionInfo.findNearest(VersionInfo.parseFromCraftBukkit(getServer().getClass()), MinecraftVersion.values());
 		getLogger().info("Detected server version {}", serverVersion);
@@ -89,7 +93,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	@Nonnull
 	@Override
 	public JavaILogger getLogger() {
-		return ILogger.forJavaLogger(super.getLogger());
+		return logger != null ? logger : (logger = new BukkitLoggerWrapper(super.getLogger()));
 	}
 
 	@Nonnull
@@ -110,6 +114,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	@Nonnull
 	@Override
 	@Deprecated
+	@ReplaceWith("BukkitModule#getConfigDocument()")
 	public FileConfiguration getConfig() {
 		return super.getConfig();
 	}
@@ -151,6 +156,16 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	public final void disable() {
 		getServer().getPluginManager().disablePlugin(this);
+	}
+
+	@Nonnull
+	public final File getDataFile(@Nonnull String filename) {
+		return new File(getDataFolder(), filename);
+	}
+
+	@Nonnull
+	public final File getDataFile(@Nonnull String subfolder, @Nonnull String filename) {
+		return new File(getDataFile(subfolder), filename);
 	}
 
 	public void runAsync(@Nonnull Runnable task) {
