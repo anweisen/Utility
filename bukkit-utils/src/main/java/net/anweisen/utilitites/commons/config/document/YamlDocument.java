@@ -72,7 +72,7 @@ public class YamlDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path) {
 		ConfigurationSection section = config.getConfigurationSection(path);
 		if (section == null) section = config.createSection(path);
 		return new YamlDocument(section);
@@ -219,31 +219,25 @@ public class YamlDocument extends AbstractDocument {
 		return config.getValues(false).size();
 	}
 
-	@Nonnull
 	@Override
-	public Document set(@Nonnull String path, @Nullable Object value) {
+	public void set0(@Nonnull String path, @Nullable Object value) {
 		if (value instanceof Enum<?>) {
 			Enum<?> enun = (Enum<?>) value;
 			value = enun.name();
 		}
 		config.set(path, value);
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document remove(@Nonnull String path) {
+	public void remove0(@Nonnull String path) {
 		config.set(path, null);
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document clear() {
+	public void clear0() {
 		for (String key : config.getKeys(true)) {
 			config.set(key, null);
 		}
-		return this;
 	}
 
 	@Nonnull
