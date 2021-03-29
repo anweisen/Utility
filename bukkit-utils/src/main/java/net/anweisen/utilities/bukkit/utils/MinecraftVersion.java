@@ -1,4 +1,4 @@
-package net.anweisen.utilitites.bukkit.utils;
+package net.anweisen.utilities.bukkit.utils;
 
 import net.anweisen.utilities.commons.version.Version;
 

@@ -1,4 +1,4 @@
-package net.anweisen.utilitites.bukkit.core;
+package net.anweisen.utilities.bukkit.core;
 
 import net.anweisen.utilities.commons.anntations.ReplaceWith;
 import net.anweisen.utilities.commons.config.Document;
@@ -9,8 +9,8 @@ import net.anweisen.utilities.commons.logging.internal.BukkitLoggerWrapper;
 import net.anweisen.utilities.commons.logging.internal.ConstantLoggerFactory;
 import net.anweisen.utilities.commons.version.Version;
 import net.anweisen.utilities.commons.version.VersionInfo;
-import net.anweisen.utilitites.bukkit.utils.MinecraftVersion;
-import net.anweisen.utilitites.commons.config.document.YamlDocument;
+import net.anweisen.utilities.bukkit.utils.MinecraftVersion;
+import net.anweisen.utilities.commons.config.document.YamlDocument;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;

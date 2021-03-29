@@ -1,8 +1,6 @@
-package net.anweisen.utilitites.commons.config.document;
+package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
-import net.anweisen.utilities.commons.config.document.AbstractDocument;
-import net.anweisen.utilities.commons.config.document.GsonDocument;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.file.YamlConstructor;
