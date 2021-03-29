@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>common-utils</artifactId>
 	<name>common-utils</name>
-	<version>1.0</version>
+	<version>1.1</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
@@ -76,7 +76,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>github</id>
+			<id>github-anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>
