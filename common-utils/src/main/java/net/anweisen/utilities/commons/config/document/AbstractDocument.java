@@ -20,6 +20,18 @@ import java.util.UUID;
  */
 public abstract class AbstractDocument extends AbstractConfig implements Document {
 
+	protected final Document root, parent;
+
+	public AbstractDocument(@Nonnull Document root, @Nullable Document parent) {
+		this.root = root;
+		this.parent = parent;
+	}
+
+	public AbstractDocument() {
+		this.root = this;
+		this.parent = null;
+	}
+
 	@Nullable
 	@Override
 	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
@@ -38,7 +50,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Nonnull
 	@Override
 	public Document getDocument(@Nonnull String path) {
-		Document document = getDocument0(path);
+		Document document = getDocument0(path, root, this);
 		return isReadonly() ? new ReadOnlyDocumentWrapper(document) : document;
 	}
 
@@ -69,16 +81,28 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Nonnull
 	@CheckReturnValue
 	public Document readonly() {
-		return isReadonly() ? this : new ReadOnlyDocumentWrapper(this);
+		return new ReadOnlyDocumentWrapper(this);
 	}
 
 	@Nonnull
-	protected abstract Document getDocument0(@Nonnull String path);
+	protected abstract Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent);
 
 	protected abstract void set0(@Nonnull String path, @Nullable Object value);
 
 	protected abstract void remove0(@Nonnull String path);
 
 	protected abstract void clear0();
+
+	@Nonnull
+	@Override
+	public Document getRoot() {
+		return root;
+	}
+
+	@Nullable
+	@Override
+	public Document getParent() {
+		return parent;
+	}
 
 }

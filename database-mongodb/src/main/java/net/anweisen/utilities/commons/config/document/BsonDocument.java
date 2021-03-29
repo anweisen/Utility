@@ -32,14 +32,19 @@ public class BsonDocument extends AbstractDocument {
 		this.bsonDocument = bsonDocument;
 	}
 
+	public BsonDocument(@Nonnull org.bson.Document bsonDocument, @Nonnull Document root, @Nullable Document parent) {
+		super(root, parent);
+		this.bsonDocument = bsonDocument;
+	}
+
 	public BsonDocument() {
 		this(new org.bson.Document());
 	}
 
 	@Nonnull
 	@Override
-	public Document getDocument0(@Nonnull String path) {
-		return new BsonDocument(bsonDocument.get(path, org.bson.Document.class));
+	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
+		return new BsonDocument(bsonDocument.get(path, org.bson.Document.class), root, parent);
 	}
 
 	@Nullable

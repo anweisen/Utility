@@ -23,6 +23,11 @@ public class MapDocument extends AbstractDocument {
 		this.values = values;
 	}
 
+	public MapDocument(Map<String, Object> values, @Nonnull Document root, @Nullable Document parent) {
+		super(root, parent);
+		this.values = values;
+	}
+
 	public MapDocument() {
 		this(new HashMap<>());
 	}
@@ -34,11 +39,11 @@ public class MapDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument0(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
 		Object value = this.values.computeIfAbsent(path, key -> new HashMap<>());
-		if (value instanceof Map) return new MapDocument((Map<String, Object>) value);
+		if (value instanceof Map) return new MapDocument((Map<String, Object>) value, root, parent);
 		if (value instanceof Document) return (Document) value;
-		if (value instanceof String) return new GsonDocument((String) value);
+		if (value instanceof String) return new GsonDocument((String) value, root, parent);
 		throw new IllegalStateException("Expected java.util.Map, found " + values.getClass().getName());
 	}
 

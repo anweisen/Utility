@@ -316,4 +316,15 @@ public abstract class DocumentWrapper implements Document {
 		return document.readonly();
 	}
 
+	@Nullable
+	@Override
+	public Document getParent() {
+		return document.getParent();
+	}
+
+	@Nonnull
+	@Override
+	public Document getRoot() {
+		return document.getRoot();
+	}
 }

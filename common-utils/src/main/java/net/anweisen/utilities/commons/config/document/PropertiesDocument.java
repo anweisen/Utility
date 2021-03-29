@@ -35,7 +35,7 @@ public class PropertiesDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument0(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
 		throw new UnsupportedOperationException("PropertiesDocument.getDocument(String)");
 	}
 

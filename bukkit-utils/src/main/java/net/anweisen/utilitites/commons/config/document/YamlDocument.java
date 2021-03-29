@@ -40,8 +40,13 @@ public class YamlDocument extends AbstractDocument {
 		this.config = config;
 	}
 
+	public YamlDocument(@Nonnull ConfigurationSection config, @Nonnull Document root, @Nullable Document parent) {
+		super(root, parent);
+		this.config = config;
+	}
+
 	public YamlDocument(@Nonnull File file) {
-		this.config = YamlConfiguration.loadConfiguration(file);
+		this(YamlConfiguration.loadConfiguration(file));
 	}
 
 	@Nullable
@@ -72,10 +77,10 @@ public class YamlDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument0(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
 		ConfigurationSection section = config.getConfigurationSection(path);
 		if (section == null) section = config.createSection(path);
-		return new YamlDocument(section);
+		return new YamlDocument(section, root, parent);
 	}
 
 	@Override

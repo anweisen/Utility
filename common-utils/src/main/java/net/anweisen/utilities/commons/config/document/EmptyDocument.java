@@ -17,6 +17,18 @@ import java.util.function.Function;
  */
 public class EmptyDocument implements Document {
 
+	protected final Document root, parent;
+
+	public EmptyDocument(@Nonnull Document root, @Nullable Document parent) {
+		this.root = root;
+		this.parent = parent;
+	}
+
+	public EmptyDocument() {
+		this.root = this;
+		this.parent = null;
+	}
+
 	@Nonnull
 	@Override
 	public Document getDocument(@Nonnull String path) {
@@ -308,6 +320,18 @@ public class EmptyDocument implements Document {
 	@Override
 	public Document readonly() {
 		return this;
+	}
+
+	@Nullable
+	@Override
+	public Document getParent() {
+		return parent;
+	}
+
+	@Nonnull
+	@Override
+	public Document getRoot() {
+		return root;
 	}
 
 }

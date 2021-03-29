@@ -46,7 +46,17 @@ public class GsonDocument extends AbstractDocument {
 		this(GSON.fromJson(json, JsonObject.class));
 	}
 
+	public GsonDocument(@Nonnull String json, @Nonnull Document root, @Nullable Document parent) {
+		this(GSON.fromJson(json, JsonObject.class), root, parent);
+	}
+
 	public GsonDocument(@Nullable JsonObject jsonObject) {
+		super();
+		this.jsonObject = jsonObject;
+	}
+
+	public GsonDocument(@Nullable JsonObject jsonObject, @Nonnull Document root, @Nullable Document parent) {
+		super(root, parent);
 		this.jsonObject = jsonObject == null ? new JsonObject() : jsonObject;
 	}
 
@@ -87,11 +97,10 @@ public class GsonDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public Document getDocument0(@Nonnull String path) {
+	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
 		JsonElement element = getElement(path).orElse(null);
-		JsonObject object = element == null ? new JsonObject() : element.getAsJsonObject();
-		if (element == null) setElement(path, object);
-		return new GsonDocument(object);
+		if (element == null || !element.isJsonObject()) setElement(path, element = new JsonObject());
+		return new GsonDocument(element.getAsJsonObject(), root, parent);
 	}
 
 	@Override
@@ -143,6 +152,7 @@ public class GsonDocument extends AbstractDocument {
 	@Override
 	public List<String> getStringList(@Nonnull String path) {
 		JsonArray array = jsonObject.getAsJsonArray(path);
+		if (array == null) return new ArrayList<>();
 		return GsonUtils.convertJsonArrayToStringList(array);
 	}
 
@@ -253,7 +263,8 @@ public class GsonDocument extends AbstractDocument {
 		}
 
 		String lastPath = paths.getLast();
-		object.add(lastPath, GSON.toJsonTree(value));
+		JsonElement jsonValue = value instanceof JsonElement ? (JsonElement) value : GSON.toJsonTree(value);
+		object.add(lastPath, jsonValue);
 
 	}
 
@@ -300,6 +311,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Override
 	public void write(@Nonnull Writer writer) throws IOException {
+		cleanup();
 		GSON.toJson(jsonObject, writer);
 	}
 
@@ -311,6 +323,17 @@ public class GsonDocument extends AbstractDocument {
 	@Override
 	public boolean isReadonly() {
 		return false;
+	}
+
+	public void cleanup() {
+		Iterator<Entry<String, JsonElement>> iterator = jsonObject.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, JsonElement> entry = iterator.next();
+			JsonElement value = entry.getValue();
+			if (value.isJsonNull()) iterator.remove();
+			else if (value.isJsonObject() && value.getAsJsonObject().size() == 0) iterator.remove();
+			else if (value.isJsonArray() && value.getAsJsonArray().size() == 0) iterator.remove();
+		}
 	}
 
 }

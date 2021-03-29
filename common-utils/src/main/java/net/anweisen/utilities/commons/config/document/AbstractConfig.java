@@ -3,7 +3,6 @@ package net.anweisen.utilities.commons.config.document;
 import net.anweisen.utilities.commons.config.Config;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
-import net.anweisen.utilities.commons.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

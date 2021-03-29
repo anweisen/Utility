@@ -15,6 +15,12 @@ public interface Document extends Config, Json {
 	@Nonnull
 	Document getDocument(@Nonnull String path);
 
+	@Nullable
+	Document getParent();
+
+	@Nonnull
+	Document getRoot();
+
 	@Nonnull
 	@Override
 	Document set(@Nonnull String path, @Nullable Object value);
