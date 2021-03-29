@@ -1,10 +1,13 @@
 package net.anweisen.utilities.database;
 
+import net.anweisen.utilities.commons.config.Document;
+
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -15,20 +18,22 @@ public interface ExecutedQuery {
 
 	@Nonnull
 	@CheckReturnValue
-	Optional<Result> first();
+	Optional<Document> first();
 
 	@Nonnull
 	@CheckReturnValue
-	Optional<Result> get(int index);
+	Optional<Document> get(int index);
 
 	@Nonnull
 	@CheckReturnValue
-	Stream<Result> all();
+	Stream<Document> all();
 
 	@Nonnull
-	<C extends Collection<? super Result>> C into(@Nonnull C collection);
+	<C extends Collection<? super Document>> C into(@Nonnull C collection);
 
-	void forEach(@Nonnull Consumer<? super Result> action);
+	int index(@Nonnull Predicate<? super Document> filter);
+
+	void forEach(@Nonnull Consumer<? super Document> action);
 
 	boolean isEmpty();
 

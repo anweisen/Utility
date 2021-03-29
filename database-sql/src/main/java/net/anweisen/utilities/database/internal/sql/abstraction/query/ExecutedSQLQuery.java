@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.query;
 
-import net.anweisen.utilities.database.Result;
+import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.database.internal.abstractation.AbstractExecutedQuery;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public class ExecutedSQLQuery extends AbstractExecutedQuery {
 				Object value = result.getObject(i);
 				map.put(data.getColumnLabel(i), value);
 			}
-			Result row = new SQLResult(map);
+			Document row = new SQLResult(map);
 			results.add(row);
 		}
 	}
