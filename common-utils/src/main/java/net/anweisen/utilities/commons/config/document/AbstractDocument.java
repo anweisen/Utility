@@ -12,7 +12,10 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -37,6 +40,15 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		if (!contains(path)) return null;
 		return SerializationUtils.deserializeObject(getDocument(path).values(), classOfT);
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getDocumentList(path).stream()
+				.map(Document::values)
+				.map(map -> SerializationUtils.deserializeObject(map, classOfT))
+				.collect(Collectors.toList());
 	}
 
 	@Override

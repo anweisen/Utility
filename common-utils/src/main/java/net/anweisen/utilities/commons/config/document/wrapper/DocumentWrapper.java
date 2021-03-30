@@ -46,6 +46,12 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
+	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return document.getSerializableList(path, classOfT);
+	}
+
+	@Nonnull
+	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
 		return document.set(path, value);
 	}

@@ -43,6 +43,12 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
+	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
 		throw new UnsupportedOperationException("EmptyDocument.set(String, Object)");
 	}
