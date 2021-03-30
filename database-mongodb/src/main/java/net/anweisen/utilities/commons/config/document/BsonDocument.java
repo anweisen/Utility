@@ -114,7 +114,13 @@ public class BsonDocument extends AbstractDocument {
 
 	@Override
 	public boolean getBoolean(@Nonnull String path, boolean def) {
-		return bsonDocument.getBoolean(path, def);
+		try {
+			Object value = bsonDocument.get(path);
+			if (value instanceof Boolean) return (Boolean) value;
+			if (value instanceof String) return Boolean.parseBoolean((String) value);
+		} catch (Exception ex) {
+		}
+		return def;
 	}
 
 	@Nullable
@@ -132,13 +138,13 @@ public class BsonDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public UUID getUUID(@Nonnull String path) {
-		return bsonDocument.get(path, UUID.class);
-	}
-
-	@Nonnull
-	@Override
-	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
-		return bsonDocument.get(path, def);
+		try {
+			Object value = bsonDocument.get(path);
+			if (value instanceof UUID) return (UUID) value;
+			if (value instanceof String) return UUID.fromString((String) value);
+		} catch (Exception ex) {
+		}
+		return null;
 	}
 
 	@Override
