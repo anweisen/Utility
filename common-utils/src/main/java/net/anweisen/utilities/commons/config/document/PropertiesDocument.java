@@ -41,6 +41,12 @@ public class PropertiesDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		throw new UnsupportedOperationException("PropertiesDocument.getDocumentList(String)");
+	}
+
+	@Nonnull
+	@Override
 	public List<String> getStringList(@Nonnull String path) {
 		throw new UnsupportedOperationException("PropertiesDocument.getList(String)");
 	}

@@ -47,6 +47,22 @@ public class MapDocument extends AbstractDocument {
 		throw new IllegalStateException("Expected java.util.Map, found " + values.getClass().getName());
 	}
 
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		List<Document> documents = new ArrayList<>();
+		Object value = values.get(path);
+		if (value instanceof List) {
+			List<Object> list = (List<Object>) value;
+			for (Object object : list) {
+				if (object instanceof String) documents.add(new GsonDocument((String) object, root, this));
+				if (object instanceof Map) documents.add(new MapDocument((Map<String, Object>) object, root, parent));
+				if (object instanceof Document) documents.add((Document) object);
+			}
+		}
+		return documents;
+	}
+
 	@Override
 	public void set0(@Nonnull String path, @Nullable Object value) {
 		values.put(path, value);

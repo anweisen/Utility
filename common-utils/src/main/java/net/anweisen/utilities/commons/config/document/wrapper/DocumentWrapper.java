@@ -40,6 +40,12 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		return document.getDocumentList(path);
+	}
+
+	@Nonnull
+	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
 		return document.set(path, value);
 	}

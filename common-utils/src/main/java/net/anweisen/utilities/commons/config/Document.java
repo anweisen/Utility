@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -14,6 +15,9 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	Document getDocument(@Nonnull String path);
+
+	@Nonnull
+	List<Document> getDocumentList(@Nonnull String path);
 
 	@Nullable
 	Document getParent();

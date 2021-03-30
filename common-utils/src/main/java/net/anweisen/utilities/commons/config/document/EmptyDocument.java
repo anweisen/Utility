@@ -37,6 +37,12 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
 		throw new UnsupportedOperationException("EmptyDocument.set(String, Object)");
 	}
@@ -170,72 +176,67 @@ public class EmptyDocument implements Document {
 	@Nonnull
 	@Override
 	public List<String> getStringList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
-		return Collections.emptyList();
-	}
-
-	@Nonnull
-	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<UUID> getUUIDList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Character> getCharacterList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Byte> getByteList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Short> getShortList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Integer> getIntegerList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Long> getLongList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Float> getFloatList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nonnull
 	@Override
 	public List<Double> getDoubleList(@Nonnull String path) {
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Nullable

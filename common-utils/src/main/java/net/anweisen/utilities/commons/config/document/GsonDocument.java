@@ -103,6 +103,20 @@ public class GsonDocument extends AbstractDocument {
 		return new GsonDocument(element.getAsJsonObject(), root, parent);
 	}
 
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		JsonElement element = getElement(path).orElse(new JsonArray());
+		if (element.isJsonNull()) return new ArrayList<>();
+		JsonArray array = element.getAsJsonArray();
+		List<Document> documents = new ArrayList<>(array.size());
+		for (JsonElement current : array) {
+			if (current == null || current.isJsonNull()) documents.add(new GsonDocument((JsonObject) null, root, this));
+			else if (current.isJsonObject()) documents.add(new GsonDocument(current.getAsJsonObject(), root, this));
+		}
+		return documents;
+	}
+
 	@Override
 	public char getChar(@Nonnull String path) {
 		return getChar(path, (char) 0);
@@ -151,9 +165,9 @@ public class GsonDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public List<String> getStringList(@Nonnull String path) {
-		JsonArray array = jsonObject.getAsJsonArray(path);
-		if (array == null) return new ArrayList<>();
-		return GsonUtils.convertJsonArrayToStringList(array);
+		JsonElement array = jsonObject.get(path);
+		if (array == null || array.isJsonNull()) return new ArrayList<>();
+		return GsonUtils.convertJsonArrayToStringList(array.getAsJsonArray());
 	}
 
 	@Nullable
@@ -326,13 +340,18 @@ public class GsonDocument extends AbstractDocument {
 	}
 
 	public void cleanup() {
+		cleanup(jsonObject);
+	}
+
+	public void cleanup(@Nonnull JsonObject jsonObject) {
 		Iterator<Entry<String, JsonElement>> iterator = jsonObject.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, JsonElement> entry = iterator.next();
 			JsonElement value = entry.getValue();
 			if (value.isJsonNull()) iterator.remove();
-			else if (value.isJsonObject() && value.getAsJsonObject().size() == 0) iterator.remove();
-			else if (value.isJsonArray() && value.getAsJsonArray().size() == 0) iterator.remove();
+			if (value.isJsonObject()) cleanup(value.getAsJsonObject());
+			if (value.isJsonObject() && value.getAsJsonObject().size() == 0) iterator.remove();
+			if (value.isJsonArray() && value.getAsJsonArray().size() == 0) iterator.remove();
 		}
 	}
 

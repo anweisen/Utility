@@ -2,6 +2,8 @@ package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.misc.FileUtils;
+import org.bson.BsonArray;
+import org.bson.BsonValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +47,21 @@ public class BsonDocument extends AbstractDocument {
 	@Override
 	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
 		return new BsonDocument(bsonDocument.get(path, org.bson.Document.class), root, parent);
+	}
+
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		BsonArray array = bsonDocument.get(path, BsonArray.class);
+		if (array == null) return new ArrayList<>();
+		List<Document> documents = new ArrayList<>(array.size());
+		for (BsonValue value : array) {
+			if (!value.isDocument()) continue;
+			String json = value.asDocument().toJson();
+			org.bson.Document document = org.bson.Document.parse(json);
+			documents.add(new BsonDocument(document, root, this));
+		}
+		return documents;
 	}
 
 	@Nullable

@@ -16,10 +16,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /**
@@ -79,6 +76,17 @@ public class YamlDocument extends AbstractDocument {
 		ConfigurationSection section = config.getConfigurationSection(path);
 		if (section == null) section = config.createSection(path);
 		return new YamlDocument(section, root, parent);
+	}
+
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		List<Map<?, ?>> maps = config.getMapList(path);
+		List<Document> documents = new ArrayList<>(maps.size());
+		for (Map<?, ?> map : maps) {
+			documents.add(new MapDocument((Map<String, Object>) map, root, this));
+		}
+		return documents;
 	}
 
 	@Override
