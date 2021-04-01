@@ -338,7 +338,12 @@ public class JavaLoggerWrapper extends JavaILogger {
 
 	@Override
 	public void log(@Nonnull LogLevel level, @Nullable String message, @Nonnull Object... args) {
-		log(level.getJavaUtilLevel(), SimpleLogger.formatMessage(message, args));
+		Throwable thrown = null;
+		for (Object arg : args) {
+			if (arg instanceof Throwable)
+				thrown = (Throwable) arg;
+		}
+		log(level.getJavaUtilLevel(), SimpleLogger.formatMessage(message, args), thrown);
 	}
 
 	@Override
