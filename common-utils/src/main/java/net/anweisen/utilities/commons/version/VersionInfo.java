@@ -1,6 +1,6 @@
 package net.anweisen.utilities.commons.version;
 
-import net.anweisen.utilities.commons.anntations.Since;
+import net.anweisen.utilities.commons.annotations.Since;
 import net.anweisen.utilities.commons.logging.ILogger;
 
 import javax.annotation.CheckReturnValue;

@@ -1,4 +1,4 @@
-package net.anweisen.utilities.commons.anntations;
+package net.anweisen.utilities.commons.annotations;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;

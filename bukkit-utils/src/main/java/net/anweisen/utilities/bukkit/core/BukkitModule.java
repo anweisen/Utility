@@ -1,6 +1,6 @@
 package net.anweisen.utilities.bukkit.core;
 
-import net.anweisen.utilities.commons.anntations.ReplaceWith;
+import net.anweisen.utilities.commons.annotations.ReplaceWith;
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.logging.JavaILogger;
