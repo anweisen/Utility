@@ -18,10 +18,10 @@ public interface Database {
 	boolean isConnected();
 
 	void connect() throws DatabaseException;
-	void connectSafely();
+	boolean connectSafely();
 
 	void disconnect() throws DatabaseException;
-	void disconnectSafely();
+	boolean disconnectSafely();
 
 	void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
 	void createTableIfNotExistsSafely(@Nonnull String name, @Nonnull SQLColumn... columns);

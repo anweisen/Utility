@@ -21,22 +21,26 @@ public abstract class AbstractDatabase implements Database {
 	}
 
 	@Override
-	public void disconnectSafely() {
+	public boolean disconnectSafely() {
 		try {
 			disconnect();
 			Database.LOGGER.info("Successfully closed connection to database of type " + this.getClass().getSimpleName());
+			return true;
 		} catch (DatabaseException ex) {
 			Database.LOGGER.error("Could not disconnect from database (" + this.getClass().getSimpleName() + ")", ex);
+			return false;
 		}
 	}
 
 	@Override
-	public void connectSafely() {
+	public boolean connectSafely() {
 		try {
 			connect();
 			Database.LOGGER.info("Successfully created connection to database of type " + this.getClass().getSimpleName());
+			return true;
 		} catch (DatabaseException ex) {
 			Database.LOGGER.error("Could not connect to database (" + this.getClass().getSimpleName() + ")", ex);
+			return false;
 		}
 	}
 
