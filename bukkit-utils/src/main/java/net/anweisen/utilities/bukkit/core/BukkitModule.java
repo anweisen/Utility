@@ -170,7 +170,7 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	public void runAsync(@Nonnull Runnable task) {
 		Thread thread = new Thread(task);
-		thread.setName("AsyncPluginTask");
+		thread.setName(getName() + "-AsyncPluginTask");
 		thread.start();
 	}
 
