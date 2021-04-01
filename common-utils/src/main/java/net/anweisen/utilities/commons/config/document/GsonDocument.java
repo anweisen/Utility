@@ -11,10 +11,7 @@ import net.anweisen.utilities.commons.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
@@ -52,7 +49,7 @@ public class GsonDocument extends AbstractDocument {
 
 	public GsonDocument(@Nullable JsonObject jsonObject) {
 		super();
-		this.jsonObject = jsonObject;
+		this.jsonObject = jsonObject == null ? new JsonObject() : jsonObject;
 	}
 
 	public GsonDocument(@Nullable JsonObject jsonObject, @Nonnull Document root, @Nullable Document parent) {
@@ -251,7 +248,7 @@ public class GsonDocument extends AbstractDocument {
 		String newPath = path.substring(index + 1);
 
 		JsonElement element = object.get(child);
-		if (element == null) return Optional.empty();
+		if (element == null || element.isJsonNull()) return Optional.empty();
 
 		return getElement(newPath, element.getAsJsonObject());
 
