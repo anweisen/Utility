@@ -125,6 +125,12 @@ public abstract class BukkitModule extends JavaPlugin {
 		super.saveConfig();
 	}
 
+	public final void registerListenerCommand(@Nonnull Object listenerAndExecutor, @Nonnull String... names) {
+		if (!(listenerAndExecutor instanceof Listener && listenerAndExecutor instanceof CommandExecutor)) throw new IllegalArgumentException("listenerAndExecutor is not an instance of Listener or CommandExecutor");
+		registerCommand((CommandExecutor) listenerAndExecutor, names);
+		registerListener((Listener) listenerAndExecutor);
+	}
+
 	public final void registerCommand(@Nonnull CommandExecutor executor, @Nonnull String... names) {
 		for (String name : names) {
 			if (isEnabled()) {
