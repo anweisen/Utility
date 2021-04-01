@@ -1,6 +1,7 @@
 package net.anweisen.utilities.database.internal.abstractation;
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.document.EmptyDocument;
 import net.anweisen.utilities.database.ExecutedQuery;
 
 import javax.annotation.Nonnull;
@@ -29,6 +30,12 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 	public Optional<Document> first() {
 		if (results.isEmpty()) return Optional.empty();
 		return Optional.ofNullable(results.get(0));
+	}
+
+	@Nonnull
+	@Override
+	public Document firstOrEmpty() {
+		return first().orElse(new EmptyDocument());
 	}
 
 	@Nonnull

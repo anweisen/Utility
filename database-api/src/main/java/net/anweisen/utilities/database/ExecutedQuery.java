@@ -22,6 +22,10 @@ public interface ExecutedQuery {
 
 	@Nonnull
 	@CheckReturnValue
+	Document firstOrEmpty();
+
+	@Nonnull
+	@CheckReturnValue
 	Optional<Document> get(int index);
 
 	@Nonnull
