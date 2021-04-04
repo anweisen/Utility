@@ -348,7 +348,7 @@ public class JavaLoggerWrapper extends JavaILogger {
 
 	@Override
 	public void log(@Nonnull LogLevel level, @Nullable Object message, @Nonnull Object... args) {
-		log(level.getJavaUtilLevel(), SimpleLogger.formatMessage(message, args));
+		log(level, String.valueOf(message), args);
 	}
 
 	@Override
