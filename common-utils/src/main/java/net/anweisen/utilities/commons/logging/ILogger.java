@@ -77,4 +77,9 @@ public interface ILogger {
 		Holder.factory = factory;
 	}
 
+	@Nonnull
+	static ILoggerFactory getFactory() {
+		return Holder.factory;
+	}
+
 }
