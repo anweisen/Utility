@@ -2,6 +2,7 @@ package net.anweisen.utilities.commons.config.document;
 
 import com.google.gson.*;
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.document.gson.ClassTypeAdapter;
 import net.anweisen.utilities.commons.config.document.gson.GsonDocumentTypeAdapter;
 import net.anweisen.utilities.commons.config.document.gson.GsonTypeAdapter;
 import net.anweisen.utilities.commons.config.document.gson.SerializableTypeAdapter;
@@ -27,6 +28,7 @@ public class GsonDocument extends AbstractDocument {
 			.setPrettyPrinting()
 			.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializationUtils::isSerializable, new SerializableTypeAdapter()))
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(GsonDocument.class, new GsonDocumentTypeAdapter()))
+			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
 			.create();
 
 	protected JsonObject jsonObject;

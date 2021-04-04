@@ -290,6 +290,18 @@ public abstract class DocumentWrapper implements Document {
 		return document.getSerializable(path, def);
 	}
 
+	@Nullable
+	@Override
+	public Class<?> getClass(@Nonnull String path) {
+		return document.getClass(path);
+	}
+
+	@Nonnull
+	@Override
+	public Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def) {
+		return document.getClass(path, def);
+	}
+
 	@Override
 	public boolean contains(@Nonnull String path) {
 		return document.contains(path);

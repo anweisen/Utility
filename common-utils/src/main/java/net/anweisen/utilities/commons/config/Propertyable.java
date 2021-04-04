@@ -111,6 +111,12 @@ public interface Propertyable {
 	@Nonnull
 	<T> T getSerializable(@Nonnull String path, @Nonnull T def);
 
+	@Nullable
+	Class<?> getClass(@Nonnull String path);
+
+	@Nonnull
+	Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def);
+
 	boolean contains(@Nonnull String path);
 
 	boolean isEmpty();

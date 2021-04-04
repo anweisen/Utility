@@ -36,7 +36,7 @@ public interface GsonTypeAdapter<T> {
 	}
 
 	@Nonnull
-	static <T> TypeAdapterFactory newTypeHierarchyFactory(@Nonnull Class<T> clazz, @Nonnull GsonTypeAdapter<T> adapter) {
+	static TypeAdapterFactory newTypeHierarchyFactory(@Nonnull Class<?> clazz, @Nonnull GsonTypeAdapter<?> adapter) {
 		return new TypeAdapterFactory() {
 			@Override
 			@SuppressWarnings("unchecked")

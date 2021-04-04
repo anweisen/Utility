@@ -109,6 +109,23 @@ public abstract class AbstractConfig implements Config {
 		return value == null ? def : value;
 	}
 
+	@Nullable
+	@Override
+	public Class<?> getClass(@Nonnull String path) {
+		try {
+			return Class.forName(getString(path));
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nonnull
+	@Override
+	public Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def) {
+		Class<?> value = getClass(path);
+		return value == null ? def : value;
+	}
+
 	@Nonnull
 	@Override
 	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {

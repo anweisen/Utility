@@ -281,6 +281,18 @@ public class EmptyDocument implements Document {
 		return def;
 	}
 
+	@Nullable
+	@Override
+	public Class<?> getClass(@Nonnull String path) {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def) {
+		return def;
+	}
+
 	@Override
 	public boolean contains(@Nonnull String path) {
 		return false;
