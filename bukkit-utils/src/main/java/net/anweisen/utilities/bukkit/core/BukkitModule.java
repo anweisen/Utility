@@ -54,7 +54,7 @@ public abstract class BukkitModule extends JavaPlugin {
 		}
 		if (devMode = getConfigDocument().getBoolean("dev-mode")) {
 			getLogger().setLevel(Level.ALL);
-			getLogger().log(LogLevel.DEBUG, "Devmode is enabled: Showing debug messages. This can be disabled in the plugin.yml ('dev-mode')");
+			getLogger().debug("Devmode is enabled: Showing debug messages. This can be disabled in the plugin.yml ('dev-mode')");
 		} else {
 			getLogger().setLevel(Level.INFO);
 		}
