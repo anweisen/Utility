@@ -72,44 +72,56 @@ public class BsonDocument extends AbstractDocument {
 
 	@Override
 	public long getLong(@Nonnull String path, long def) {
-		Long value = bsonDocument.getLong(path);
-		if (value == null) return def;
-		return value;
+		try {
+			return Long.parseLong(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public int getInt(@Nonnull String path, int def) {
-		Integer value = bsonDocument.getInteger(path);
-		if (value == null) return def;
-		return value;
+		try {
+			return Integer.parseInt(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public short getShort(@Nonnull String path, short def) {
-		Number value = bsonDocument.getInteger(path);
-		if (value == null) return def;
-		return value.shortValue();
+		try {
+			return Short.parseShort(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public byte getByte(@Nonnull String path, byte def) {
-		Number value = bsonDocument.getInteger(path);
-		if (value == null) return def;
-		return value.byteValue();
+		try {
+			return Byte.parseByte(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public double getDouble(@Nonnull String path, double def) {
-		Double value = bsonDocument.getDouble(path);
-		if (value == null) return def;
-		return value;
+		try {
+			return Double.parseDouble(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public float getFloat(@Nonnull String path, float def) {
-		Double value = bsonDocument.getDouble(path);
-		if (value == null) return def;
-		return (float) (double) value;
+		try {
+			return Float.parseFloat(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
