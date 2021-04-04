@@ -9,7 +9,7 @@ import java.util.logging.Level;
  */
 public enum LogLevel {
 
-	DEBUG(Level.CONFIG),
+	DEBUG(Level.FINE),
 	STATUS(Level.CONFIG),
 	INFO(Level.INFO),
 	WARN(Level.WARNING),
