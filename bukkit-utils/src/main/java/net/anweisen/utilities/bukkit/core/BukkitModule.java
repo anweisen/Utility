@@ -5,6 +5,7 @@ import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.logging.JavaILogger;
 import net.anweisen.utilities.commons.logging.LogLevel;
+import net.anweisen.utilities.commons.logging.LoggingExceptionHandler;
 import net.anweisen.utilities.commons.logging.internal.BukkitLoggerWrapper;
 import net.anweisen.utilities.commons.logging.internal.ConstantLoggerFactory;
 import net.anweisen.utilities.commons.version.Version;
@@ -177,6 +178,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	public void runAsync(@Nonnull Runnable task) {
 		Thread thread = new Thread(task);
 		thread.setName(getName() + "-AsyncPluginTask-" + thread.getId());
+		thread.setUncaughtExceptionHandler(new LoggingExceptionHandler(this.getLogger()));
 		thread.start();
 	}
 
