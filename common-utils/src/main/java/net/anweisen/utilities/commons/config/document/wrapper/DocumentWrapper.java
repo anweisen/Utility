@@ -2,17 +2,16 @@ package net.anweisen.utilities.commons.config.document.wrapper;
 
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.Propertyable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -94,6 +93,12 @@ public abstract class DocumentWrapper implements Document {
 	@Override
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		return document.getObject(path, def);
+	}
+
+	@Nonnull
+	@Override
+	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+		return document.getOptional(key, extractor);
 	}
 
 	@Nullable

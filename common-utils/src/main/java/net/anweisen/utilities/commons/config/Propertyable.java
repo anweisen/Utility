@@ -3,11 +3,9 @@ package net.anweisen.utilities.commons.config;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -21,6 +19,9 @@ public interface Propertyable {
 
 	@Nonnull
 	Object getObject(@Nonnull String path, @Nonnull Object def);
+
+	@Nonnull
+	<T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor);
 
 	@Nullable
 	String getString(@Nonnull String path);

@@ -1,6 +1,7 @@
 package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.Propertyable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -85,6 +87,12 @@ public class EmptyDocument implements Document {
 	@Override
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		return def;
+	}
+
+	@Nonnull
+	@Override
+	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+		return Optional.empty();
 	}
 
 	@Nullable

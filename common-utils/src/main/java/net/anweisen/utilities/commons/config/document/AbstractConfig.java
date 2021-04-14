@@ -1,6 +1,7 @@
 package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Config;
+import net.anweisen.utilities.commons.config.Propertyable;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
 
@@ -8,7 +9,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -24,6 +27,12 @@ public abstract class AbstractConfig implements Config {
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		Object value = getObject(path);
 		return value == null ? def : value;
+	}
+
+	@Nonnull
+	@Override
+	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+		return Optional.ofNullable(extractor.apply(this, key));
 	}
 
 	@Nonnull
