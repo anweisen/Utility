@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.mongodb.query;
 
-import net.anweisen.utilities.database.internal.abstractation.AbstractExecutedQuery;
+import net.anweisen.utilities.database.internal.abstraction.AbstractExecutedQuery;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;

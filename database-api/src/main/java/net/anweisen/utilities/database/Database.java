@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database;
 
 import net.anweisen.utilities.commons.logging.ILogger;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utilities.database.exceptions.*;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -17,10 +17,40 @@ public interface Database {
 
 	boolean isConnected();
 
+	/**
+	 * Creates the connection to the database synchronously.
+	 *
+	 * @throws DatabaseException
+	 *         If the connection could not be established
+	 * @throws DatabaseAlreadyConnectedException
+	 *         If this database is already {@link #isConnected() connected}
+	 */
 	void connect() throws DatabaseException;
+
+	/**
+	 * Creates the connection to the database synchronously.
+	 * No exceptions will be thrown if the process fails.
+	 *
+	 * @return {@code true} if the connection was established successfully
+	 */
 	boolean connectSafely();
 
+	/**
+	 * Closes the connection to the database synchronously.
+	 *
+	 * @throws DatabaseException
+	 *         If something went wrong while closing the connection to the database
+	 * @throws DatabaseConnectionClosedException
+	 *         If this database is not {@link #isConnected() connected}
+	 */
 	void disconnect() throws DatabaseException;
+
+	/**
+	 * Closes the connection to the database synchronously.
+	 * No exceptions will be thrown if the process fails.
+	 *
+	 * @return {@code true} if the connection was closed without errors
+	 */
 	boolean disconnectSafely();
 
 	void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
