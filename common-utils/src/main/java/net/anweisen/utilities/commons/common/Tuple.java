@@ -20,12 +20,10 @@ public class Tuple<A, B> {
 		this.second = second;
 	}
 
-	@Nullable
 	public A getFirst() {
 		return first;
 	}
 
-	@Nullable
 	public B getSecond() {
 		return second;
 	}
