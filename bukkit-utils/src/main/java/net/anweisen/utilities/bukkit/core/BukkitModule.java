@@ -144,7 +144,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	private void registerCommand0(@Nonnull CommandExecutor executor, @Nonnull String name) {
 		PluginCommand command = getCommand(name);
 		if (command == null) {
-			getLogger().warning("Tried to register invalid command '" + name + "'");
+			getLogger().warn("Tried to register invalid command '{}'", name);
 		} else {
 			command.setExecutor(executor);
 		}
@@ -176,7 +176,7 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	public void runAsync(@Nonnull Runnable task) {
 		Thread thread = new Thread(task);
-		thread.setName(getName() + "-AsyncPluginTask");
+		thread.setName(getName() + "-AsyncPluginTask-" + thread.getId());
 		thread.start();
 	}
 

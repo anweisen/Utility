@@ -77,7 +77,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Nonnull
 	@Override
 	public Document remove(@Nonnull String path) {
-		if (isReadonly()) throw new ConfigReadOnlyException("set");
+		if (isReadonly()) throw new ConfigReadOnlyException("remove");
 		remove0(path);
 		return this;
 	}
@@ -85,7 +85,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Nonnull
 	@Override
 	public Document clear() {
-		if (isReadonly()) throw new ConfigReadOnlyException("set");
+		if (isReadonly()) throw new ConfigReadOnlyException("clear");
 		clear0();
 		return this;
 	}
@@ -93,7 +93,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Nonnull
 	@CheckReturnValue
 	public Document readonly() {
-		return new ReadOnlyDocumentWrapper(this);
+		return isReadonly() ? this : new ReadOnlyDocumentWrapper(this);
 	}
 
 	@Nonnull

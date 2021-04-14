@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.logging;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.util.logging.Level;
 
@@ -26,6 +27,7 @@ public enum LogLevel {
 		return level;
 	}
 
+	@CheckReturnValue
 	public boolean showAtLoggerLevel(@Nonnull LogLevel loggerLevel) {
 		return this.ordinal() >= loggerLevel.ordinal();
 	}
