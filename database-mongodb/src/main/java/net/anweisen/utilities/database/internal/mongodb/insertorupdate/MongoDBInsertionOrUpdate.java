@@ -1,7 +1,9 @@
 package net.anweisen.utilities.database.internal.mongodb.insertorupdate;
 
 import net.anweisen.utilities.commons.misc.BsonUtils;
+import net.anweisen.utilities.database.DatabaseInsertion;
 import net.anweisen.utilities.database.DatabaseInsertionOrUpdate;
+import net.anweisen.utilities.database.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.update.MongoDBUpdate;
@@ -12,6 +14,7 @@ import org.bson.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -71,6 +74,26 @@ public class MongoDBInsertionOrUpdate extends MongoDBUpdate implements DatabaseI
 
 			database.insert(collection, document).execute();
 		}
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseUpdate other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseInsertion other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
 	}
 
 }

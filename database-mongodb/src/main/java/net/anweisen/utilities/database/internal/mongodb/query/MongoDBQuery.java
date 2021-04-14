@@ -14,10 +14,8 @@ import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -98,6 +96,24 @@ public class MongoDBQuery implements DatabaseQuery {
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Override
+	public boolean equals(@Nonnull ExecutedQuery other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MongoDBQuery that = (MongoDBQuery) o;
+		return database.equals(that.database) && collection.equals(that.collection) && where.equals(that.where) && order == that.order && Objects.equals(orderBy, that.orderBy);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(database, collection, where, order, orderBy);
 	}
 
 }

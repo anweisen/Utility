@@ -133,4 +133,24 @@ public class SQLQuery implements DatabaseQuery {
 		}
 	}
 
+	@Override
+	public boolean equals(@Nonnull ExecutedQuery other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SQLQuery sqlQuery = (SQLQuery) o;
+		return database.equals(sqlQuery.database) && table.equals(sqlQuery.table) && where.equals(sqlQuery.where) && Arrays.equals(selection, sqlQuery.selection) && Objects.equals(orderBy, sqlQuery.orderBy) && order == sqlQuery.order;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(database, table, where, orderBy, order);
+		result = 31 * result + Arrays.hashCode(selection);
+		return result;
+	}
+
 }

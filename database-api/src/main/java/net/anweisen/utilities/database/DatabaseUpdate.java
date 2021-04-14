@@ -34,4 +34,6 @@ public interface DatabaseUpdate {
 
 	void execute() throws DatabaseException;
 
+	boolean equals(@Nonnull DatabaseUpdate other);
+
 }

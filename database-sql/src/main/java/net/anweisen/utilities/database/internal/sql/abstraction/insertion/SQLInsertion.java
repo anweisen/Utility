@@ -8,10 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -84,4 +81,23 @@ public class SQLInsertion implements DatabaseInsertion {
 			throw new DatabaseException(ex);
 		}
 	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseInsertion other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SQLInsertion that = (SQLInsertion) o;
+		return values.equals(that.values) && database.equals(that.database) && table.equals(that.table);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(values, database, table);
+	}
+
 }

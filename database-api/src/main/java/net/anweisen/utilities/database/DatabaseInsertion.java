@@ -18,4 +18,6 @@ public interface DatabaseInsertion {
 
 	void execute() throws DatabaseException;
 
+	boolean equals(@Nonnull DatabaseInsertion other);
+
 }

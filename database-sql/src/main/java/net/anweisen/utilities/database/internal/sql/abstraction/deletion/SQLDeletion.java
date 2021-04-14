@@ -90,4 +90,22 @@ public class SQLDeletion implements DatabaseDeletion {
 		}
 	}
 
+	@Override
+	public boolean equals(@Nonnull DatabaseDeletion other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SQLDeletion that = (SQLDeletion) o;
+		return database.equals(that.database) && table.equals(that.table) && where.equals(that.where);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(database, table, where);
+	}
+
 }
