@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.config;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
@@ -42,6 +43,7 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	@Override
+	@CheckReturnValue
 	Document readonly();
 
 	void write(@Nonnull Writer writer) throws IOException;

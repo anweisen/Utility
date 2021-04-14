@@ -1,4 +1,4 @@
-package net.anweisen.utilities.database.internal.abstractation;
+package net.anweisen.utilities.database.internal.abstraction;
 
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.config.document.EmptyDocument;

@@ -1,4 +1,4 @@
-package net.anweisen.utilities.database.internal.abstractation;
+package net.anweisen.utilities.database.internal.abstraction;
 
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.DatabaseConfig;
@@ -24,10 +24,10 @@ public abstract class AbstractDatabase implements Database {
 	public boolean disconnectSafely() {
 		try {
 			disconnect();
-			Database.LOGGER.info("Successfully closed connection to database of type " + this.getClass().getSimpleName());
+			LOGGER.info("Successfully closed connection to database of type " + this.getClass().getSimpleName());
 			return true;
 		} catch (DatabaseException ex) {
-			Database.LOGGER.error("Could not disconnect from database (" + this.getClass().getSimpleName() + ")", ex);
+			LOGGER.error("Could not disconnect from database (" + this.getClass().getSimpleName() + ")", ex);
 			return false;
 		}
 	}
@@ -36,10 +36,10 @@ public abstract class AbstractDatabase implements Database {
 	public boolean connectSafely() {
 		try {
 			connect();
-			Database.LOGGER.info("Successfully created connection to database of type " + this.getClass().getSimpleName());
+			LOGGER.info("Successfully created connection to database of type " + this.getClass().getSimpleName());
 			return true;
 		} catch (DatabaseException ex) {
-			Database.LOGGER.error("Could not connect to database (" + this.getClass().getSimpleName() + ")", ex);
+			LOGGER.error("Could not connect to database (" + this.getClass().getSimpleName() + ")", ex);
 			return false;
 		}
 	}
@@ -49,7 +49,7 @@ public abstract class AbstractDatabase implements Database {
 		try {
 			createTableIfNotExists(name, columns);
 		} catch (DatabaseException ex) {
-			Database.LOGGER.error("Could not create table (" + this.getClass().getSimpleName() + ")", ex);
+			LOGGER.error("Could not create table (" + this.getClass().getSimpleName() + ")", ex);
 		}
 	}
 
