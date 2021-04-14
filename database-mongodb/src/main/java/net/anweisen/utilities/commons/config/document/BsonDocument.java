@@ -46,7 +46,12 @@ public class BsonDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
-		return new BsonDocument(bsonDocument.get(path, org.bson.Document.class), root, parent);
+		org.bson.Document document = bsonDocument.get(path, org.bson.Document.class);
+		if (document == null) {
+			bsonDocument.put(path, document = new org.bson.Document());
+		}
+
+		return new BsonDocument(document, root, parent);
 	}
 
 	@Nonnull
@@ -67,7 +72,8 @@ public class BsonDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public String getString(@Nonnull String path) {
-		return bsonDocument.getString(path);
+		Object value = getObject(path);
+		return value == null ? null : value.toString();
 	}
 
 	@Override
@@ -162,11 +168,6 @@ public class BsonDocument extends AbstractDocument {
 	@Override
 	public boolean contains(@Nonnull String path) {
 		return bsonDocument.containsKey(path);
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return bsonDocument.isEmpty();
 	}
 
 	@Override
