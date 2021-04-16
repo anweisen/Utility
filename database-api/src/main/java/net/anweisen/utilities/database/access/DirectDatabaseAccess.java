@@ -36,6 +36,12 @@ public class DirectDatabaseAccess implements DatabaseAccess {
 	}
 
 	@Nonnull
+	@Override
+	public Optional<String> getValueOptional(@Nonnull String key) throws DatabaseException {
+		return getValue0(key);
+	}
+
+	@Nonnull
 	protected Optional<String> getValue0(@Nonnull String key) throws DatabaseException {
 		return database.query(config.getTable())
 				.where(config.getKeyField(), key)

@@ -6,6 +6,7 @@ import net.anweisen.utilities.database.exceptions.DatabaseException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,6 +41,15 @@ public class CachedDatabaseAccess extends DirectDatabaseAccess {
 		value = super.getValue(key, def);
 		cache.put(key, value);
 		return value;
+	}
+
+	@Nonnull
+	@Override
+	public Optional<String> getValueOptional(@Nonnull String key) throws DatabaseException {
+		String cached = cache.get(key);
+		if (cached != null) return Optional.of(cached);
+
+		return super.getValueOptional(key);
 	}
 
 	@Override
