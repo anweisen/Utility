@@ -115,7 +115,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	@Nonnull
 	@Override
 	@Deprecated
-	@ReplaceWith("BukkitModule#getConfigDocument()")
+	@ReplaceWith("getConfigDocument()")
 	public FileConfiguration getConfig() {
 		return super.getConfig();
 	}
