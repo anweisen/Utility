@@ -69,6 +69,11 @@
 			<url>https://libraries.minecraft.net/</url>
 		</repository>
 
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/anweisen/*</url>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
