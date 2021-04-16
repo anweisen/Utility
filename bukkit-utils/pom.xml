@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>bukkit-utils</artifactId>
 	<name>bukkit-utils</name>
-	<version>1.1</version>
+	<version>1.2</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>1.1</version>
+			<version>1.2</version>
 		</dependency>
 
 		<!-- Spigot development api -->

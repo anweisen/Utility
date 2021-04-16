@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>database-api</artifactId>
 	<name>database-api</name>
-	<version>1.1</version>
+	<version>1.2</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>1.1</version>
+			<version>1.2</version>
 		</dependency>
 
 		<!-- Annotations like @Nonnull -->
