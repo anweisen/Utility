@@ -118,6 +118,10 @@ public interface Propertyable {
 	@Nonnull
 	Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def);
 
+	boolean isList(@Nonnull String path);
+
+	boolean isObject(@Nonnull String path);
+
 	boolean contains(@Nonnull String path);
 
 	boolean isEmpty();

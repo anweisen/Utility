@@ -313,6 +313,21 @@ public abstract class DocumentWrapper implements Document {
 	}
 
 	@Override
+	public boolean hasChildren(@Nonnull String path) {
+		return document.hasChildren(path);
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
+		return document.isObject(path);
+	}
+
+	@Override
+	public boolean isList(@Nonnull String path) {
+		return document.isList(path);
+	}
+
+	@Override
 	public boolean isEmpty() {
 		return document.isEmpty();
 	}

@@ -63,7 +63,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Override
 	public Document getDocument(@Nonnull String path) {
 		Document document = getDocument0(path, root, this);
-		return isReadonly() ? new ReadOnlyDocumentWrapper(document) : document;
+		return isReadonly() && !document.isReadonly() ? new ReadOnlyDocumentWrapper(document) : document;
 	}
 
 	@Nonnull
@@ -104,6 +104,11 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	protected abstract void remove0(@Nonnull String path);
 
 	protected abstract void clear0();
+
+	@Override
+	public boolean hasChildren(@Nonnull String path) {
+		return !getDocument(path).isEmpty();
+	}
 
 	@Nonnull
 	@Override

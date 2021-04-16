@@ -151,8 +151,8 @@ public class PropertiesDocument extends AbstractDocument {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return properties.isEmpty();
+	public boolean isList(@Nonnull String path) {
+		return false;
 	}
 
 	@Override

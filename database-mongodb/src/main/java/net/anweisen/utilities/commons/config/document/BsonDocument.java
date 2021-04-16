@@ -171,6 +171,12 @@ public class BsonDocument extends AbstractDocument {
 	}
 
 	@Override
+	public boolean isList(@Nonnull String path) {
+		Object value = bsonDocument.get(path);
+		return value instanceof Iterable || (value != null && value.getClass().isArray());
+	}
+
+	@Override
 	public int size() {
 		return bsonDocument.size();
 	}

@@ -216,13 +216,13 @@ public class YamlDocument extends AbstractDocument {
 	}
 
 	@Override
-	public boolean contains(@Nonnull String path) {
-		return config.contains(path, true);
+	public boolean isList(@Nonnull String path) {
+		return config.isList(path);
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return config.getValues(false).isEmpty();
+	public boolean contains(@Nonnull String path) {
+		return config.contains(path, true);
 	}
 
 	@Override

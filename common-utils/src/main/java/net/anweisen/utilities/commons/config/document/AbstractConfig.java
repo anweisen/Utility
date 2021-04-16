@@ -205,6 +205,11 @@ public abstract class AbstractConfig implements Config {
 	}
 
 	@Override
+	public boolean isObject(@Nonnull String path) {
+		return !isList(path);
+	}
+
+	@Override
 	public boolean isEmpty() {
 		return size() == 0;
 	}

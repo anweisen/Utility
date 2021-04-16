@@ -173,7 +173,7 @@ public class MapDocument extends AbstractDocument {
 		if (object instanceof List) return (List<String>) object;
 		if (object instanceof Collection) return new ArrayList<>((Collection<String>) object);
 		if (object instanceof String) return GsonUtils.convertJsonArrayToStringList(GsonDocument.GSON.fromJson((String) object, JsonArray.class));
-		throw new IllegalStateException("Cannot parse " + object.getClass() + " to ");
+		throw new IllegalStateException("Cannot convert " + object.getClass() + " to a list");
 	}
 
 	@Nullable
@@ -186,6 +186,12 @@ public class MapDocument extends AbstractDocument {
 		} catch (Exception ex) {
 			return null;
 		}
+	}
+
+	@Override
+	public boolean isList(@Nonnull String path) {
+		Object value = values.get(path);
+		return value instanceof Iterable || (value != null && value.getClass().isArray());
 	}
 
 	@Override

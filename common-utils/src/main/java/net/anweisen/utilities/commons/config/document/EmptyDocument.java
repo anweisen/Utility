@@ -312,6 +312,21 @@ public class EmptyDocument implements Document {
 	}
 
 	@Override
+	public boolean hasChildren(@Nonnull String path) {
+		return false;
+	}
+
+	@Override
+	public boolean isList(@Nonnull String path) {
+		return true;
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
+		return true;
+	}
+
+	@Override
 	public int size() {
 		return 0;
 	}

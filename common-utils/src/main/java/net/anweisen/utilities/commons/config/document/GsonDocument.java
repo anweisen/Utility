@@ -182,13 +182,13 @@ public class GsonDocument extends AbstractDocument {
 	}
 
 	@Override
-	public boolean contains(@Nonnull String path) {
-		return getElement(path).isPresent();
+	public boolean isList(@Nonnull String path) {
+		return getElement(path).map(JsonElement::isJsonArray).orElse(false);
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return jsonObject.size() == 0;
+	public boolean contains(@Nonnull String path) {
+		return getElement(path).isPresent();
 	}
 
 	@Override

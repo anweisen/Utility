@@ -46,6 +46,8 @@ public interface Document extends Config, Json {
 	@CheckReturnValue
 	Document readonly();
 
+	boolean hasChildren(@Nonnull String path);
+
 	void write(@Nonnull Writer writer) throws IOException;
 
 	void save(@Nonnull File file) throws IOException;
