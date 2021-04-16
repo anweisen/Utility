@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>database-sql</artifactId>
 	<name>database-sql</name>
-	<version>1.0</version>
+	<version>1.2</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
@@ -42,6 +42,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -56,13 +57,22 @@
 
 	</build>
 
+	<repositories>
+
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/anweisen/*</url>
+		</repository>
+
+	</repositories>
+
 	<dependencies>
 
 		<!-- Database API -->
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>database-api</artifactId>
-			<version>1.0</version>
+			<version>1.2</version>
 		</dependency>
 
 		<!-- Annotations like @Nonnull -->
@@ -72,11 +82,23 @@
 			<version>3.0.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.23</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.34.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<distributionManagement>
 		<repository>
-			<id>github</id>
+			<id>github-anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

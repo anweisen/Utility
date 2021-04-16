@@ -16,8 +16,7 @@ import java.util.Map;
  */
 public final class SQLHelper {
 
-	private SQLHelper() {
-	}
+	private SQLHelper() {}
 
 	public static void fillParams(@Nonnull PreparedStatement statement, @Nonnull Object... params) throws SQLException {
 		for (int i = 0; i < params.length; i++) {

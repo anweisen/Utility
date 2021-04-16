@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -45,6 +46,24 @@ public class MongoDBInsertion implements DatabaseInsertion {
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseInsertion other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MongoDBInsertion that = (MongoDBInsertion) o;
+		return database.equals(that.database) && collection.equals(that.collection) && values.equals(that.values);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(database, collection, values);
 	}
 
 }

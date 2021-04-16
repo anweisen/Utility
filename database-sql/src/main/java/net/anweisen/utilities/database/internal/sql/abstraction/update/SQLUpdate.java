@@ -120,4 +120,22 @@ public class SQLUpdate implements DatabaseUpdate {
 		}
 	}
 
+	@Override
+	public boolean equals(@Nonnull DatabaseUpdate other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SQLUpdate sqlUpdate = (SQLUpdate) o;
+		return database.equals(sqlUpdate.database) && table.equals(sqlUpdate.table) && where.equals(sqlUpdate.where) && values.equals(sqlUpdate.values);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(database, table, where, values);
+	}
+
 }

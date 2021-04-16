@@ -1,6 +1,6 @@
 package net.anweisen.utilities.commons.version;
 
-import net.anweisen.utilities.commons.anntations.Since;
+import net.anweisen.utilities.commons.annotations.Since;
 import net.anweisen.utilities.commons.logging.ILogger;
 
 import javax.annotation.CheckReturnValue;
@@ -12,7 +12,7 @@ import java.util.*;
  * @author anweisen | https://github.com/anweisen
  * @since 2.0
  */
-public final class VersionInfo implements Version {
+public class VersionInfo implements Version {
 
 	protected static final ILogger logger = ILogger.forThisClass();
 
@@ -41,13 +41,10 @@ public final class VersionInfo implements Version {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		VersionInfo that = (VersionInfo) o;
-		return major == that.major &&
-			   minor == that.minor &&
-			   revision == that.revision;
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (!(other instanceof Version)) return false;
+		return this.equals((Version) other);
 	}
 
 	@Override
@@ -73,23 +70,17 @@ public final class VersionInfo implements Version {
 			return new VersionInfo(1, 0, 0);
 		}
 	}
-	@Nonnull
-	public static <V extends Version> V findNearest(@Nonnull Version version, @Nonnull V[] versions) {
-		return findNearest(version.getMajor(), version.getMinor(), version.getRevision(), versions);
-	}
 
 	@Nonnull
 	@CheckReturnValue
-	public static <V extends Version> V findNearest(int major, int minor, int revision, @Nonnull V[] versionsArray) {
+	public static <V extends Version> V findNearest(@Nonnull Version target, @Nonnull V[] versionsArray) {
 		List<V> versions = new ArrayList<>(Arrays.asList(versionsArray));
 		Collections.reverse(versions);
 		for (V version : versions) {
-			if (version.getMajor() > major) continue;
-			if (version.getMinor() > minor) continue;
-			if (version.getRevision() > revision) continue;
+			if (version.isNewerThan(target)) continue;
 			return version;
 		}
-		throw new IllegalArgumentException("No version found for '" + major + "." + minor + "." + revision + "'");
+		throw new IllegalArgumentException("No version found for '" + target + "'");
 	}
 
 	@Nonnull

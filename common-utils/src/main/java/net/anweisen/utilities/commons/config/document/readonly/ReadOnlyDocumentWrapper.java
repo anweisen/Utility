@@ -21,31 +21,4 @@ public final class ReadOnlyDocumentWrapper extends DocumentWrapper {
 		return true;
 	}
 
-	@Nonnull
-	@Override
-	public Document getDocument(@Nonnull String path) {
-		return new ReadOnlyDocumentWrapper(document.getDocument(path));
-	}
-
-	@Nonnull
-	@Override
-	@Deprecated
-	public Document set(@Nonnull String path, @Nullable Object value) {
-		throw new UnsupportedOperationException("ReadonlyDocumentWrapper.set(String, Object)");
-	}
-
-	@Nonnull
-	@Override
-	@Deprecated
-	public Document clear() {
-		throw new UnsupportedOperationException("ReadonlyDocumentWrapper.clear()");
-	}
-
-	@Nonnull
-	@Override
-	@Deprecated
-	public Document remove(@Nonnull String path) {
-		throw new UnsupportedOperationException("ReadonlyDocumentWrapper.remove(String)");
-	}
-
 }

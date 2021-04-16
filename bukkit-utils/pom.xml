@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>bukkit-utils</artifactId>
 	<name>bukkit-utils</name>
-	<version>1.0</version>
+	<version>1.2</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
@@ -42,6 +42,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -63,6 +64,16 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 
+		<repository>
+			<id>minecraft-repo</id>
+			<url>https://libraries.minecraft.net/</url>
+		</repository>
+
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/anweisen/*</url>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
@@ -71,7 +82,7 @@
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>1.0</version>
+			<version>1.2</version>
 		</dependency>
 
 		<!-- Spigot development api -->
@@ -82,11 +93,19 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Minecraft authlib for gameprofiles -->
+		<dependency>
+			<groupId>com.mojang</groupId>
+			<artifactId>authlib</artifactId>
+			<version>1.5.21</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<distributionManagement>
 		<repository>
-			<id>github</id>
+			<id>github-anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

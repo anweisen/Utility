@@ -1,6 +1,7 @@
 package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.Propertyable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -16,10 +19,34 @@ import java.util.function.BiConsumer;
  */
 public class EmptyDocument implements Document {
 
+	protected final Document root, parent;
+
+	public EmptyDocument(@Nonnull Document root, @Nullable Document parent) {
+		this.root = root;
+		this.parent = parent;
+	}
+
+	public EmptyDocument() {
+		this.root = this;
+		this.parent = null;
+	}
+
 	@Nonnull
 	@Override
 	public Document getDocument(@Nonnull String path) {
 		return new EmptyDocument();
+	}
+
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return new ArrayList<>();
 	}
 
 	@Nonnull
@@ -60,6 +87,12 @@ public class EmptyDocument implements Document {
 	@Override
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		return def;
+	}
+
+	@Nonnull
+	@Override
+	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+		return Optional.empty();
 	}
 
 	@Nullable
@@ -156,8 +189,68 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
-		return Collections.emptyList();
+	public List<String> getStringList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<UUID> getUUIDList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Character> getCharacterList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Byte> getByteList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Short> getShortList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Integer> getIntegerList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Long> getLongList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Float> getFloatList(@Nonnull String path) {
+		return new ArrayList<>();
+	}
+
+	@Nonnull
+	@Override
+	public List<Double> getDoubleList(@Nonnull String path) {
+		return new ArrayList<>();
 	}
 
 	@Nullable
@@ -196,6 +289,18 @@ public class EmptyDocument implements Document {
 		return def;
 	}
 
+	@Nullable
+	@Override
+	public Class<?> getClass(@Nonnull String path) {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def) {
+		return def;
+	}
+
 	@Override
 	public boolean contains(@Nonnull String path) {
 		return false;
@@ -203,6 +308,21 @@ public class EmptyDocument implements Document {
 
 	@Override
 	public boolean isEmpty() {
+		return true;
+	}
+
+	@Override
+	public boolean hasChildren(@Nonnull String path) {
+		return false;
+	}
+
+	@Override
+	public boolean isList(@Nonnull String path) {
+		return true;
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
 		return true;
 	}
 
@@ -236,6 +356,24 @@ public class EmptyDocument implements Document {
 	@Override
 	public boolean isReadonly() {
 		return true;
+	}
+
+	@Nonnull
+	@Override
+	public Document readonly() {
+		return this;
+	}
+
+	@Nullable
+	@Override
+	public Document getParent() {
+		return parent;
+	}
+
+	@Nonnull
+	@Override
+	public Document getRoot() {
+		return root;
 	}
 
 }

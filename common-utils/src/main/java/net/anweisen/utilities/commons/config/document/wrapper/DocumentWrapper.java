@@ -2,17 +2,17 @@ package net.anweisen.utilities.commons.config.document.wrapper;
 
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.Propertyable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -35,6 +35,18 @@ public abstract class DocumentWrapper implements Document {
 	@Override
 	public Document getDocument(@Nonnull String path) {
 		return document.getDocument(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		return document.getDocumentList(path);
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return document.getSerializableList(path, classOfT);
 	}
 
 	@Nonnull
@@ -81,6 +93,12 @@ public abstract class DocumentWrapper implements Document {
 	@Override
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		return document.getObject(path, def);
+	}
+
+	@Nonnull
+	@Override
+	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+		return document.getOptional(key, extractor);
 	}
 
 	@Nullable
@@ -177,8 +195,68 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
-		return document.getList(path);
+	public List<String> getStringList(@Nonnull String path) {
+		return document.getStringList(path);
+	}
+
+	@Nonnull
+	@Override
+	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+		return document.getList(path, mapper);
+	}
+
+	@Nonnull
+	@Override
+	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
+		return document.getEnumList(path, classOfEnum);
+	}
+
+	@Nonnull
+	@Override
+	public List<UUID> getUUIDList(@Nonnull String path) {
+		return document.getUUIDList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Character> getCharacterList(@Nonnull String path) {
+		return document.getCharacterList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Byte> getByteList(@Nonnull String path) {
+		return document.getByteList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Short> getShortList(@Nonnull String path) {
+		return document.getShortList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Integer> getIntegerList(@Nonnull String path) {
+		return document.getIntegerList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Long> getLongList(@Nonnull String path) {
+		return document.getLongList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Float> getFloatList(@Nonnull String path) {
+		return document.getFloatList(path);
+	}
+
+	@Nonnull
+	@Override
+	public List<Double> getDoubleList(@Nonnull String path) {
+		return document.getDoubleList(path);
 	}
 
 	@Nullable
@@ -217,9 +295,36 @@ public abstract class DocumentWrapper implements Document {
 		return document.getSerializable(path, def);
 	}
 
+	@Nullable
+	@Override
+	public Class<?> getClass(@Nonnull String path) {
+		return document.getClass(path);
+	}
+
+	@Nonnull
+	@Override
+	public Class<?> getClass(@Nonnull String path, @Nonnull Class<?> def) {
+		return document.getClass(path, def);
+	}
+
 	@Override
 	public boolean contains(@Nonnull String path) {
 		return document.contains(path);
+	}
+
+	@Override
+	public boolean hasChildren(@Nonnull String path) {
+		return document.hasChildren(path);
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
+		return document.isObject(path);
+	}
+
+	@Override
+	public boolean isList(@Nonnull String path) {
+		return document.isList(path);
 	}
 
 	@Override
@@ -249,4 +354,21 @@ public abstract class DocumentWrapper implements Document {
 		document.forEach(action);
 	}
 
+	@Nonnull
+	@Override
+	public Document readonly() {
+		return document.readonly();
+	}
+
+	@Nullable
+	@Override
+	public Document getParent() {
+		return document.getParent();
+	}
+
+	@Nonnull
+	@Override
+	public Document getRoot() {
+		return document.getRoot();
+	}
 }

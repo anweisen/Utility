@@ -1,12 +1,12 @@
 package net.anweisen.utilities.commons.config;
 
-import net.anweisen.utilities.commons.misc.FileUtils;
-
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -16,6 +16,18 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	Document getDocument(@Nonnull String path);
+
+	@Nonnull
+	List<Document> getDocumentList(@Nonnull String path);
+
+	@Nonnull
+	<T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT);
+
+	@Nullable
+	Document getParent();
+
+	@Nonnull
+	Document getRoot();
 
 	@Nonnull
 	@Override
@@ -28,6 +40,13 @@ public interface Document extends Config, Json {
 	@Nonnull
 	@Override
 	Document remove(@Nonnull String path);
+
+	@Nonnull
+	@Override
+	@CheckReturnValue
+	Document readonly();
+
+	boolean hasChildren(@Nonnull String path);
 
 	void write(@Nonnull Writer writer) throws IOException;
 

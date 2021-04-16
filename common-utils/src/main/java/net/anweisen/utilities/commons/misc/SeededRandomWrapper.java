@@ -7,7 +7,7 @@ import java.util.Random;
  * which will save seed. This allows us to save randomization and reload it.
  *
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public class SeededRandomWrapper extends Random {
 

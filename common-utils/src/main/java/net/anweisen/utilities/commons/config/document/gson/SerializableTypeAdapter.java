@@ -12,6 +12,7 @@ import net.anweisen.utilities.commons.misc.SerializationUtils;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -41,9 +42,7 @@ public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 		if (element == null || !element.isJsonObject()) return null;
 
 		JsonObject json = element.getAsJsonObject();
-		String classOfType = json.get(KEY).getAsString();
-
-		Map<String, Object> map = GsonUtils.convertJsonObjectToMap(json);
+		String classOfType = Optional.ofNullable(json.get(KEY)).map(JsonElement::getAsString).orElse(null);
 
 		Class<?> clazz;
 		try {
@@ -52,6 +51,7 @@ public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 			return null;
 		}
 
+		Map<String, Object> map = GsonUtils.convertJsonObjectToMap(json);
 		return SerializationUtils.deserializeObject(map, clazz);
 
 	}

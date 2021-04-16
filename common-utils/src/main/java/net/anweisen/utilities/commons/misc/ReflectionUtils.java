@@ -2,8 +2,10 @@ package net.anweisen.utilities.commons.misc;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,6 +91,53 @@ public final class ReflectionUtils {
 		try {
 			return getCaller(2);
 		} catch (Exception ignored) {
+			return null;
+		}
+	}
+
+	/**
+	 * Takes a {@link Enum} and returns the corresponding {@link Field} using {@link Class#getField(String)}
+	 *
+	 * @see Class#getField(String)
+	 */
+	@Nonnull
+	public static Field getEnumAsField(@Nonnull Enum<?> enun) {
+
+		Class<?> classOfEnum = enun.getClass();
+
+		try {
+			return classOfEnum.getField(enun.name());
+		} catch (NoSuchFieldException ex) {
+			throw new WrappedException(ex);
+		}
+
+	}
+
+	/**
+	 * @see Field#getAnnotations()
+	 */
+	@Nonnull
+	public static <E extends Enum<?>> Annotation[] getEnumAnnotations(@Nonnull E enun) {
+		Field field = getEnumAsField(enun);
+		return field.getAnnotations();
+	}
+
+	/**
+	 * @return Returns {@code null} if no annotation of this class is present
+	 *
+	 * @see Field#getAnnotation(Class)
+	 */
+	public static <E extends Enum<?>, A extends Annotation> A getEnumAnnotation(@Nonnull E enun, Class<A> classOfAnnotation) {
+		Field field = getEnumAsField(enun);
+		return field.getAnnotation(classOfAnnotation);
+	}
+
+	@Nullable
+	public static <E extends Enum<E>> E getEnumOrNull(@Nullable String name, @Nonnull Class<E> classOfEnum) {
+		try {
+			if (name == null) return null;
+			return Enum.valueOf(classOfEnum, name);
+		} catch (Exception ex) {
 			return null;
 		}
 	}

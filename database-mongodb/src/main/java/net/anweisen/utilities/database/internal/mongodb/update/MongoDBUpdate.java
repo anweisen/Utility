@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -113,6 +114,27 @@ public class MongoDBUpdate implements DatabaseUpdate {
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseUpdate other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MongoDBUpdate that = (MongoDBUpdate) o;
+		return database.equals(that.database)
+				&& collection.equals(that.collection)
+				&& where.equals(that.where)
+				&& values.equals(that.values);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(database, collection, where, values);
 	}
 
 }

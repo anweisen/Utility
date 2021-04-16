@@ -30,4 +30,6 @@ public interface DatabaseDeletion {
 
 	void execute() throws DatabaseException;
 
+	boolean equals(@Nonnull DatabaseDeletion other);
+
 }

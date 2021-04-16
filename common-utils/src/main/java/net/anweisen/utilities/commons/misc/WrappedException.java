@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.misc;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 /**
@@ -12,6 +13,12 @@ public class WrappedException extends RuntimeException {
 
 	public WrappedException(@Nonnull Throwable cause) {
 		super(cause);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static RuntimeException wrap(@Nonnull Throwable ex) {
+		return ex instanceof RuntimeException ? (RuntimeException) ex : new WrappedException(ex);
 	}
 
 }

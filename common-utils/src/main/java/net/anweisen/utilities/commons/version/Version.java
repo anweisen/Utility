@@ -18,7 +18,6 @@ public interface Version {
 	@Nonnegative
 	int getRevision();
 
-
 	default boolean isNewerThan(@Nonnull Version other) {
 		if (this.getMajor() > other.getMajor()) return true; // 2.?.? > 1.?.?
 		if (this.getMajor() == other.getMajor()
@@ -36,7 +35,7 @@ public interface Version {
 	default boolean isOlderThan(@Nonnull Version other) {
 		if (this.getMajor() < other.getMajor()) return true; // 1.?.? < 2.?.?
 		if (this.getMajor() == other.getMajor()
-		 && this.getMinor() < other.getMinor()) return true; // 1.0.? < 1.0.?
+		 && this.getMinor() < other.getMinor()) return true; // 1.0.? < 1.1.?
 		if (this.getMajor() == other.getMajor()
 	 	 && this.getMinor() == other.getMinor()
 		 && this.getRevision() < other.getRevision()) return true; // 1.0.0 < 1.0.1

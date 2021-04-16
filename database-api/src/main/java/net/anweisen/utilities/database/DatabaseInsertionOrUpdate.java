@@ -34,4 +34,6 @@ public interface DatabaseInsertionOrUpdate extends DatabaseUpdate, DatabaseInser
 
 	void execute() throws DatabaseException;
 
+	boolean equals(@Nonnull DatabaseInsertionOrUpdate other);
+
 }

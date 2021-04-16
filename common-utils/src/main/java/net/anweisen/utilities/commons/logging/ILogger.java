@@ -1,7 +1,6 @@
 package net.anweisen.utilities.commons.logging;
 
 import net.anweisen.utilities.commons.logging.internal.DefaultLoggerFactory;
-import net.anweisen.utilities.commons.logging.internal.JavaLoggerWrapper;
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
 
 import javax.annotation.CheckReturnValue;
@@ -76,6 +75,11 @@ public interface ILogger {
 
 	static void setFactory(@Nonnull ILoggerFactory factory) {
 		Holder.factory = factory;
+	}
+
+	@Nonnull
+	static ILoggerFactory getFactory() {
+		return Holder.factory;
 	}
 
 }

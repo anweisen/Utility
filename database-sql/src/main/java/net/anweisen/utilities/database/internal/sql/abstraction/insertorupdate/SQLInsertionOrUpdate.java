@@ -1,6 +1,8 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.insertorupdate;
 
+import net.anweisen.utilities.database.DatabaseInsertion;
 import net.anweisen.utilities.database.DatabaseInsertionOrUpdate;
+import net.anweisen.utilities.database.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.update.SQLUpdate;
@@ -71,6 +73,26 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 
 			database.insert(table, insert).execute();
 		}
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseUpdate other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(@Nonnull DatabaseInsertion other) {
+		return equals((Object) other);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
 	}
 
 }

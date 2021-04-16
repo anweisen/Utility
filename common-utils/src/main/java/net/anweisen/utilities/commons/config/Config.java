@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.config;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -19,5 +20,9 @@ public interface Config extends Propertyable {
 	Config remove(@Nonnull String path);
 
 	boolean isReadonly();
+
+	@Nonnull
+	@CheckReturnValue
+	Config readonly();
 
 }

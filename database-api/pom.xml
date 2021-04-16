@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>database-api</artifactId>
 	<name>database-api</name>
-	<version>1.0</version>
+	<version>1.2</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
@@ -42,6 +42,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -56,13 +57,22 @@
 
 	</build>
 
+	<repositories>
+
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/anweisen/*</url>
+		</repository>
+
+	</repositories>
+
 	<dependencies>
 
 		<!-- Common Utilities -->
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>1.0</version>
+			<version>1.2</version>
 		</dependency>
 
 		<!-- Annotations like @Nonnull -->
@@ -76,7 +86,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>github</id>
+			<id>github-anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

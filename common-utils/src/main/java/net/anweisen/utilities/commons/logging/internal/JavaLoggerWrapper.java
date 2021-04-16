@@ -320,11 +320,8 @@ public class JavaLoggerWrapper extends JavaILogger {
 
 	@Nonnull
 	protected Level mapLevel(@Nonnull Level level) {
-		if (isLoggable(level) && level.intValue() < Level.INFO.intValue())
-			return Level.INFO;
 		return level;
 	}
-
 
 	@Nonnull
 	@Override
@@ -341,12 +338,17 @@ public class JavaLoggerWrapper extends JavaILogger {
 
 	@Override
 	public void log(@Nonnull LogLevel level, @Nullable String message, @Nonnull Object... args) {
-		log(level.getJavaUtilLevel(), SimpleLogger.formatMessage(message, args));
+		Throwable thrown = null;
+		for (Object arg : args) {
+			if (arg instanceof Throwable)
+				thrown = (Throwable) arg;
+		}
+		log(level.getJavaUtilLevel(), SimpleLogger.formatMessage(message, args), thrown);
 	}
 
 	@Override
 	public void log(@Nonnull LogLevel level, @Nullable Object message, @Nonnull Object... args) {
-		log(level.getJavaUtilLevel(), SimpleLogger.formatMessage(message, args));
+		log(level, String.valueOf(message), args);
 	}
 
 	@Override

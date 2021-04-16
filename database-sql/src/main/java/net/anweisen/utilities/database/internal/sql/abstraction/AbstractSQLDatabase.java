@@ -1,8 +1,9 @@
 package net.anweisen.utilities.database.internal.sql.abstraction;
 
 import net.anweisen.utilities.database.*;
+import net.anweisen.utilities.database.DatabaseConfig;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.database.internal.abstractation.AbstractDatabase;
+import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.deletion.SQLDeletion;
 import net.anweisen.utilities.database.internal.sql.abstraction.insertion.SQLInsertion;
 import net.anweisen.utilities.database.internal.sql.abstraction.insertorupdate.SQLInsertionOrUpdate;
@@ -58,7 +59,7 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 			connection.isClosed();
 			return true;
 		} catch (SQLException ex) {
-			Database.LOGGER.error("Could not check connection state: " + ex.getMessage());
+			LOGGER.error("Could not check connection state: " + ex.getMessage());
 			return false;
 		}
 	}

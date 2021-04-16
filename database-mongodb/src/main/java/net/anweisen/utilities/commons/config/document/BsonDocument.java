@@ -2,6 +2,8 @@ package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.misc.FileUtils;
+import org.bson.BsonArray;
+import org.bson.BsonValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,67 +34,111 @@ public class BsonDocument extends AbstractDocument {
 		this.bsonDocument = bsonDocument;
 	}
 
+	public BsonDocument(@Nonnull org.bson.Document bsonDocument, @Nonnull Document root, @Nullable Document parent) {
+		super(root, parent);
+		this.bsonDocument = bsonDocument;
+	}
+
 	public BsonDocument() {
 		this(new org.bson.Document());
 	}
 
 	@Nonnull
 	@Override
-	public Document getDocument(@Nonnull String path) {
-		return new BsonDocument(bsonDocument.get(path, org.bson.Document.class));
+	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
+		org.bson.Document document = bsonDocument.get(path, org.bson.Document.class);
+		if (document == null) {
+			bsonDocument.put(path, document = new org.bson.Document());
+		}
+
+		return new BsonDocument(document, root, parent);
+	}
+
+	@Nonnull
+	@Override
+	public List<Document> getDocumentList(@Nonnull String path) {
+		BsonArray array = bsonDocument.get(path, BsonArray.class);
+		if (array == null) return new ArrayList<>();
+		List<Document> documents = new ArrayList<>(array.size());
+		for (BsonValue value : array) {
+			if (!value.isDocument()) continue;
+			String json = value.asDocument().toJson();
+			org.bson.Document document = org.bson.Document.parse(json);
+			documents.add(new BsonDocument(document, root, this));
+		}
+		return documents;
 	}
 
 	@Nullable
 	@Override
 	public String getString(@Nonnull String path) {
-		return bsonDocument.getString(path);
+		Object value = getObject(path);
+		return value == null ? null : value.toString();
 	}
 
 	@Override
 	public long getLong(@Nonnull String path, long def) {
-		Long value = bsonDocument.getLong(path);
-		if (value == null) return def;
-		return value;
+		try {
+			return Long.parseLong(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public int getInt(@Nonnull String path, int def) {
-		Integer value = bsonDocument.getInteger(path);
-		if (value == null) return def;
-		return value;
+		try {
+			return Integer.parseInt(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public short getShort(@Nonnull String path, short def) {
-		Number value = bsonDocument.getInteger(path);
-		if (value == null) return def;
-		return value.shortValue();
+		try {
+			return Short.parseShort(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public byte getByte(@Nonnull String path, byte def) {
-		Number value = bsonDocument.getInteger(path);
-		if (value == null) return def;
-		return value.byteValue();
+		try {
+			return Byte.parseByte(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public double getDouble(@Nonnull String path, double def) {
-		Double value = bsonDocument.getDouble(path);
-		if (value == null) return def;
-		return value;
+		try {
+			return Double.parseDouble(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public float getFloat(@Nonnull String path, float def) {
-		Double value = bsonDocument.getDouble(path);
-		if (value == null) return def;
-		return (float) (double) value;
+		try {
+			return Float.parseFloat(getString(path));
+		} catch (Exception ex) {
+			return def;
+		}
 	}
 
 	@Override
 	public boolean getBoolean(@Nonnull String path, boolean def) {
-		return bsonDocument.getBoolean(path, def);
+		try {
+			Object value = bsonDocument.get(path);
+			if (value instanceof Boolean) return (Boolean) value;
+			if (value instanceof String) return Boolean.parseBoolean((String) value);
+		} catch (Exception ex) {
+		}
+		return def;
 	}
 
 	@Nullable
@@ -103,20 +149,20 @@ public class BsonDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
-	public List<String> getList(@Nonnull String path) {
+	public List<String> getStringList(@Nonnull String path) {
 		return bsonDocument.getList(path, String.class);
 	}
 
 	@Nullable
 	@Override
 	public UUID getUUID(@Nonnull String path) {
-		return bsonDocument.get(path, UUID.class);
-	}
-
-	@Nonnull
-	@Override
-	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
-		return bsonDocument.get(path, def);
+		try {
+			Object value = bsonDocument.get(path);
+			if (value instanceof UUID) return (UUID) value;
+			if (value instanceof String) return UUID.fromString((String) value);
+		} catch (Exception ex) {
+		}
+		return null;
 	}
 
 	@Override
@@ -125,8 +171,9 @@ public class BsonDocument extends AbstractDocument {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return bsonDocument.isEmpty();
+	public boolean isList(@Nonnull String path) {
+		Object value = bsonDocument.get(path);
+		return value instanceof Iterable || (value != null && value.getClass().isArray());
 	}
 
 	@Override
@@ -134,25 +181,19 @@ public class BsonDocument extends AbstractDocument {
 		return bsonDocument.size();
 	}
 
-	@Nonnull
 	@Override
-	public Document clear() {
+	public void clear0() {
 		bsonDocument.clear();
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document set(@Nonnull String path, @Nullable Object value) {
+	public void set0(@Nonnull String path, @Nullable Object value) {
 		bsonDocument.put(path, value);
-		return this;
 	}
 
-	@Nonnull
 	@Override
-	public Document remove(@Nonnull String path) {
+	public void remove0(@Nonnull String path) {
 		bsonDocument.remove(path);
-		return this;
 	}
 
 	@Override

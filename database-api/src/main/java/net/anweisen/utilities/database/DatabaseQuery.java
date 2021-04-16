@@ -40,4 +40,6 @@ public interface DatabaseQuery {
 	@CheckReturnValue
 	ExecutedQuery execute() throws DatabaseException;
 
+	boolean equals(@Nonnull ExecutedQuery other);
+
 }

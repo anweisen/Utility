@@ -8,8 +8,10 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.anweisen.utilities.database.*;
+import net.anweisen.utilities.database.DatabaseConfig;
+import net.anweisen.utilities.database.exceptions.DatabaseAlreadyConnectedException;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.database.internal.abstractation.AbstractDatabase;
+import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
 import net.anweisen.utilities.database.internal.mongodb.deletion.MongoDBDeletion;
 import net.anweisen.utilities.database.internal.mongodb.insertion.MongoDBInsertion;
 import net.anweisen.utilities.database.internal.mongodb.insertorupdate.MongoDBInsertionOrUpdate;
@@ -61,11 +63,13 @@ public class MongoDBDatabase extends AbstractDatabase {
 
 	@Override
 	public void connect() throws DatabaseException {
+		if (isConnected()) throw new DatabaseAlreadyConnectedException();
+
 		try {
 
 			MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
 			MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
-					.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : 27017))))
+					.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
 					.build();
 
 			client = MongoClients.create(settings);
