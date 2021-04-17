@@ -339,6 +339,18 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
+	public Map<String, String> valuesAsStrings() {
+		return new HashMap<>();
+	}
+
+	@Nonnull
+	@Override
+	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
+		return new HashMap<>();
+	}
+
+	@Nonnull
+	@Override
 	public Collection<String> keys() {
 		return Collections.emptyList();
 	}

@@ -345,6 +345,18 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
+	public Map<String, String> valuesAsStrings() {
+		return document.valuesAsStrings();
+	}
+
+	@Nonnull
+	@Override
+	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
+		return document.mapValues(keyMapper, valueMapper);
+	}
+
+	@Nonnull
+	@Override
 	public Collection<String> keys() {
 		return document.keys();
 	}

@@ -133,6 +133,12 @@ public interface Propertyable {
 	Map<String, Object> values();
 
 	@Nonnull
+	Map<String, String> valuesAsStrings();
+
+	@Nonnull
+	<K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper);
+
+	@Nonnull
 	Collection<String> keys();
 
 	void forEach(@Nonnull BiConsumer<? super String, ? super Object> action);

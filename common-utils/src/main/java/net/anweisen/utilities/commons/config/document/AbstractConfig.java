@@ -7,10 +7,7 @@ import net.anweisen.utilities.commons.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -212,6 +209,30 @@ public abstract class AbstractConfig implements Config {
 	@Override
 	public boolean isEmpty() {
 		return size() == 0;
+	}
+
+
+	@Nonnull
+	@Override
+	public Map<String, String> valuesAsStrings() {
+		Map<String, String> map = new HashMap<>();
+		values().forEach((key, value) -> map.put(key, String.valueOf(value)));
+		return map;
+	}
+
+	@Nonnull
+	@Override
+	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
+		Map<String, String> origin = valuesAsStrings();
+		Map<K, V> result = new HashMap<>();
+		origin.forEach((key, value) -> {
+			try {
+				result.put(keyMapper.apply(key), valueMapper.apply(value));
+			} catch (Exception ex) {
+				logger.error("Unable to map values for '{}'='{}'", key, value, ex);
+			}
+		});
+		return result;
 	}
 
 }
