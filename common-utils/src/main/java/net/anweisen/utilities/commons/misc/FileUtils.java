@@ -42,7 +42,13 @@ public final class FileUtils {
 
 	public static void createFilesIfNecessary(@Nonnull File file) throws IOException {
 		if (file.exists()) return;
-		(file.isDirectory() ? file : file.getParentFile()).mkdirs();
+
+		if (file.isDirectory()) {
+			file.mkdirs();
+		} else if (file.getParentFile() != null) {
+			file.getParentFile().mkdirs();
+		}
+
 		file.createNewFile();
 	}
 
