@@ -1,4 +1,4 @@
-package net.anweisen.utilities.commons.misc;
+package net.anweisen.utilities.commons.common;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
