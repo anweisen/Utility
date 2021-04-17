@@ -1,5 +1,8 @@
 package net.anweisen.utilities.commons.misc;
 
+import net.anweisen.utilities.commons.common.PublicSecurityManager;
+import net.anweisen.utilities.commons.common.WrappedException;
+
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

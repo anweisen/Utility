@@ -1,4 +1,4 @@
-package net.anweisen.utilities.commons.misc;
+package net.anweisen.utilities.commons.common;
 
 import java.util.Random;
 
