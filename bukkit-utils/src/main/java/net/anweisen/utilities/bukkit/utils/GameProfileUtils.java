@@ -3,10 +3,8 @@ package net.anweisen.utilities.bukkit.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.anweisen.utilities.commons.logging.ILogger;
-import net.anweisen.utilities.commons.misc.WrappedException;
+import net.anweisen.utilities.commons.common.WrappedException;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import javax.annotation.Nonnull;
