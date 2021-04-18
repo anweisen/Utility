@@ -5,10 +5,8 @@ import net.anweisen.utilities.commons.config.document.EmptyDocument;
 import net.anweisen.utilities.database.ExecutedQuery;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -35,7 +33,7 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 	@Nonnull
 	@Override
 	public Document firstOrEmpty() {
-		return first().orElse(new EmptyDocument());
+		return first().orElse(Document.empty());
 	}
 
 	@Nonnull
@@ -70,11 +68,6 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 	}
 
 	@Override
-	public void forEach(@Nonnull Consumer<? super Document> action) {
-		results.forEach(action);
-	}
-
-	@Override
 	public boolean isEmpty() {
 		return results.isEmpty();
 	}
@@ -105,6 +98,11 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 			System.out.println();
 			index++;
 		}
+	}
+
+	@Override
+	public Iterator<Document> iterator() {
+		return Collections.unmodifiableCollection(results).iterator();
 	}
 
 }

@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface ExecutedQuery {
+public interface ExecutedQuery extends Iterable<Document> {
 
 	@Nonnull
 	@CheckReturnValue
@@ -36,8 +36,6 @@ public interface ExecutedQuery {
 	<C extends Collection<? super Document>> C into(@Nonnull C collection);
 
 	int index(@Nonnull Predicate<? super Document> filter);
-
-	void forEach(@Nonnull Consumer<? super Document> action);
 
 	boolean isEmpty();
 
