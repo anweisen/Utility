@@ -1,28 +1,32 @@
 package net.anweisen.utilities.bukkit.core;
 
+import net.anweisen.utilities.bukkit.utils.wrapper.SimpleEventExecutor;
+import net.anweisen.utilities.bukkit.utils.wrapper.ActionListener;
 import net.anweisen.utilities.commons.annotations.ReplaceWith;
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.logging.JavaILogger;
-import net.anweisen.utilities.commons.logging.LogLevel;
 import net.anweisen.utilities.commons.logging.LoggingExceptionHandler;
 import net.anweisen.utilities.commons.logging.internal.BukkitLoggerWrapper;
 import net.anweisen.utilities.commons.logging.internal.ConstantLoggerFactory;
 import net.anweisen.utilities.commons.version.Version;
 import net.anweisen.utilities.commons.version.VersionInfo;
-import net.anweisen.utilities.bukkit.utils.MinecraftVersion;
+import net.anweisen.utilities.bukkit.utils.misc.MinecraftVersion;
 import net.anweisen.utilities.commons.config.document.YamlDocument;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 /**
@@ -154,11 +158,35 @@ public abstract class BukkitModule extends JavaPlugin {
 	public final void registerListener(@Nonnull Listener... listeners) {
 		if (isEnabled()) {
 			for (Listener listener : listeners) {
-				getServer().getPluginManager().registerEvents(listener, this);
+				registerListener0(listener);
 			}
 		} else {
 			this.listeners.addAll(Arrays.asList(listeners));
 		}
+	}
+
+	private void registerListener0(@Nonnull Listener listener) {
+		if (listener instanceof ActionListener) {
+			ActionListener<?> actionListener = (ActionListener<?>) listener;
+			getServer().getPluginManager().registerEvent(
+					actionListener.getClassOfEvent(), actionListener, actionListener.getPriority(),
+					new SimpleEventExecutor(actionListener.getClassOfEvent(), actionListener.getListener()), this, actionListener.isIgnoreCancelled()
+			);
+		} else {
+			getServer().getPluginManager().registerEvents(listener, this);
+		}
+	}
+
+	public final <E extends Event> void onEvent(@Nonnull Class<E> classOfEvent, @Nonnull Consumer<? super E> action) {
+		onEvent(classOfEvent, EventPriority.NORMAL, action);
+	}
+
+	public final <E extends Event> void onEvent(@Nonnull Class<E> classOfEvent, @Nonnull EventPriority priority, @Nonnull Consumer<? super E> action) {
+		onEvent(classOfEvent, priority, false, action);
+	}
+
+	public final <E extends Event> void onEvent(@Nonnull Class<E> classOfEvent, @Nonnull EventPriority priority, boolean ignoreCancelled, @Nonnull Consumer<? super E> action) {
+		registerListener(new ActionListener<>(classOfEvent, action, priority, ignoreCancelled));
 	}
 
 	public final void disable() {
