@@ -49,7 +49,7 @@ public final class ReflectionUtils {
 	 * @return The first enum found by the given names
 	 */
 	@Nonnull
-	public static <E extends Enum<E>> E getEnumByNames(@Nonnull Class<E> classOfEnum, @Nonnull String... names) {
+	public static <E extends Enum<E>> E getFirstEnumByNames(@Nonnull Class<E> classOfEnum, @Nonnull String... names) {
 		for (String name : names) {
 			try {
 				return Enum.valueOf(classOfEnum, name);
