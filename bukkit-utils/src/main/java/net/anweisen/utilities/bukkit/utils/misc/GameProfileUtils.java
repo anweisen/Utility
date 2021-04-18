@@ -1,4 +1,4 @@
-package net.anweisen.utilities.bukkit.utils;
+package net.anweisen.utilities.bukkit.utils.misc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -48,10 +48,6 @@ public class GameProfileUtils {
 
 		Class<?> classOfMeta = meta.getClass();
 		try {
-//			Field field = classOfMeta.getDeclaredField("profile");
-//			field.setAccessible(true);
-//			field.set(meta, profile);
-
 			Method setProfileMethod = classOfMeta.getDeclaredMethod("setProfile", GameProfile.class);
 			setProfileMethod.setAccessible(true);
 			setProfileMethod.invoke(meta, profile);
