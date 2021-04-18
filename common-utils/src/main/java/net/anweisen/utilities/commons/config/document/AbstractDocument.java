@@ -35,6 +35,13 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 		this.parent = null;
 	}
 
+	@Nonnull
+	@Override
+	public <T> T getSerializable(@Nonnull String path, @Nonnull T def) {
+		T value = getSerializable(path, (Class<T>) def.getClass());
+		return value == null ? def : value;
+	}
+
 	@Nullable
 	@Override
 	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {

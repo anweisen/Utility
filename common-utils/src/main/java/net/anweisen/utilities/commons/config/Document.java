@@ -24,6 +24,12 @@ public interface Document extends Config, Json {
 	<T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT);
 
 	@Nullable
+	<T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT);
+
+	@Nonnull
+	<T> T getSerializable(@Nonnull String path, @Nonnull T def);
+
+	@Nullable
 	Document getParent();
 
 	@Nonnull

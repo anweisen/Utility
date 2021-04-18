@@ -108,13 +108,6 @@ public abstract class AbstractConfig implements Config {
 		return value == null ? def : value;
 	}
 
-	@Nonnull
-	@Override
-	public <T> T getSerializable(@Nonnull String path, @Nonnull T def) {
-		T value = getSerializable(path, (Class<T>) def.getClass());
-		return value == null ? def : value;
-	}
-
 	@Nullable
 	@Override
 	public Class<?> getClass(@Nonnull String path) {

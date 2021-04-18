@@ -107,12 +107,6 @@ public interface Propertyable {
 	<E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def);
 
 	@Nullable
-	<T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT);
-
-	@Nonnull
-	<T> T getSerializable(@Nonnull String path, @Nonnull T def);
-
-	@Nullable
 	Class<?> getClass(@Nonnull String path);
 
 	@Nonnull
