@@ -58,4 +58,13 @@ public interface Document extends Config, Json {
 
 	void save(@Nonnull File file) throws IOException;
 
+	/**
+	 * @return an empty, immutable document
+	 */
+	@Nonnull
+	@CheckReturnValue
+	static Document empty() {
+		return new EmptyDocument();
+	}
+
 }
