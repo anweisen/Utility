@@ -7,7 +7,7 @@
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>bukkit-utils</artifactId>
 	<name>bukkit-utils</name>
-	<version>1.2</version>
+	<version>1.2.1</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
