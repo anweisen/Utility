@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.config;
 
+import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.config.document.EmptyDocument;
 
 import javax.annotation.CheckReturnValue;
@@ -8,7 +9,11 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -47,6 +52,9 @@ public interface Document extends Config, Json {
 	@Nonnull
 	<T> T getSerializable(@Nonnull String path, @Nonnull T def);
 
+	@Nonnull
+	<K, V> Map<K, V> mapDocuments(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper);
+
 	/**
 	 * Returns the parent document of this document.
 	 * If {@code this} is the {@link #getRoot() root} the this method will return {@code null}.
@@ -82,6 +90,11 @@ public interface Document extends Config, Json {
 	@CheckReturnValue
 	Document readonly();
 
+	@Nonnull
+	Map<String, Document> children();
+
+	boolean isDocument(@Nonnull String path);
+
 	boolean hasChildren(@Nonnull String path);
 
 	void write(@Nonnull Writer writer) throws IOException;
@@ -89,12 +102,27 @@ public interface Document extends Config, Json {
 	void save(@Nonnull File file) throws IOException;
 
 	/**
-	 * @return an empty, immutable document
+	 * @return a new empty and immutable document
+	 *
+	 * @see EmptyDocument
 	 */
 	@Nonnull
 	@CheckReturnValue
 	static Document empty() {
 		return new EmptyDocument();
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document create(@Nonnull Class<? extends Document> classOfDocument, @Nonnull File file) {
+		try {
+			Constructor<? extends Document> constructor = classOfDocument.getDeclaredConstructor(File.class);
+			return constructor.newInstance(file);
+		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+			throw new IllegalArgumentException(classOfDocument.getName() + " does not support File creation");
+		} catch (InvocationTargetException ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 }

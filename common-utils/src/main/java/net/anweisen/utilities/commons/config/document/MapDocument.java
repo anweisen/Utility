@@ -8,8 +8,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -55,9 +58,9 @@ public class MapDocument extends AbstractDocument {
 		if (value instanceof List) {
 			List<Object> list = (List<Object>) value;
 			for (Object object : list) {
-				if (object instanceof String) documents.add(new GsonDocument((String) object, root, this));
 				if (object instanceof Map) documents.add(new MapDocument((Map<String, Object>) object, root, parent));
 				if (object instanceof Document) documents.add((Document) object);
+				if (object instanceof String) documents.add(new GsonDocument((String) object, root, this));
 			}
 		}
 		return documents;
@@ -170,8 +173,7 @@ public class MapDocument extends AbstractDocument {
 	public List<String> getStringList(@Nonnull String path) {
 		Object object = getObject(path);
 		if (object == null) return Collections.emptyList();
-		if (object instanceof List) return (List<String>) object;
-		if (object instanceof Collection) return new ArrayList<>((Collection<String>) object);
+		if (object instanceof Iterable) return StreamSupport.stream(((Iterable<?>)object).spliterator(), false).map(String::valueOf).collect(Collectors.toList());
 		if (object instanceof String) return GsonUtils.convertJsonArrayToStringList(GsonDocument.GSON.fromJson((String) object, JsonArray.class));
 		throw new IllegalStateException("Cannot convert " + object.getClass() + " to a list");
 	}
@@ -192,6 +194,17 @@ public class MapDocument extends AbstractDocument {
 	public boolean isList(@Nonnull String path) {
 		Object value = values.get(path);
 		return value instanceof Iterable || (value != null && value.getClass().isArray());
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
+		return !isDocument(path) && !isList(path);
+	}
+
+	@Override
+	public boolean isDocument(@Nonnull String path) {
+		Object value = values.get(path);
+		return value instanceof Map || value instanceof Document;
 	}
 
 	@Override

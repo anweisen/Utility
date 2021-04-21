@@ -2,6 +2,7 @@ package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.config.Propertyable;
+import net.anweisen.utilities.commons.config.exceptions.ConfigReadOnlyException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +53,7 @@ public class EmptyDocument implements Document {
 	@Nonnull
 	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
-		throw new UnsupportedOperationException("EmptyDocument.set(String, Object)");
+		throw new ConfigReadOnlyException("set");
 	}
 
 	@Nonnull
@@ -201,7 +202,7 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
-	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+	public <T> List<T> mapList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
 		return new ArrayList<>();
 	}
 
@@ -318,12 +319,17 @@ public class EmptyDocument implements Document {
 
 	@Override
 	public boolean isList(@Nonnull String path) {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isObject(@Nonnull String path) {
-		return true;
+		return false;
+	}
+
+	@Override
+	public boolean isDocument(@Nonnull String path) {
+		return false;
 	}
 
 	@Override
@@ -345,7 +351,19 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
+	public Map<String, Document> children() {
+		return new HashMap<>();
+	}
+
+	@Nonnull
+	@Override
 	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
+		return new HashMap<>();
+	}
+
+	@Nonnull
+	@Override
+	public <K, V> Map<K, V> mapDocuments(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper) {
 		return new HashMap<>();
 	}
 

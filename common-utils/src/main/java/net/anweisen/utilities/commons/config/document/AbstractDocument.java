@@ -12,9 +12,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +55,12 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 				.map(Document::values)
 				.map(map -> SerializationUtils.deserializeObject(map, classOfT))
 				.collect(Collectors.toList());
+	}
+
+	@Nonnull
+	@Override
+	public <K, V> Map<K, V> mapDocuments(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper) {
+		return map(children(), keyMapper, valueMapper);
 	}
 
 	@Override
@@ -111,6 +116,17 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	protected abstract void remove0(@Nonnull String path);
 
 	protected abstract void clear0();
+
+	@Nonnull
+	@Override
+	public Map<String, Document> children() {
+		Map<String, Document> map = new HashMap<>();
+		keys().forEach(key -> {
+			if (!isDocument(key)) return;
+			map.put(key, getDocument(key));
+		});
+		return map;
+	}
 
 	@Override
 	public boolean hasChildren(@Nonnull String path) {

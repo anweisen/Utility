@@ -1,14 +1,12 @@
 package net.anweisen.utilities.commons.config.document;
 
 import net.anweisen.utilities.commons.config.Config;
-import net.anweisen.utilities.commons.config.Propertyable;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -24,12 +22,6 @@ public abstract class AbstractConfig implements Config {
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		Object value = getObject(path);
 		return value == null ? def : value;
-	}
-
-	@Nonnull
-	@Override
-	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
-		return Optional.ofNullable(extractor.apply(this, key));
 	}
 
 	@Nonnull
@@ -103,6 +95,7 @@ public abstract class AbstractConfig implements Config {
 
 	@Nonnull
 	@Override
+	@SuppressWarnings("unchecked")
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
 		E value = getEnum(path, (Class<E>) def.getClass());
 		return value == null ? def : value;
@@ -128,82 +121,76 @@ public abstract class AbstractConfig implements Config {
 	@Nonnull
 	@Override
 	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		return getList(path, name -> ReflectionUtils.getEnumOrNull(name, classOfEnum));
+		return mapList(path, name -> ReflectionUtils.getEnumOrNull(name, classOfEnum));
 	}
 
 	@Nonnull
 	@Override
 	public List<Character> getCharacterList(@Nonnull String path) {
-		return getList(path, string -> string == null || string.length() == 0 ? (char) 0 : string.charAt(0));
+		return mapList(path, string -> string == null || string.length() == 0 ? (char) 0 : string.charAt(0));
 	}
 
 	@Nonnull
 	@Override
 	public List<UUID> getUUIDList(@Nonnull String path) {
-		return getList(path, UUID::fromString);
+		return mapList(path, UUID::fromString);
 	}
 
 	@Nonnull
 	@Override
 	public List<Byte> getByteList(@Nonnull String path) {
-		return getList(path, Byte::parseByte);
+		return mapList(path, Byte::parseByte);
 	}
 
 	@Nonnull
 	@Override
 	public List<Short> getShortList(@Nonnull String path) {
-		return getList(path, Short::parseShort);
+		return mapList(path, Short::parseShort);
 	}
 
 	@Nonnull
 	@Override
 	public List<Integer> getIntegerList(@Nonnull String path) {
-		return getList(path, Integer::parseInt);
+		return mapList(path, Integer::parseInt);
 	}
 
 	@Nonnull
 	@Override
 	public List<Long> getLongList(@Nonnull String path) {
-		return getList(path, Long::parseLong);
+		return mapList(path, Long::parseLong);
 	}
 
 	@Nonnull
 	@Override
 	public List<Float> getFloatList(@Nonnull String path) {
-		return getList(path, Float::parseFloat);
+		return mapList(path, Float::parseFloat);
 	}
 
 	@Nonnull
 	@Override
 	public List<Double> getDoubleList(@Nonnull String path) {
-		return getList(path, Double::parseDouble);
+		return mapList(path, Double::parseDouble);
 	}
 
 	@Nonnull
 	@Override
-	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+	public <T> List<T> mapList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
 		List<String> list = getStringList(path);
 		List<T> result = new ArrayList<>(list.size());
 		for (String string : list) {
 			try {
 				result.add(mapper.apply(string));
 			} catch (Exception ex) {
-				logger.error("Could not map '{}'", string, ex);
+				logger.error("Unable to map values for '{}'", string, ex);
 			}
 		}
 		return result;
 	}
 
 	@Override
-	public boolean isObject(@Nonnull String path) {
-		return !isList(path);
-	}
-
-	@Override
 	public boolean isEmpty() {
 		return size() == 0;
 	}
-
 
 	@Nonnull
 	@Override
@@ -216,9 +203,15 @@ public abstract class AbstractConfig implements Config {
 	@Nonnull
 	@Override
 	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
-		Map<String, String> origin = valuesAsStrings();
-		Map<K, V> result = new HashMap<>();
-		origin.forEach((key, value) -> {
+		return map(valuesAsStrings(), keyMapper, valueMapper);
+	}
+
+	@Nonnull
+	public <FromK, FromV, ToK, ToV> Map<ToK, ToV> map(@Nonnull Map<? extends FromK, ? extends FromV> values,
+	                                                  @Nonnull Function<? super FromK, ? extends ToK> keyMapper,
+	                                                  @Nonnull Function<? super FromV, ? extends ToV> valueMapper) {
+		Map<ToK, ToV> result = new HashMap<>();
+		values.forEach((key, value) -> {
 			try {
 				result.put(keyMapper.apply(key), valueMapper.apply(value));
 			} catch (Exception ex) {

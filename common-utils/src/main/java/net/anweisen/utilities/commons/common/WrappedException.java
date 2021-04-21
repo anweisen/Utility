@@ -15,10 +15,4 @@ public class WrappedException extends RuntimeException {
 		super(cause);
 	}
 
-	@Nonnull
-	@CheckReturnValue
-	public static RuntimeException wrap(@Nonnull Throwable ex) {
-		return ex instanceof RuntimeException ? (RuntimeException) ex : new WrappedException(ex);
-	}
-
 }

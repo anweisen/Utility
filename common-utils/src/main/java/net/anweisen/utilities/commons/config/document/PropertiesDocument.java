@@ -156,6 +156,16 @@ public class PropertiesDocument extends AbstractDocument {
 	}
 
 	@Override
+	public boolean isObject(@Nonnull String path) {
+		return true;
+	}
+
+	@Override
+	public boolean isDocument(@Nonnull String path) {
+		return false;
+	}
+
+	@Override
 	public int size() {
 		return properties.size();
 	}

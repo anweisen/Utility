@@ -201,8 +201,8 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
-	public <T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
-		return document.getList(path, mapper);
+	public <T> List<T> mapList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
+		return document.mapList(path, mapper);
 	}
 
 	@Nonnull
@@ -328,6 +328,11 @@ public abstract class DocumentWrapper implements Document {
 	}
 
 	@Override
+	public boolean isDocument(@Nonnull String path) {
+		return document.isDocument(path);
+	}
+
+	@Override
 	public boolean isEmpty() {
 		return document.isEmpty();
 	}
@@ -351,8 +356,20 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
+	public Map<String, Document> children() {
+		return document.children();
+	}
+
+	@Nonnull
+	@Override
 	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
 		return document.mapValues(keyMapper, valueMapper);
+	}
+
+	@Nonnull
+	@Override
+	public <K, V> Map<K, V> mapDocuments(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper) {
+		return document.mapDocuments(keyMapper, valueMapper);
 	}
 
 	@Nonnull

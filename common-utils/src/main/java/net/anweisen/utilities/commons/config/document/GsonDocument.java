@@ -16,6 +16,8 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -183,7 +185,21 @@ public class GsonDocument extends AbstractDocument {
 
 	@Override
 	public boolean isList(@Nonnull String path) {
-		return getElement(path).map(JsonElement::isJsonArray).orElse(false);
+		return checkElement(path, JsonElement::isJsonArray);
+	}
+
+	@Override
+	public boolean isDocument(@Nonnull String path) {
+		return checkElement(path, JsonElement::isJsonObject);
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
+		return checkElement(path, JsonElement::isJsonPrimitive);
+	}
+
+	private boolean checkElement(@Nonnull String path, @Nonnull Function<? super JsonElement, Boolean> check) {
+		return getElement(path).map(check).orElse(false);
 	}
 
 	@Override

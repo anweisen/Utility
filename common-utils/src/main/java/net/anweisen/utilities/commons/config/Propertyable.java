@@ -21,7 +21,9 @@ public interface Propertyable {
 	Object getObject(@Nonnull String path, @Nonnull Object def);
 
 	@Nonnull
-	<T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor);
+	default <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+		return Optional.ofNullable(extractor.apply(this, key));
+	}
 
 	@Nullable
 	String getString(@Nonnull String path);
@@ -63,9 +65,6 @@ public interface Propertyable {
 
 	@Nonnull
 	List<String> getStringList(@Nonnull String path);
-
-	@Nonnull
-	<T> List<T> getList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper);
 
 	@Nonnull
 	<E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum);
@@ -131,6 +130,9 @@ public interface Propertyable {
 
 	@Nonnull
 	<K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper);
+
+	@Nonnull
+	<T> List<T> mapList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper);
 
 	@Nonnull
 	Collection<String> keys();
