@@ -2,6 +2,7 @@ package net.anweisen.utilities.jda.commandmanager.utils;
 
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.config.document.GsonDocument;
+import net.anweisen.utilities.commons.config.document.wrapper.FileDocumentWrapper;
 import net.anweisen.utilities.commons.misc.FileUtils;
 
 import javax.annotation.Nonnull;
@@ -23,15 +24,19 @@ public final class BotConfigLoader {
 			{ "database.database", "discordbot" },
 	};
 
-	private final Document document;
+	private final FileDocumentWrapper document;
 
 	public BotConfigLoader() throws IOException {
-		this(new File("config.json"));
+		this(new File("config.json"), DEFAULT_VALUES);
 	}
 
 	public BotConfigLoader(@Nonnull File file) throws IOException {
+		this(file, DEFAULT_VALUES);
+	}
 
-		document = file.exists() ? new GsonDocument(file) : new GsonDocument();
+	public BotConfigLoader(@Nonnull File file, @Nonnull Object[][] defaultValues) throws IOException {
+
+		document = new FileDocumentWrapper(file, file.exists() ? new GsonDocument(file) : new GsonDocument());
 
 		if (!file.exists()) {
 			FileUtils.createFilesIfNecessary(file);
@@ -40,14 +45,14 @@ public final class BotConfigLoader {
 				String value = (String) pair[1];
 				document.set(key, value);
 			}
-			document.save(file);
+			document.save();
 			throw new FileNotFoundException("Config file " + file.getName() + " was not found, created a new one");
 		}
 
 	}
 
 	@Nonnull
-	public Document getDocument() {
+	public FileDocumentWrapper getDocument() {
 		return document;
 	}
 

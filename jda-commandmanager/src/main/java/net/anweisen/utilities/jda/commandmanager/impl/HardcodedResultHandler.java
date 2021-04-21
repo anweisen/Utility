@@ -2,8 +2,8 @@ package net.anweisen.utilities.jda.commandmanager.impl;
 
 import net.anweisen.utilities.commons.misc.NumberFormatter;
 import net.anweisen.utilities.jda.commandmanager.CommandManager;
-import net.anweisen.utilities.jda.commandmanager.MessageInfo;
-import net.anweisen.utilities.jda.commandmanager.MessagePipeline;
+import net.anweisen.utilities.jda.commandmanager.message.MessageInfo;
+import net.anweisen.utilities.jda.commandmanager.message.MessagePipeline;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultHandler;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultInfo;
 import net.anweisen.utilities.jda.commandmanager.utils.CommandHelper;

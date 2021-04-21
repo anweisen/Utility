@@ -4,9 +4,13 @@ import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.jda.commandmanager.language.LanguageManager;
 import net.anweisen.utilities.jda.commandmanager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultHandler;
+import net.anweisen.utilities.jda.commandmanager.registered.CommandOptions;
+import net.anweisen.utilities.jda.commandmanager.registered.CommandTask;
+import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -21,6 +25,12 @@ public interface CommandManager {
 
 	@Nonnull
 	CommandManager register(@Nonnull Object... commands);
+
+	@Nonnull
+	CommandManager register(@Nonnull CommandTask task, @Nonnull CommandOptions options);
+
+	@Nonnull
+	Collection<RegisteredCommand> getRegisteredCommands();
 
 	@Nonnull
 	PrefixProvider getPrefixProvider();

@@ -1,5 +1,6 @@
-package net.anweisen.utilities.jda.commandmanager;
+package net.anweisen.utilities.jda.commandmanager.message;
 
+import net.anweisen.utilities.jda.commandmanager.CommandManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 
@@ -10,6 +11,9 @@ import javax.annotation.Nonnull;
  * @since 1.0
  */
 public interface MessageInfo {
+
+	@Nonnull
+	CommandManager getManager();
 
 	@Nonnull
 	JDA getJDA();
@@ -86,5 +90,23 @@ public interface MessageInfo {
 	@Nonnull
 	Member getSelfMember();
 
+	@Nonnull
+	MessageChannel getChannel();
+
+	/**
+	 * @throws IllegalStateException
+	 *         If this event was not triggered in a guild.
+	 *         You can check this using {@link #isGuild()}
+	 */
+	@Nonnull
+	TextChannel getTextChannel();
+
+	/**
+	 * @throws IllegalStateException
+	 *         If this event was not triggered in a private chat
+	 *         You can check this using {@link #isPrivate()}
+	 */
+	@Nonnull
+	PrivateChannel getPrivateChannel();
 
 }

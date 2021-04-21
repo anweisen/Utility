@@ -3,8 +3,8 @@ package net.anweisen.utilities.jda.commandmanager.impl;
 import net.anweisen.utilities.commons.misc.NumberFormatter;
 import net.anweisen.utilities.jda.commandmanager.CommandField;
 import net.anweisen.utilities.jda.commandmanager.CommandManager;
-import net.anweisen.utilities.jda.commandmanager.MessageInfo;
-import net.anweisen.utilities.jda.commandmanager.MessagePipeline;
+import net.anweisen.utilities.jda.commandmanager.message.MessageInfo;
+import net.anweisen.utilities.jda.commandmanager.message.MessagePipeline;
 import net.anweisen.utilities.jda.commandmanager.language.Message;
 import net.anweisen.utilities.jda.commandmanager.process.CommandProcessResult;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultHandler;
@@ -23,7 +23,7 @@ public class LanguageResultHandler implements CommandResultHandler {
 	public void handle(@Nonnull CommandManager manager, @Nonnull MessagePipeline pipeline, @Nonnull MessageInfo info, @Nonnull CommandResultInfo result) {
 		if (!result.getType().isUserMistake()) return;
 		String messageName = result.getType() == CommandProcessResult.INVALID_FIELD
-				? "invalid-field-" + (result.getCommand().getAnnotation().field() == CommandField.GUILD ? "guild" : "private")
+				? "invalid-field-" + (result.getCommand().getOptions().getField() == CommandField.GUILD ? "guild" : "private")
 				: result.getType().name().toLowerCase().replace('_', '-');
 		Message message = manager.getLanguageManager().getLanguage(info).getMessage("error-" + messageName);
 		if (message.isEmpty()) return;

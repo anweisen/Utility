@@ -2,7 +2,7 @@ package net.anweisen.utilities.jda.commandmanager.language;
 
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.jda.commandmanager.MessageInfo;
+import net.anweisen.utilities.jda.commandmanager.message.MessageInfo;
 import net.dv8tion.jda.api.entities.Guild;
 
 import javax.annotation.Nonnull;

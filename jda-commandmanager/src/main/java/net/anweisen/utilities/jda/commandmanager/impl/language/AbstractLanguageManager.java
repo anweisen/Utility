@@ -3,7 +3,7 @@ package net.anweisen.utilities.jda.commandmanager.impl.language;
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.commons.config.document.GsonDocument;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.jda.commandmanager.MessageInfo;
+import net.anweisen.utilities.jda.commandmanager.message.MessageInfo;
 import net.anweisen.utilities.jda.commandmanager.language.Language;
 import net.anweisen.utilities.jda.commandmanager.language.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;

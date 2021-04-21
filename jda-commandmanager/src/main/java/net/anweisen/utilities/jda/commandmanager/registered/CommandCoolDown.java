@@ -18,15 +18,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CommandCoolDown {
 
 	private final CoolDownScope scope;
-	private final double commandCoolDown;
+	private final double cooldown;
 
 	private final Map<User, Long> userCoolDowns = new ConcurrentHashMap<>();
 	private final Map<Guild, Long> guildCoolDowns = new ConcurrentHashMap<>();
 	private final AtomicLong globalCoolDown = new AtomicLong();
 
-	public CommandCoolDown(@Nonnull CoolDownScope scope, @Nonnegative double commandCoolDown) {
+	public CommandCoolDown(@Nonnull CoolDownScope scope, @Nonnegative double cooldown) {
 		this.scope = scope;
-		this.commandCoolDown = commandCoolDown;
+		this.cooldown = cooldown;
 	}
 
 	public boolean isOnCoolDown(@Nonnull User user, @Nullable Guild guild) {
@@ -34,6 +34,7 @@ public class CommandCoolDown {
 	}
 
 	public double getCoolDown(@Nonnull User user, @Nullable Guild guild) {
+		if (cooldown == 0) return 0;
 		switch (scope) {
 			case USER:      return Math.max(userCoolDowns.getOrDefault(user, 0L) - System.currentTimeMillis(), 0) / 1000d;
 			case GUILD:     return Math.max(guildCoolDowns.getOrDefault(guild, 0L) - System.currentTimeMillis(), 0) / 1000d;
@@ -43,15 +44,16 @@ public class CommandCoolDown {
 	}
 
 	public void renewCoolDown(@Nonnull User user, @Nullable Guild guild) {
+		if (cooldown == 0) return;
 		switch (scope) {
 			case USER:
-				userCoolDowns.put(user, System.currentTimeMillis() + (long) commandCoolDown * 1000);
+				userCoolDowns.put(user, System.currentTimeMillis() + (long) cooldown * 1000);
 				return;
 			case GUILD:
-				guildCoolDowns.put(guild, System.currentTimeMillis() + (long) commandCoolDown * 1000);
+				guildCoolDowns.put(guild, System.currentTimeMillis() + (long) cooldown * 1000);
 				return;
 			case GLOBAL:
-				globalCoolDown.set(System.currentTimeMillis() + (long) commandCoolDown * 1000);
+				globalCoolDown.set(System.currentTimeMillis() + (long) cooldown * 1000);
 				return;
 			default: throw new IllegalStateException("Unsupported cooldown scope " + scope);
 		}

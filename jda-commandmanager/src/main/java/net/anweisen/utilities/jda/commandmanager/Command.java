@@ -39,6 +39,8 @@ public @interface Command {
 
 	boolean allowEdits() default true;
 
+	boolean disableMentions() default true;
+
 	@Nonnull
 	CoolDownScope cooldownScope() default CoolDownScope.USER;
 

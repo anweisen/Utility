@@ -31,17 +31,25 @@ public class RequiredArgument {
 		String argument = args[0];
 
 		int startLengthIndex = input.indexOf("|");
-
 		if (startLengthIndex != -1) {
 			key = argument.substring(0, startLengthIndex);
 		} else {
 			key = argument;
 		}
 
-		this.name = name.length() == 0 ? key : name.toString();
+		if (name.length() == 0) {
+			int startLastTileIndex = key.indexOf(":");
+			if (startLastTileIndex == -1) {
+				this.name = key;
+			} else {
+				this.name = key.substring(startLastTileIndex + 1);
+			}
+		} else {
+			this.name = name.toString();
+		}
 
 		Tuple<ArgumentParser<?>, Class<?>> pair = context.getParser(key);
-		if (pair == null) throw new IllegalArgumentException("No such argument parser '" + key + "' in '" + input + "'");
+		if (pair == null) throw new IllegalArgumentException("No such argument parser '" + key + "' ('" + input + "')");
 
 		parser = pair.getFirst();
 		classOfArgument = pair.getSecond();
