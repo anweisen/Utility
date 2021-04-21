@@ -1,6 +1,7 @@
 package net.anweisen.utilities.commons.config.document.wrapper;
 
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.FileDocument;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -10,7 +11,7 @@ import java.io.IOException;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class FileDocumentWrapper extends DocumentWrapper {
+public class FileDocumentWrapper extends DocumentWrapper implements FileDocument {
 
 	protected final File file;
 
@@ -19,17 +20,18 @@ public class FileDocumentWrapper extends DocumentWrapper {
 		this.file = file;
 	}
 
-	public void save(boolean async) {
-		if (async)  saveAsync();
-		else        save();
-	}
-
+	@Override
 	public void save() {
 		try {
-			document.save(file);
+			saveExceptionally();
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			LOGGER.error("Could not save config to file \"{}\"", file, ex);
 		}
+	}
+
+	@Override
+	public void saveExceptionally() throws IOException {
+		document.save(file);
 	}
 
 	public void saveAsync() {
