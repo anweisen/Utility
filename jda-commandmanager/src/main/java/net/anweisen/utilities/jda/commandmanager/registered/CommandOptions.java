@@ -62,73 +62,73 @@ public final class CommandOptions {
 	}
 
 	@Nonnull
-	public CommandOptions setName(@Nonnull String... name) {
+	public CommandOptions name(@Nonnull String... name) {
 		this.name = name;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setUsage(@Nonnull String usage) {
+	public CommandOptions usage(@Nonnull String usage) {
 		this.usage = usage;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setField(@Nonnull CommandField field) {
+	public CommandOptions field(@Nonnull CommandField field) {
 		this.field = field;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setPermission(@Nonnull Permission permission) {
+	public CommandOptions permission(@Nonnull Permission permission) {
 		this.permission = permission;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setTeam(boolean teamCommand) {
+	public CommandOptions team(boolean teamCommand) {
 		this.team = teamCommand;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setAsync(boolean executeAsync) {
+	public CommandOptions async(boolean executeAsync) {
 		this.async = executeAsync;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setAllowsBots(boolean allowBots) {
+	public CommandOptions allowBots(boolean allowBots) {
 		this.allowBots = allowBots;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setAllowWebHooks(boolean allowWebHooks) {
+	public CommandOptions allowWebHooks(boolean allowWebHooks) {
 		this.allowWebHooks = allowWebHooks;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setAllowsEdits(boolean allowEdits) {
+	public CommandOptions allowEdits(boolean allowEdits) {
 		this.allowEdits = allowEdits;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setMentionsDisabled(boolean disableMentions) {
-		this.disableMentions = disableMentions;
+	public CommandOptions disableMentions(boolean disable) {
+		this.disableMentions = disable;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setCoolDownScope(@Nonnull CoolDownScope scope) {
+	public CommandOptions cooldown(@Nonnull CoolDownScope scope) {
 		this.cooldownScope = scope;
 		return this;
 	}
 
 	@Nonnull
-	public CommandOptions setCoolDown(@Nonnegative double seconds) {
+	public CommandOptions cooldown(@Nonnegative double seconds) {
 		this.cooldownSeconds = seconds;
 		return this;
 	}
@@ -190,7 +190,7 @@ public final class CommandOptions {
 		return async;
 	}
 
-	public boolean isDisableMentions() {
+	public boolean getDisableMentions() {
 		return disableMentions;
 	}
 
