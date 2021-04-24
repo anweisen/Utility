@@ -15,20 +15,6 @@ public interface CommandArguments {
 	@Nonnull
 	<T> T get(int index);
 
-	long getLong(int index);
-
-	int getInt(int index);
-
-	short getShort(int index);
-
-	byte getByte(int index);
-
-	float getFloat(int index);
-
-	double getDouble(int index);
-
-	char getChar(int index);
-
 	@Nonnull
 	Class<?> getType(int index);
 

@@ -26,43 +26,9 @@ public class CommandArgumentsImpl implements CommandArguments {
 
 	@Nonnull
 	@Override
-	public <T> T get(int index) {
+	@SuppressWarnings("unchecked")
+	public <T> T get(int index) throws ClassCastException {
 		return (T) args[index];
-	}
-
-	@Override
-	public long getLong(int index) {
-		return get(index);
-	}
-
-	@Override
-	public int getInt(int index) {
-		return get(index);
-	}
-
-	@Override
-	public short getShort(int index) {
-		return get(index);
-	}
-
-	@Override
-	public byte getByte(int index) {
-		return get(index);
-	}
-
-	@Override
-	public float getFloat(int index) {
-		return get(index);
-	}
-
-	@Override
-	public double getDouble(int index) {
-		return get(index);
-	}
-
-	@Override
-	public char getChar(int index) {
-		return get(index);
 	}
 
 	@Nonnull
