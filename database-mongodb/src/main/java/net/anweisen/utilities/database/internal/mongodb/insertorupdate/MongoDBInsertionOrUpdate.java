@@ -56,6 +56,13 @@ public class MongoDBInsertionOrUpdate extends MongoDBUpdate implements DatabaseI
 
 	@Nonnull
 	@Override
+	public DatabaseInsertionOrUpdate whereNot(@Nonnull String field, @Nullable Object value) {
+		super.whereNot(field, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseInsertionOrUpdate set(@Nonnull String field, @Nullable Object value) {
 		super.set(field, value);
 		return this;

@@ -28,6 +28,10 @@ public interface DatabaseDeletion {
 	@CheckReturnValue
 	DatabaseDeletion where(@Nonnull String field, @Nullable String value);
 
+	@Nonnull
+	@CheckReturnValue
+	DatabaseDeletion whereNot(@Nonnull String field, @Nullable Object value);
+
 	void execute() throws DatabaseException;
 
 	boolean equals(@Nonnull DatabaseDeletion other);

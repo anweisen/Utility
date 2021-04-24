@@ -45,7 +45,7 @@ public class SQLQuery implements DatabaseQuery {
 	@Nonnull
 	@Override
 	public DatabaseQuery where(@Nonnull String column, @Nullable Object object) {
-		where.put(column, new ObjectWhere(column, object));
+		where.put(column, new ObjectWhere(column, object, "="));
 		return this;
 	}
 
@@ -67,6 +67,13 @@ public class SQLQuery implements DatabaseQuery {
 		if (!ignoreCase) return where(column, value);
 		if (value == null) throw new NullPointerException("Cannot use where ignore case with null value");
 		where.put(column, new StringIgnoreCaseWhere(column, value));
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseQuery whereNot(@Nonnull String column, @Nullable Object object) {
+		where.put(column, new ObjectWhere(column, object, "!="));
 		return this;
 	}
 

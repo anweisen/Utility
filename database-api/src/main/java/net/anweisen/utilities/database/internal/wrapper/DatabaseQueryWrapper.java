@@ -46,6 +46,12 @@ public abstract class DatabaseQueryWrapper implements DatabaseQuery {
 
 	@Nonnull
 	@Override
+	public DatabaseQuery whereNot(@Nonnull String field, @Nullable Object value) {
+		return query.whereNot(field, value);
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseQuery select(@Nonnull String... selection) {
 		return query.select(selection);
 	}

@@ -32,7 +32,7 @@ public class SQLDeletion implements DatabaseDeletion {
 	@Nonnull
 	@Override
 	public DatabaseDeletion where(@Nonnull String column, @Nullable Object value) {
-		where.put(column, new ObjectWhere(column, value));
+		where.put(column, new ObjectWhere(column, value, "="));
 		return this;
 	}
 
@@ -54,6 +54,13 @@ public class SQLDeletion implements DatabaseDeletion {
 		if (!ignoreCase) return where(column, value);
 		if (value == null) throw new NullPointerException("Cannot use where ignore case with null value");
 		where.put(column, new StringIgnoreCaseWhere(column, value));
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseDeletion whereNot(@Nonnull String column, @Nullable Object value) {
+		where.put(column, new ObjectWhere(column, value, "!="));
 		return this;
 	}
 

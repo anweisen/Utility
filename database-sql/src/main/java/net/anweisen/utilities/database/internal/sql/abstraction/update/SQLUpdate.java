@@ -42,7 +42,7 @@ public class SQLUpdate implements DatabaseUpdate {
 	@Nonnull
 	@Override
 	public DatabaseUpdate where(@Nonnull String column, @Nullable Object value) {
-		where.put(column, new ObjectWhere(column, value));
+		where.put(column, new ObjectWhere(column, value, "="));
 		return this;
 	}
 
@@ -69,6 +69,13 @@ public class SQLUpdate implements DatabaseUpdate {
 
 	@Nonnull
 	@Override
+	public DatabaseUpdate whereNot(@Nonnull String column, @Nullable Object value) {
+		where.put(column, new ObjectWhere(column, value, "!="));
+		return this;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseUpdate set(@Nonnull String column, @Nullable Object value) {
 		values.put(column, value);
 		return this;
@@ -89,7 +96,7 @@ public class SQLUpdate implements DatabaseUpdate {
 			int index = 0;
 			for (Entry<String, Object> entry : values.entrySet()) {
 				if (index > 0) command.append(", ");
-				command.append(entry.getKey() + " = ?");
+				command.append("`" + entry.getKey() + "` = ?");
 				args.add(entry.getValue());
 				index++;
 			}

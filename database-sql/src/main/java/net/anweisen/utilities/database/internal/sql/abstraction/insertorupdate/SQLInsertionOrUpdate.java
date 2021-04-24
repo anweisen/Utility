@@ -54,6 +54,13 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 
 	@Nonnull
 	@Override
+	public DatabaseInsertionOrUpdate whereNot(@Nonnull String column, @Nullable Object value) {
+		super.whereNot(column, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseInsertionOrUpdate set(@Nonnull String column, @Nullable Object value) {
 		super.set(column, value);
 		return this;

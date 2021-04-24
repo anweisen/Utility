@@ -30,6 +30,10 @@ public interface DatabaseInsertionOrUpdate extends DatabaseUpdate, DatabaseInser
 
 	@Nonnull
 	@Override
+	DatabaseInsertionOrUpdate whereNot(@Nonnull String field, @Nullable Object value);
+
+	@Nonnull
+	@Override
 	DatabaseInsertionOrUpdate set(@Nonnull String field, @Nullable Object value);
 
 	void execute() throws DatabaseException;

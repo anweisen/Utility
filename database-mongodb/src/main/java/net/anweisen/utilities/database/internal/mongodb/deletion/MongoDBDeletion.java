@@ -3,6 +3,7 @@ package net.anweisen.utilities.database.internal.mongodb.deletion;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DeleteOptions;
+import com.mongodb.client.model.Filters;
 import net.anweisen.utilities.commons.misc.BsonUtils;
 import net.anweisen.utilities.database.DatabaseDeletion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
@@ -38,7 +39,7 @@ public class MongoDBDeletion implements DatabaseDeletion {
 	@Nonnull
 	@Override
 	public DatabaseDeletion where(@Nonnull String column, @Nullable Object object) {
-		where.put(column, new ObjectWhere(column, object));
+		where.put(column, new ObjectWhere(column, object, Filters::eq));
 		return this;
 	}
 
@@ -60,6 +61,13 @@ public class MongoDBDeletion implements DatabaseDeletion {
 		if (!ignoreCase) return where(column, value);
 		if (value == null) throw new NullPointerException("Cannot use where ignore case with null value");
 		where.put(column, new StringIgnoreCaseWhere(column, value));
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseDeletion whereNot(@Nonnull String column, @Nullable Object object) {
+		where.put(column, new ObjectWhere(column, object, Filters::ne));
 		return this;
 	}
 

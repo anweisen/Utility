@@ -3,6 +3,7 @@ package net.anweisen.utilities.database.internal.mongodb.update;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import net.anweisen.utilities.commons.misc.BsonUtils;
 import net.anweisen.utilities.commons.misc.MongoUtils;
@@ -51,7 +52,7 @@ public class MongoDBUpdate implements DatabaseUpdate {
 	@Nonnull
 	@Override
 	public DatabaseUpdate where(@Nonnull String field, @Nullable Object value) {
-		where.put(field, new ObjectWhere(field, value));
+		where.put(field, new ObjectWhere(field, value, Filters::eq));
 		return this;
 	}
 
@@ -73,6 +74,13 @@ public class MongoDBUpdate implements DatabaseUpdate {
 		if (!ignoreCase) return where(field, value);
 		if (value == null) throw new NullPointerException("Cannot use where ignore case with null value");
 		where.put(field, new StringIgnoreCaseWhere(field, value));
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseUpdate whereNot(@Nonnull String field, @Nullable Object value) {
+		where.put(field, new ObjectWhere(field, value, Filters::ne));
 		return this;
 	}
 

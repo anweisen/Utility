@@ -30,6 +30,10 @@ public interface DatabaseQuery {
 
 	@Nonnull
 	@CheckReturnValue
+	DatabaseQuery whereNot(@Nonnull String field, @Nullable Object value);
+
+	@Nonnull
+	@CheckReturnValue
 	DatabaseQuery select(@Nonnull String... selection);
 
 	@Nonnull

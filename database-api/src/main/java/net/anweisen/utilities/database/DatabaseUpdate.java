@@ -30,6 +30,10 @@ public interface DatabaseUpdate {
 
 	@Nonnull
 	@CheckReturnValue
+	DatabaseUpdate whereNot(@Nonnull String field, @Nullable Object value);
+
+	@Nonnull
+	@CheckReturnValue
 	DatabaseUpdate set(@Nonnull String field, @Nullable Object value);
 
 	void execute() throws DatabaseException;
