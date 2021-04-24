@@ -1,8 +1,12 @@
 package net.anweisen.utilities.jda.commandmanager.impl.prefix;
 
+import net.anweisen.utilities.database.Database;
+import net.anweisen.utilities.database.access.CachedDatabaseAccess;
 import net.anweisen.utilities.database.access.DatabaseAccess;
+import net.anweisen.utilities.database.access.DatabaseAccessConfig;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.jda.commandmanager.PrefixProvider;
+import net.anweisen.utilities.jda.commandmanager.impl.language.DatabaseLanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
 
 import javax.annotation.Nonnull;
@@ -19,6 +23,10 @@ public class DatabasePrefixProvider implements PrefixProvider {
 	public DatabasePrefixProvider(@Nonnull String defaultPrefix, @Nonnull DatabaseAccess<String> access) {
 		this.access = access;
 		this.defaultPrefix = defaultPrefix;
+	}
+
+	public DatabasePrefixProvider(@Nonnull String defaultPrefix, @Nonnull Database database, @Nonnull String table, @Nonnull String keyField, @Nonnull String valueField) {
+		this(defaultPrefix, CachedDatabaseAccess.newStringDatabaseAccess(database, new DatabaseAccessConfig(table, keyField, valueField)));
 	}
 
 	@Nonnull
