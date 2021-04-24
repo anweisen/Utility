@@ -85,4 +85,17 @@ public final class CommandResultInfo {
 	public double getCoolDown() {
 		return cooldown;
 	}
+
+	@Override
+	public String toString() {
+		return "CommandResultInfo{" +
+				"result=" + result +
+				", command=" + command +
+				", matchingName=" + matchingName +
+				", commandName='" + commandName + '\'' +
+				", prefix='" + prefix + '\'' +
+				", cooldown=" + cooldown +
+				'}';
+	}
+
 }

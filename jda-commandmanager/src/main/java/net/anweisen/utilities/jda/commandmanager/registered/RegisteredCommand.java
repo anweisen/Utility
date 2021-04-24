@@ -4,11 +4,11 @@ import net.anweisen.utilities.jda.commandmanager.*;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -25,8 +25,9 @@ public final class RegisteredCommand {
 
 	public RegisteredCommand(@Nonnull Object holder, @Nonnull Method method, @Nonnull CommandManager manager) {
 		this(new CommandOptions(method.getAnnotation(Command.class)), (event, args) -> {
+			boolean staticMethod = Modifier.isStatic(method.getModifiers());
 			method.setAccessible(true);
-			method.invoke(holder instanceof Class ? null : holder, event, args);
+			method.invoke(staticMethod ? null : holder, event, args);
 		}, manager);
 	}
 
@@ -35,7 +36,7 @@ public final class RegisteredCommand {
 	}
 
 	public RegisteredCommand(@Nonnull CommandOptions options, @Nonnull CommandTask task, @Nonnull CommandManager manager) {
-		if (options.getField() != CommandField.GUILD && options.getCoolDownScope() == CoolDownScope.GUILD) throw new IllegalArgumentException("Cannot use CoolDownScope.GUILD without CommandField.GUILD");
+		if (options.getScope() != CommandScope.GUILD && options.getCoolDownScope() == CoolDownScope.GUILD) throw new IllegalArgumentException("Cannot use CoolDownScope.GUILD without CommandField.GUILD");
 
 		List<RequiredArgument> arguments = new ArrayList<>();
 		parseArguments(options.getUsage(), manager, arguments);
@@ -102,17 +103,17 @@ public final class RegisteredCommand {
 		StringBuilder buffer = new StringBuilder();
 		for (char c : usage.toCharArray()) {
 			if (!inArgument) {
-				if (c == ' ') continue; // Ignore spaces
+				if (c == ' ') continue; // Ignore spaces outside arguments
 				if (c == '[') { // Start argument
 					inArgument = true;
 					continue;
 				}
-				throw new IllegalArgumentException("Unexpected '" + c + "' in " +usage + "; Expected argument start ]");
+				throw new IllegalArgumentException("Unexpected '" + c + "' in " + usage + ", expected argument start '['");
 			}
 			if (c == ']') { // End argument
 				inArgument = false;
 				arguments.add(new RequiredArgument(manager.getParserContext(), buffer.toString()));
-				buffer = new StringBuilder();
+				buffer.setLength(0);
 				continue;
 			}
 

@@ -25,7 +25,10 @@ public interface LanguageManager {
 	Language getLanguage(@Nonnull Guild guild);
 
 	@Nullable
-	Language getLanguage(@Nonnull String name);
+	Language getLanguageByIdentifier(@Nonnull String identifier);
+
+	@Nullable
+	Language getLanguageByName(@Nonnull String name);
 
 	@Nonnull
 	Language getLanguage(@Nonnull MessageInfo info);
@@ -33,18 +36,24 @@ public interface LanguageManager {
 	void setLanguage(@Nonnull Guild guild, @Nonnull Language language) throws DatabaseException;
 
 	@Nonnull
-	LanguageManager setDefaultLanguage(@Nonnull String name);
+	LanguageManager setDefaultLanguage(@Nonnull String identifier);
 
 	@Nonnull
-	LanguageManager readLanguages(@Nonnull String folder) throws IOException;
+	LanguageManager readFolder(@Nonnull String folder) throws IOException;
 
 	@Nonnull
-	LanguageManager readLanguages(@Nonnull File folder) throws IOException;
+	LanguageManager readFolder(@Nonnull File folder) throws IOException;
 
 	@Nonnull
-	LanguageManager readLanguage(@Nonnull String filename) throws IOException;
+	LanguageManager readFile(@Nonnull String filename) throws IOException;
 
 	@Nonnull
-	LanguageManager readLanguage(@Nonnull File file) throws IOException;
+	LanguageManager readFile(@Nonnull File file) throws IOException;
+
+	@Nonnull
+	LanguageManager readResource(@Nonnull String filename) throws IOException;
+
+	@Nonnull
+	LanguageManager register(@Nonnull Language language);
 
 }

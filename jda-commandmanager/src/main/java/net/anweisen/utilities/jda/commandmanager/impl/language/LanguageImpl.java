@@ -3,6 +3,7 @@ package net.anweisen.utilities.jda.commandmanager.impl.language;
 import net.anweisen.utilities.commons.config.Document;
 import net.anweisen.utilities.jda.commandmanager.language.Language;
 import net.anweisen.utilities.jda.commandmanager.language.Message;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -14,11 +15,12 @@ import java.util.Map;
  */
 public class LanguageImpl implements Language {
 
-	private final Map<String, Message> messages = new HashMap<>();
-	private final String name;
+	protected final Map<String, Message> messages = new HashMap<>();
+	protected final String identifier;
+	protected String[] names;
 
-	public LanguageImpl(@Nonnull String name) {
-		this.name = name;
+	public LanguageImpl(@Nonnull String identifier) {
+		this.identifier = identifier;
 	}
 
 	@Nonnull
@@ -29,12 +31,22 @@ public class LanguageImpl implements Language {
 
 	@Nonnull
 	@Override
-	public String getName() {
-		return name;
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	@Nonnull
+	@Override
+	public String[] getNames() {
+		return names;
 	}
 
 	@Override
 	public void read(@Nonnull Document document) {
+		names = document.getStringList("name").toArray(new String[0]);
+		if (names.length == 0)
+			throw new IllegalArgumentException("Names of language ('" + identifier + "') cannot be empty");
+
 		for (String path : document.keys()) {
 			Message message = getMessage(path);
 			if (document.isList(path)) {

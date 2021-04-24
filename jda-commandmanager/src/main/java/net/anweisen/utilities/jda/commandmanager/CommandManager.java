@@ -62,6 +62,12 @@ public interface CommandManager {
 	@Nonnull
 	CommandManager setTeamRoleManager(@Nullable TeamRoleManager manager);
 
+	@Nonnull
+	EventCreator getEventCreator();
+
+	@Nonnull
+	CommandManager setEventCreator(@Nonnull EventCreator creator);
+
 	boolean getReactToMentionPrefix();
 
 	@Nonnull

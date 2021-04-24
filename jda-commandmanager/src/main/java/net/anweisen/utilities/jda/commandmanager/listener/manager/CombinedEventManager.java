@@ -14,8 +14,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * This {@link IEventManager EventManager} combines the functionality
+ * of the {@link net.dv8tion.jda.api.hooks.InterfacedEventManager}
+ * and {@link net.dv8tion.jda.api.hooks.AnnotatedEventManager}.
+ *
+ * Event listeners can be created via the {@link net.dv8tion.jda.api.hooks.InterfacedEventManager}
+ * by implementing {@link EventListener} or {@link net.dv8tion.jda.api.hooks.ListenerAdapter}, which is more advanced.
+ * By annotating a method with {@link net.dv8tion.jda.api.hooks.SubscribeEvent} a event listener can be created via the {@link net.dv8tion.jda.api.hooks.AnnotatedEventManager}.
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see net.dv8tion.jda.api.hooks.SubscribeEvent
+ * @see net.dv8tion.jda.api.hooks.EventListener
+ *
+ * @see net.dv8tion.jda.api.hooks.InterfacedEventManager
+ * @see net.dv8tion.jda.api.hooks.AnnotatedEventManager
  */
 public class CombinedEventManager implements IEventManager {
 

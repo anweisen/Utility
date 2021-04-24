@@ -11,6 +11,14 @@ import javax.annotation.Nonnull;
  */
 public class ConstantLanguageManager extends AbstractLanguageManager {
 
+	public ConstantLanguageManager() {
+	}
+
+	public ConstantLanguageManager(@Nonnull Language language) {
+		register(language);
+	}
+
+
 	@Nonnull
 	@Override
 	public Language getLanguage(@Nonnull Guild guild) {

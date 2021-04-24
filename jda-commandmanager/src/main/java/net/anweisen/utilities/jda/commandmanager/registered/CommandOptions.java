@@ -1,9 +1,8 @@
 package net.anweisen.utilities.jda.commandmanager.registered;
 
 import net.anweisen.utilities.jda.commandmanager.Command;
-import net.anweisen.utilities.jda.commandmanager.CommandField;
+import net.anweisen.utilities.jda.commandmanager.CommandScope;
 import net.anweisen.utilities.jda.commandmanager.CoolDownScope;
-import net.anweisen.utilities.jda.commandmanager.InterfacedCommand;
 import net.dv8tion.jda.api.Permission;
 
 import javax.annotation.Nonnegative;
@@ -19,7 +18,7 @@ public final class CommandOptions {
 
 	private String[] name = {};
 	private String usage = "";
-	private CommandField field = CommandField.GENERAL;
+	private CommandScope scope = CommandScope.GENERAL;
 	private Permission permission = Permission.UNKNOWN;
 	private boolean team = false;
 	private boolean async = true;
@@ -38,12 +37,12 @@ public final class CommandOptions {
 		this.usage = usage;
 	}
 
-	public CommandOptions(@Nonnull String[] name, @Nonnull String usage, @Nonnull CommandField field, @Nonnull Permission permission,
+	public CommandOptions(@Nonnull String[] name, @Nonnull String usage, @Nonnull CommandScope scope, @Nonnull Permission permission,
 	                      boolean team, boolean async, boolean allowBots, boolean allowWebHooks, boolean allowEdits, boolean disableMentions,
 	                      @Nonnull CoolDownScope cooldownScope, @Nonnegative double cooldownSeconds) {
 		this.name = name;
 		this.usage = usage;
-		this.field = field;
+		this.scope = scope;
 		this.permission = permission;
 		this.team = team;
 		this.async = async;
@@ -56,7 +55,7 @@ public final class CommandOptions {
 	}
 
 	public CommandOptions(@Nonnull Command command) {
-		this(command.name(), command.usage(), command.field(), command.permission(),
+		this(command.name(), command.usage(), command.scope(), command.permission(),
 			 command.team(), command.async(), command.allowBots(), command.allowWebHooks(), command.allowEdits(), command.disableMentions(),
 			 command.cooldownScope(), command.cooldownSeconds());
 	}
@@ -74,8 +73,8 @@ public final class CommandOptions {
 	}
 
 	@Nonnull
-	public CommandOptions field(@Nonnull CommandField field) {
-		this.field = field;
+	public CommandOptions scope(@Nonnull CommandScope field) {
+		this.scope = field;
 		return this;
 	}
 
@@ -134,8 +133,8 @@ public final class CommandOptions {
 	}
 
 	@Nonnull
-	public CommandField getField() {
-		return field;
+	public CommandScope getScope() {
+		return scope;
 	}
 
 	@Nonnull
@@ -203,7 +202,7 @@ public final class CommandOptions {
 		return "CommandOptions{" +
 				"name=" + Arrays.toString(name) +
 				", usage='" + usage + '\'' +
-				", field=" + field +
+				", field=" + scope +
 				", permission=" + permission +
 				", team=" + team +
 				", async=" + async +
@@ -221,12 +220,12 @@ public final class CommandOptions {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		CommandOptions that = (CommandOptions) o;
-		return team == that.team && async == that.async && allowBots == that.allowBots && allowWebHooks == that.allowWebHooks && allowEdits == that.allowEdits && disableMentions == that.disableMentions && Double.compare(that.cooldownSeconds, cooldownSeconds) == 0 && Arrays.equals(name, that.name) && Objects.equals(usage, that.usage) && field == that.field && permission == that.permission && cooldownScope == that.cooldownScope;
+		return team == that.team && async == that.async && allowBots == that.allowBots && allowWebHooks == that.allowWebHooks && allowEdits == that.allowEdits && disableMentions == that.disableMentions && Double.compare(that.cooldownSeconds, cooldownSeconds) == 0 && Arrays.equals(name, that.name) && Objects.equals(usage, that.usage) && scope == that.scope && permission == that.permission && cooldownScope == that.cooldownScope;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(usage, field, permission, team, async, allowBots, allowWebHooks, allowEdits, disableMentions, cooldownScope, cooldownSeconds);
+		int result = Objects.hash(usage, scope, permission, team, async, allowBots, allowWebHooks, allowEdits, disableMentions, cooldownScope, cooldownSeconds);
 		result = 31 * result + Arrays.hashCode(name);
 		return result;
 	}

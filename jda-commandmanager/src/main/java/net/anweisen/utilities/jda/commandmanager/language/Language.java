@@ -16,6 +16,19 @@ public interface Language {
 	Message getMessage(@Nonnull String name);
 
 	@Nonnull
-	String getName();
+	String getIdentifier();
+
+	/**
+	 * @return the first {@link #getNames() name} or the {@link #getIdentifier() identifier}
+	 */
+	@Nonnull
+	default String getName() {
+		String[] names = getNames();
+		if (names.length == 0) return getIdentifier();
+		return names[0];
+	}
+
+	@Nonnull
+	String[] getNames();
 
 }

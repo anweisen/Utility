@@ -1,4 +1,4 @@
-package net.anweisen.utilities.jda.commandmanager.defaults;
+package net.anweisen.utilities.jda.commandmanager.defaults.commands;
 
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.jda.commandmanager.*;
@@ -22,7 +22,7 @@ public class DefaultSetPrefixCommand {
 	@Command(
 			name = "setprefix",
 			usage = "[string prefix]",
-			field = CommandField.GUILD,
+			scope = CommandScope.GUILD,
 			cooldownScope = CoolDownScope.GUILD,
 			cooldownSeconds = 10
 	)

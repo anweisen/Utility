@@ -24,7 +24,7 @@ public @interface Command {
 	String usage() default "";
 
 	@Nonnull
-	CommandField field() default CommandField.GENERAL;
+	CommandScope scope() default CommandScope.GENERAL;
 
 	@Nonnull
 	Permission permission() default Permission.UNKNOWN;

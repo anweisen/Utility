@@ -1,14 +1,16 @@
 package net.anweisen.utilities.jda.commandmanager.impl;
 
 import net.anweisen.utilities.commons.common.Tuple;
-import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
+import net.anweisen.utilities.commons.misc.WrappedException;
 import net.anweisen.utilities.jda.commandmanager.*;
 import net.anweisen.utilities.jda.commandmanager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.commandmanager.arguments.InvalidArgumentParseValueException;
 import net.anweisen.utilities.jda.commandmanager.arguments.ParserOptions;
 import net.anweisen.utilities.jda.commandmanager.impl.entities.CommandArgumentsImpl;
 import net.anweisen.utilities.jda.commandmanager.impl.entities.CommandEventImpl;
+import net.anweisen.utilities.jda.commandmanager.impl.language.ConstantLanguageManager;
+import net.anweisen.utilities.jda.commandmanager.impl.language.FallbackLanguage;
 import net.anweisen.utilities.jda.commandmanager.impl.prefix.ConstantPrefixProvider;
 import net.anweisen.utilities.jda.commandmanager.language.LanguageManager;
 import net.anweisen.utilities.jda.commandmanager.process.CommandPreProcessInfo;
@@ -20,11 +22,11 @@ import net.anweisen.utilities.jda.commandmanager.registered.CommandTask;
 import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
 import net.anweisen.utilities.jda.commandmanager.registered.RequiredArgument;
 import net.dv8tion.jda.api.Permission;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
@@ -50,12 +52,20 @@ public class DefaultCommandManager implements CommandManager {
 		public Object call(@Nonnull CommandResultInfo info) {
 			if (called) return null;
 			called = true;
-			action.accept(info);
+			try {
+				action.accept(info);
+			} catch (Throwable ex) {
+				LOGGER.error("An error occurred while handling callback of command handling");
+			}
 			return null;
 		}
 
 		public Object call(@Nonnull CommandProcessResult result, @Nullable String prefix, @Nullable String commandName) {
 			return call(new CommandResultInfo(result, commandName, prefix));
+		}
+
+		public Object call(@Nonnull CommandProcessResult result, @Nonnull RegisteredCommand command, @Nonnull String prefix, @Nonnull String commandName) {
+			return call(new CommandResultInfo(result, command, commandName, prefix));
 		}
 
 		public Object call(@Nonnull CommandProcessResult result) {
@@ -66,10 +76,11 @@ public class DefaultCommandManager implements CommandManager {
 
 	protected final Map<String, RegisteredCommand> commandsByName = new HashMap<>();
 	protected final ExecutorService executorService = Executors.newCachedThreadPool();
-	protected CommandResultHandler resultHandler = new HardcodedResultHandler(false);
+	protected LanguageManager languageManager = new ConstantLanguageManager(new FallbackLanguage());
+	protected CommandResultHandler resultHandler = new LanguageResultHandler();
 	protected ParserContext parserContext = new DefaultParserContext();
+	protected EventCreator eventCreator = new DefaultEventCreator();
 	protected PrefixProvider prefixProvider;
-	protected LanguageManager languageManager;
 	protected TeamRoleManager teamRoleManager;
 	protected boolean reactToMentionPrefix = true;
 
@@ -105,10 +116,12 @@ public class DefaultCommandManager implements CommandManager {
 			return this;
 		}
 
-		for (Method method : ReflectionUtils.getMethodsAnnotatedWith(command.getClass(), Command.class)) {
+		for (Method method : ReflectionUtils.getMethodsAnnotatedWith(command instanceof Class ? (Class<?>) command : command.getClass(), Command.class)) {
 			Class<?>[] parameters = method.getParameterTypes();
+			if (!Modifier.isStatic(method.getModifiers()) && command instanceof Class) continue; // Ignore instance commands when registering via class
 			if (parameters.length != 2) throw new IllegalArgumentException("Cannot register " + method + ", parameter count is not 2");
-			if (parameters[0] != CommandEvent.class || parameters[1] != CommandArguments.class) throw new IllegalArgumentException("Cannot register " + method + ", parameters are not (CommandEvent, CommandArguments)");
+			if (!parameters[0].isAssignableFrom(eventCreator.getEventClass()) || !parameters[1].isAssignableFrom(CommandArguments.class))
+				throw new IllegalArgumentException("Cannot register " + method + ", parameters are not (" + eventCreator.getEventClass().getName() + ", " + CommandArguments.class.getName() + ")");
 
 			RegisteredCommand registeredCommand = new RegisteredCommand(command, method, this);
 			register0(registeredCommand);
@@ -134,6 +147,7 @@ public class DefaultCommandManager implements CommandManager {
 		for (Entry<String, RegisteredCommand> entry : commandsByName.entrySet()) {
 			String name = entry.getKey();
 			if (!input.startsWith(name)) continue;
+			if (input.length() > name.length() && !input.substring(name.length()).startsWith(" ")) continue;
 			RegisteredCommand command = entry.getValue();
 			matchingName.add(command);
 			RequiredArgument[] arguments = command.getArguments();
@@ -153,7 +167,7 @@ public class DefaultCommandManager implements CommandManager {
 			index += argument.getLength();
 			if (index > splitted.length) return false;
 		}
-		return index > 0;
+		return true;
 	}
 
 	@Override
@@ -207,19 +221,19 @@ public class DefaultCommandManager implements CommandManager {
 		String commandName = command.getOptions().getFirstName();
 
 		if (!command.getOptions().getAllowEdits() && info.getMessage().isEdited())
-			return callback.call(CommandProcessResult.EDITS_UNSUPPORTED, prefix, commandName);
+			return callback.call(CommandProcessResult.EDITS_UNSUPPORTED, command, prefix, commandName);
 		if (!command.getOptions().getAllowBots() && info.getMessage().getAuthor().isBot())
-			return callback.call(CommandProcessResult.INVALID_AUTHOR, prefix, commandName);
+			return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
 		if (!command.getOptions().getAllowWebHooks() && info.getMessage().isWebhookMessage())
-			return callback.call(CommandProcessResult.INVALID_AUTHOR, prefix, commandName);
-		if (command.getOptions().getField() == CommandField.GUILD && !info.getMessage().isFromGuild())
-			return callback.call(CommandProcessResult.INVALID_FIELD, prefix, commandName);
-		if (command.getOptions().getField() == CommandField.PRIVATE && info.getMessage().isFromGuild())
-			return callback.call(CommandProcessResult.INVALID_FIELD, prefix, commandName);
+			return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
+		if (command.getOptions().getScope() == CommandScope.GUILD && !info.getMessage().isFromGuild())
+			return callback.call(CommandProcessResult.INVALID_SCOPE, command, prefix, commandName);
+		if (command.getOptions().getScope() == CommandScope.PRIVATE && info.getMessage().isFromGuild())
+			return callback.call(CommandProcessResult.INVALID_SCOPE, command, prefix, commandName);
 		if (command.getOptions().getPermission() != Permission.UNKNOWN && !info.getMember().hasPermission(command.getOptions().getPermission()))
-			return callback.call(CommandProcessResult.MISSING_PERMISSION);
-		if (command.getOptions().getTeam() && (!teamRoleManager.isTeamRoleSet(info.getMember().getGuild()) || !teamRoleManager.hasTeamRole(info.getMember())) && !info.getMember().hasPermission(command.getOptions().getPermissionOrAdmin()))
-			return callback.call(CommandProcessResult.MISSING_TEAM_ROLE);
+			return callback.call(CommandProcessResult.MISSING_PERMISSION, command, prefix, commandName);
+		if (command.getOptions().getTeam() && teamRoleManager != null && (!teamRoleManager.isTeamRoleSet(info.getMember().getGuild()) || !teamRoleManager.hasTeamRole(info.getMember())) && !info.getMember().hasPermission(command.getOptions().getPermissionOrAdmin()))
+			return callback.call(CommandProcessResult.MISSING_TEAM_ROLE, command, prefix, commandName);
 		if (command.getCoolDown().isOnCoolDown(info.getMessage().getAuthor(), info.getMessage().isFromGuild() ? info.getMessage().getGuild() : null))
 			return callback.call(new CommandResultInfo(CommandProcessResult.COOLDOWN, command, commandName, prefix, command.getCoolDown().getCoolDown(info.getMessage().getAuthor(), info.getMessage().isFromGuild() ? info.getMessage().getGuild() : null)));
 
@@ -227,7 +241,10 @@ public class DefaultCommandManager implements CommandManager {
 
 		String stripped = content.substring(commandName.length()).trim();
 
-		CommandEvent event = new CommandEventImpl(this, info.getMessage(), info.getMember(), command.getOptions().isDisableMentions());
+		CommandEvent event = eventCreator.createEvent(this, info, command);
+		if (!eventCreator.getEventClass().isAssignableFrom(event.getClass()))
+			throw new IllegalArgumentException("EventCreator returned " + event.getClass().getName() + " which is not an instance of " + eventCreator.getEventClass().getName() + " as expected");
+
 		Tuple<Class<?>[], Object[]> parsed = parseArguments(command, stripped, event);
 		if (parsed == null)
 			return callback.call(new CommandResultInfo(CommandProcessResult.INCORRECT_ARGUMENTS, command, commandName, prefix));
@@ -246,10 +263,10 @@ public class DefaultCommandManager implements CommandManager {
 	protected Object execute0(@Nonnull RegisteredCommand command, @Nonnull Callback callback, @Nonnull CommandEvent event, @Nonnull CommandArguments args, @Nonnull String prefix, @Nonnull String commandName) {
 		try {
 			command.execute(event, args);
-			return callback.call(CommandProcessResult.SUCCESS, prefix, commandName);
+			return callback.call(CommandProcessResult.SUCCESS, command, prefix, commandName);
 		} catch (Throwable ex) {
-			LOGGER.error("An error occurred while executing a command", ex);
-			return callback.call(CommandProcessResult.ERROR, prefix, commandName);
+			LOGGER.error("An error occurred while executing the command '{}'", commandName, ex);
+			return callback.call(CommandProcessResult.ERROR, command, prefix, commandName);
 		}
 	}
 
@@ -348,6 +365,21 @@ public class DefaultCommandManager implements CommandManager {
 	@Override
 	public CommandManager setTeamRoleManager(@Nullable TeamRoleManager teamRoleManager) {
 		this.teamRoleManager = teamRoleManager;
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public EventCreator getEventCreator() {
+		return eventCreator;
+	}
+
+	@Nonnull
+	@Override
+	public CommandManager setEventCreator(@Nonnull EventCreator eventCreator) {
+		if (!commandsByName.isEmpty() && !eventCreator.getEventClass().isAssignableFrom(this.eventCreator.getEventClass()))
+			LOGGER.warn("EventCreator was set what changed the event class from " + this.eventCreator.getEventClass().getName() + " to " + eventCreator.getEventClass().getName() + " after commands were registered, this can cause issues");
+		this.eventCreator = eventCreator;
 		return this;
 	}
 

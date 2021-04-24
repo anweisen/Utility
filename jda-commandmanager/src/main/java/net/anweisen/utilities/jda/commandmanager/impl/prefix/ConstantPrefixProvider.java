@@ -31,7 +31,7 @@ public class ConstantPrefixProvider implements PrefixProvider {
 
 	@Override
 	public void setGuildPrefix(@Nonnull Guild guild, @Nonnull String prefix) {
-		throw new UnsupportedOperationException("Custom guild prefixes are not supported");
+		throw new UnsupportedOperationException("ConstantPrefixProvider does not support custom guild prefixes");
 	}
 
 }

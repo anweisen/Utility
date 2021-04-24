@@ -1,6 +1,9 @@
 package net.anweisen.utilities.jda.commandmanager.impl;
 
+import net.anweisen.utilities.database.Database;
+import net.anweisen.utilities.database.access.CachedDatabaseAccess;
 import net.anweisen.utilities.database.access.DatabaseAccess;
+import net.anweisen.utilities.database.access.DatabaseAccessConfig;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.jda.commandmanager.TeamRoleManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -20,6 +23,10 @@ public class DatabaseTeamRoleManager implements TeamRoleManager {
 
 	public DatabaseTeamRoleManager(@Nonnull DatabaseAccess<String> access) {
 		this.access = access;
+	}
+
+	public DatabaseTeamRoleManager(@Nonnull Database database, @Nonnull String table, @Nonnull String keyField, @Nonnull String valueField) {
+		this(CachedDatabaseAccess.newStringDatabaseAccess(database, new DatabaseAccessConfig(table, keyField, valueField)));
 	}
 
 	@Override
