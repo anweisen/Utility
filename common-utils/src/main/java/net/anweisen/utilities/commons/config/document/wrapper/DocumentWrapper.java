@@ -95,9 +95,10 @@ public abstract class DocumentWrapper implements Document {
 		return document.getObject(path, def);
 	}
 
+
 	@Nonnull
 	@Override
-	public <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
+	public <T, O> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
 		return document.getOptional(key, extractor);
 	}
 

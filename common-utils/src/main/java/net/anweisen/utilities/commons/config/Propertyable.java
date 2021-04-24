@@ -21,8 +21,9 @@ public interface Propertyable {
 	Object getObject(@Nonnull String path, @Nonnull Object def);
 
 	@Nonnull
-	default <T> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<? super Propertyable, ? super String, ? extends T> extractor) {
-		return Optional.ofNullable(extractor.apply(this, key));
+	@SuppressWarnings("unchecked")
+	default <T, O> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
+		return Optional.ofNullable(extractor.apply((O) this, key));
 	}
 
 	@Nullable
