@@ -177,6 +177,17 @@ public class BsonDocument extends AbstractDocument {
 	}
 
 	@Override
+	public boolean isDocument(@Nonnull String path) {
+		Object value = bsonDocument.get(path);
+		return value instanceof org.bson.Document;
+	}
+
+	@Override
+	public boolean isObject(@Nonnull String path) {
+		return !isList(path) && !isDocument(path);
+	}
+
+	@Override
 	public int size() {
 		return bsonDocument.size();
 	}
