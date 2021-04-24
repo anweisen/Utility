@@ -1,9 +1,9 @@
 package net.anweisen.utilities.jda.commandmanager.utils;
 
+import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.config.document.GsonDocument;
 import net.anweisen.utilities.commons.config.document.wrapper.FileDocumentWrapper;
 import net.anweisen.utilities.commons.misc.FileUtils;
-import net.anweisen.utilities.commons.misc.WrappedException;
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.DatabaseConfig;
 import net.anweisen.utilities.database.SimpleDatabaseTypeResolver;
@@ -85,11 +85,11 @@ public final class BotConfigCreator {
 	}
 
 	public String getDatabaseType() {
-		return document.getString("database-type");
+		return document.getString("database.type");
 	}
 
 	public DatabaseConfig getTargetDatabaseConfig() {
-		return new DatabaseConfig(document.getDocument(getDatabaseType()));
+		return new DatabaseConfig(document.getDocument("database." + getDatabaseType()));
 	}
 
 	public Database createDatabase() {
