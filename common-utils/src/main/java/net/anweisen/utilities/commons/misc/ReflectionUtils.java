@@ -145,4 +145,14 @@ public final class ReflectionUtils {
 		}
 	}
 
+	@Nullable
+	public static Class<?> getClassOrNull(@Nullable String name) {
+		try {
+			if (name == null) return null;
+			return Class.forName(name);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
 }
