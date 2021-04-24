@@ -40,6 +40,25 @@ public final class FileUtils {
 				.orElse("");
 	}
 
+	@Nonnull
+	public static String getFileName(@Nonnull File file) {
+		return getFileName(file.getName());
+	}
+
+	@Nonnull
+	public static String getFileName(@Nonnull String filename) {
+		filename = stripFolders(filename);
+		int index = filename.lastIndexOf('.');
+		if (index == -1) return filename;
+		return filename.substring(0, index);
+	}
+
+	public static String stripFolders(@Nonnull String filename) {
+		int index = filename.lastIndexOf('/');
+		if (index == -1) return filename;
+		return filename.substring(index + 1);
+	}
+
 	public static void createFilesIfNecessary(@Nonnull File file) throws IOException {
 		if (file.exists()) return;
 
