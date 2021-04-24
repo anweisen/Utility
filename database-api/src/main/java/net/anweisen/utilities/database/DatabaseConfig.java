@@ -93,4 +93,17 @@ public final class DatabaseConfig {
 		return file;
 	}
 
+	@Override
+	public String toString() {
+		return "DatabaseConfig{" +
+				"host='" + host + '\'' +
+				", database='" + database + '\'' +
+				", authDatabase='" + authDatabase + '\'' +
+				", user='" + user + '\'' +
+				", file='" + file + '\'' +
+				", port=" + port +
+				", portIsSet=" + portIsSet +
+				'}';
+	}
+
 }
