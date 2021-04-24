@@ -45,10 +45,10 @@ public class DirectDatabaseAccess<V> implements DatabaseAccess<V> {
 
 	@Nonnull
 	protected Optional<V> getValue0(@Nonnull String key) throws DatabaseException {
-		Document document = database.query(config.getTable())
+		return database.query(config.getTable())
 				.where(config.getKeyField(), key)
-				.execute().firstOrEmpty();
-		return Optional.ofNullable(mapper.apply(document, config.getValueField()));
+				.execute().first()
+				.map(document -> mapper.apply(document, config.getValueField()));
 	}
 
 	@Override
@@ -57,12 +57,6 @@ public class DirectDatabaseAccess<V> implements DatabaseAccess<V> {
 				.set(config.getValueField(), value)
 				.where(config.getKeyField(), key)
 				.execute();
-	}
-
-	@Nonnull
-	@Override
-	public BiFunction<? super Document, ? super String, ? extends V> getMapper() {
-		return mapper;
 	}
 
 	@Nonnull
