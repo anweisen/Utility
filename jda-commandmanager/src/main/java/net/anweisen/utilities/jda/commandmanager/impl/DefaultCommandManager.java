@@ -1,8 +1,8 @@
 package net.anweisen.utilities.jda.commandmanager.impl;
 
 import net.anweisen.utilities.commons.common.Tuple;
+import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
-import net.anweisen.utilities.commons.misc.WrappedException;
 import net.anweisen.utilities.jda.commandmanager.*;
 import net.anweisen.utilities.jda.commandmanager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.commandmanager.arguments.InvalidArgumentParseValueException;
@@ -143,7 +143,7 @@ public class DefaultCommandManager implements CommandManager {
 	}
 
 	@Nonnull
-	public Optional<RegisteredCommand> findCommand(@Nonnull String input, @Nonnull Collection<RegisteredCommand> matchingName) {
+	public Optional<Tuple<String, RegisteredCommand>> findCommand(@Nonnull String input, @Nonnull Collection<RegisteredCommand> matchingName) {
 		for (Entry<String, RegisteredCommand> entry : commandsByName.entrySet()) {
 			String name = entry.getKey();
 			if (!input.startsWith(name)) continue;
@@ -153,7 +153,7 @@ public class DefaultCommandManager implements CommandManager {
 			RequiredArgument[] arguments = command.getArguments();
 			String argumentInput = input.substring(name.length()).trim();
 			if (!isArgumentLengthAssignable(argumentInput, arguments)) continue;
-			return Optional.of(command);
+			return Optional.of(new Tuple<>(name, command));
 		}
 		return Optional.empty();
 	}
@@ -208,7 +208,7 @@ public class DefaultCommandManager implements CommandManager {
 		String content = raw.substring(usedPrefix.length());
 		String lower = content.toLowerCase();
 		List<RegisteredCommand> matchingName = new ArrayList<>();
-		Optional<RegisteredCommand> optional = findCommand(lower, matchingName);
+		Optional<Tuple<String, RegisteredCommand>> optional = findCommand(lower, matchingName);
 		if (!optional.isPresent()) {
 			if (matchingName.isEmpty()) {
 				return callback.call(CommandProcessResult.UNKNOWN_COMMAND, prefix, content);
@@ -217,8 +217,9 @@ public class DefaultCommandManager implements CommandManager {
 			}
 		}
 
-		RegisteredCommand command = optional.get();
-		String commandName = command.getOptions().getFirstName();
+		Tuple<String, RegisteredCommand> pair = optional.get();
+		String commandName = pair.getFirst();
+		RegisteredCommand command = pair.getSecond();
 
 		if (!command.getOptions().getAllowEdits() && info.getMessage().isEdited())
 			return callback.call(CommandProcessResult.EDITS_UNSUPPORTED, command, prefix, commandName);
