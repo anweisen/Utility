@@ -4,16 +4,15 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>jda-commandmanager</artifactId>
-	<name>jda-commandmanager</name>
-	<version>1.0</version>
+	<name>${artifactId}</name>
+	<version>${parent.version}</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
 		<groupId>net.anweisen.utilities</groupId>
 		<artifactId>root</artifactId>
-		<version>1.0</version>
+		<version>1.2.2</version>
 	</parent>
 
 	<properties>
@@ -78,18 +77,18 @@
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>database-api</artifactId>
-			<version>1.2.2</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>database-sql</artifactId>
-			<version>1.2</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>database-mongodb</artifactId>
-			<version>1.2</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Annotations like @Nonnull -->
