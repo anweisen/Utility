@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public interface ILogger {
 
-	class Holder {
+	final class Holder {
 
 		private static ILoggerFactory factory = new DefaultLoggerFactory();
 
