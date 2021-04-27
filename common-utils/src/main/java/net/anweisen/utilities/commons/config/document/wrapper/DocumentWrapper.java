@@ -202,6 +202,12 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
+	public String[] getStringArray(@Nonnull String path) {
+		return document.getStringArray(path);
+	}
+
+	@Nonnull
+	@Override
 	public <T> List<T> mapList(@Nonnull String path, @Nonnull Function<String, ? extends T> mapper) {
 		return document.mapList(path, mapper);
 	}

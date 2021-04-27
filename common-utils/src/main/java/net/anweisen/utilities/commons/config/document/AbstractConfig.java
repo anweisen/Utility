@@ -120,6 +120,12 @@ public abstract class AbstractConfig implements Config {
 
 	@Nonnull
 	@Override
+	public String[] getStringArray(@Nonnull String path) {
+		return getStringList(path).toArray(new String[0]);
+	}
+
+	@Nonnull
+	@Override
 	public <E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
 		return mapList(path, name -> ReflectionUtils.getEnumOrNull(name, classOfEnum));
 	}

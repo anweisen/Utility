@@ -68,6 +68,9 @@ public interface Propertyable {
 	List<String> getStringList(@Nonnull String path);
 
 	@Nonnull
+	String[] getStringArray(@Nonnull String path);
+
+	@Nonnull
 	<E extends Enum<E>> List<E> getEnumList(@Nonnull String path, @Nonnull Class<E> classOfEnum);
 
 	@Nonnull
