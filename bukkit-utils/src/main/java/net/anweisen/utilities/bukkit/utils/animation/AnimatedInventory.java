@@ -37,6 +37,10 @@ public class AnimatedInventory {
 	}
 
 	public void open(@Nonnull Player player, @Nonnull JavaPlugin plugin) {
+		if (!Bukkit.isPrimaryThread()) {
+			Bukkit.getScheduler().runTask(plugin, () -> openNotAnimated(player, playSound, plugin));
+			return;
+		}
 
 		Inventory inventory = createInventory();
 		applyFrame(inventory, 0, player);
