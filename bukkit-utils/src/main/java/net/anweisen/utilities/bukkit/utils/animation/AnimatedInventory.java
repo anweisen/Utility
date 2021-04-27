@@ -36,16 +36,13 @@ public class AnimatedInventory {
 	}
 
 	public void open(@Nonnull Player player, @Nonnull JavaPlugin plugin) {
-		if (!Bukkit.isPrimaryThread()) {
-			Bukkit.getScheduler().runTask(plugin, () -> open(player, plugin));
-			return;
-		}
 
 		Inventory inventory = createInventory();
 		player.openInventory(inventory);
 
 		AtomicInteger index = new AtomicInteger();
 		Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task -> {
+		Bukkit.getScheduler().runTaskTimer(plugin, task -> {
 
 			if (index.get() >= frames.size() || player.getOpenInventory().getTopInventory() != inventory) {
 				task.cancel();
