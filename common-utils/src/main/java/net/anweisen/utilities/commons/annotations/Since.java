@@ -1,15 +1,13 @@
 package net.anweisen.utilities.commons.annotations;
 
 import javax.annotation.Nonnull;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
+@Documented
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PACKAGE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Since {
