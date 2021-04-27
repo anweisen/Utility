@@ -22,17 +22,14 @@ public class Triple<A, B, C> {
 		this.third = third;
 	}
 
-	@Nullable
 	public A getFirst() {
 		return first;
 	}
 
-	@Nullable
 	public B getSecond() {
 		return second;
 	}
 
-	@Nullable
 	public C getThird() {
 		return third;
 	}
