@@ -38,7 +38,7 @@ public class AnimatedInventory {
 
 	public void open(@Nonnull Player player, @Nonnull JavaPlugin plugin) {
 		if (!Bukkit.isPrimaryThread()) {
-			Bukkit.getScheduler().runTask(plugin, () -> openNotAnimated(player, playSound, plugin));
+			Bukkit.getScheduler().runTask(plugin, () -> open(player, plugin));
 			return;
 		}
 
