@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,22 +39,18 @@ public class AnimatedInventory {
 	public void open(@Nonnull Player player, @Nonnull JavaPlugin plugin) {
 
 		Inventory inventory = createInventory();
+		applyFrame(inventory, 0, player);
 		player.openInventory(inventory);
 
-		AtomicInteger index = new AtomicInteger();
-		Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task -> {
+		AtomicInteger index = new AtomicInteger(1);
 		Bukkit.getScheduler().runTaskTimer(plugin, task -> {
 
-			if (index.get() >= frames.size() || player.getOpenInventory().getTopInventory() != inventory) {
+			if (index.get() >= frames.size() || inventory.getViewers().isEmpty()) {
 				task.cancel();
 				return;
 			}
 
-			AnimationFrame frame = frames.get(index.get());
-			inventory.setContents(frame.getContent());
-
-			if (index.get() == frames.size() - 1 && endSound != null) endSound.play(player);
-			else if (frameSound != null && frame.shouldPlaySound()) frameSound.play(player);
+			applyFrame(inventory, index.get(), player);
 
 			index.incrementAndGet();
 
@@ -68,15 +65,24 @@ public class AnimatedInventory {
 		}
 
 		Inventory inventory = createInventory();
-		player.openInventory(inventory);
 
 		if (!frames.isEmpty()) {
 			AnimationFrame frame = getLastFrame();
 			inventory.setContents(frame.getContent());
 		}
 
+		player.openInventory(inventory);
+
 		if (playSound && endSound != null) endSound.play(player);
 
+	}
+
+	private void applyFrame(@Nonnull Inventory inventory, int index, @Nonnull Player viewer) {
+		AnimationFrame frame = frames.get(index);
+		inventory.setContents(frame.getContent());
+
+		if (index == frames.size() - 1 && endSound != null) endSound.play(viewer);
+		else if (frameSound != null && frame.shouldPlaySound()) frameSound.play(viewer);
 	}
 
 	@Nonnull
