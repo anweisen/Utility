@@ -73,18 +73,30 @@ public interface Document extends Config, Json {
 	@Nonnull
 	Document getRoot();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Nonnull
 	@Override
 	Document set(@Nonnull String path, @Nullable Object value);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Nonnull
 	@Override
 	Document clear();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Nonnull
 	@Override
 	Document remove(@Nonnull String path);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Nonnull
 	@Override
 	@CheckReturnValue

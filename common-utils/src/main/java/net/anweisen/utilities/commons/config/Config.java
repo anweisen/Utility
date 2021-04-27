@@ -45,7 +45,7 @@ public interface Config extends Propertyable {
 	boolean isReadonly();
 
 	/**
-	 * @return A new document which is readonly, or {@code this} if already {@link #isReadonly() readonly}
+	 * @return A new config which is readonly, or {@code this} if already {@link #isReadonly() readonly}
 	 */
 	@Nonnull
 	@CheckReturnValue
