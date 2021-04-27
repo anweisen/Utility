@@ -221,6 +221,16 @@ public class YamlDocument extends AbstractDocument {
 	}
 
 	@Override
+	public boolean isObject(@Nonnull String path) {
+		return !isDocument(path) && !isList(path);
+	}
+
+	@Override
+	public boolean isDocument(@Nonnull String path) {
+		return config.get(path) instanceof ConfigurationSection;
+	}
+
+	@Override
 	public boolean contains(@Nonnull String path) {
 		return config.contains(path, true);
 	}
