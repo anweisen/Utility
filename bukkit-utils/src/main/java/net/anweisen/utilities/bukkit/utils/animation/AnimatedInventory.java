@@ -49,7 +49,7 @@ public class AnimatedInventory {
 		AtomicInteger index = new AtomicInteger(1);
 		Bukkit.getScheduler().runTaskTimer(plugin, task -> {
 
-			if (index.get() >= frames.size() || inventory.getViewers().isEmpty()) {
+			if (index.get() >= frames.size() || player.getOpenInventory().getTopInventory() != inventory) {
 				task.cancel();
 				return;
 			}
