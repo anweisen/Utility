@@ -12,6 +12,8 @@ import net.anweisen.utilities.jda.commandmanager.impl.entities.CommandEventImpl;
 import net.anweisen.utilities.jda.commandmanager.impl.language.ConstantLanguageManager;
 import net.anweisen.utilities.jda.commandmanager.impl.language.FallbackLanguage;
 import net.anweisen.utilities.jda.commandmanager.impl.prefix.ConstantPrefixProvider;
+import net.anweisen.utilities.jda.commandmanager.impl.resolver.AnnotatedCommandResolver;
+import net.anweisen.utilities.jda.commandmanager.impl.resolver.InterfacedCommandResolver;
 import net.anweisen.utilities.jda.commandmanager.language.LanguageManager;
 import net.anweisen.utilities.jda.commandmanager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.commandmanager.process.CommandProcessResult;
@@ -21,12 +23,11 @@ import net.anweisen.utilities.jda.commandmanager.registered.CommandOptions;
 import net.anweisen.utilities.jda.commandmanager.registered.CommandTask;
 import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
 import net.anweisen.utilities.jda.commandmanager.registered.RequiredArgument;
+import net.anweisen.utilities.jda.commandmanager.registered.resolver.CommandResolver;
 import net.dv8tion.jda.api.Permission;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
@@ -76,6 +77,7 @@ public class DefaultCommandManager implements CommandManager {
 
 	protected final Map<String, RegisteredCommand> commandsByName = new HashMap<>();
 	protected final ExecutorService executorService = Executors.newCachedThreadPool();
+	protected final Collection<CommandResolver> resolvers = new ArrayList<>(Arrays.asList(new AnnotatedCommandResolver(), new InterfacedCommandResolver()));
 	protected LanguageManager languageManager = new ConstantLanguageManager(new FallbackLanguage());
 	protected CommandResultHandler resultHandler = new LanguageResultHandler();
 	protected ParserContext parserContext = new DefaultParserContext();
@@ -109,22 +111,22 @@ public class DefaultCommandManager implements CommandManager {
 
 	@Nonnull
 	@Override
-	public CommandManager register(@Nonnull Object command) {
-		if (command instanceof InterfacedCommand) {
-			RegisteredCommand registeredCommand = new RegisteredCommand((InterfacedCommand) command, this);
-			register0(registeredCommand);
-			return this;
+	public CommandManager register(@Nonnull Iterable<Object> commands) {
+		for (Object command : commands) {
+			register(command);
 		}
+		return this;
+	}
 
-		for (Method method : ReflectionUtils.getMethodsAnnotatedWith(command instanceof Class ? (Class<?>) command : command.getClass(), Command.class)) {
-			Class<?>[] parameters = method.getParameterTypes();
-			if (!Modifier.isStatic(method.getModifiers()) && command instanceof Class) continue; // Ignore instance commands when registering via class
-			if (parameters.length != 2) throw new IllegalArgumentException("Cannot register " + method + ", parameter count is not 2");
-			if (!parameters[0].isAssignableFrom(eventCreator.getEventClass()) || !parameters[1].isAssignableFrom(CommandArguments.class))
-				throw new IllegalArgumentException("Cannot register " + method + ", parameters are not (" + eventCreator.getEventClass().getName() + ", " + CommandArguments.class.getName() + ")");
-
-			RegisteredCommand registeredCommand = new RegisteredCommand(command, method, this);
-			register0(registeredCommand);
+	@Nonnull
+	@Override
+	public CommandManager register(@Nonnull Object command) {
+		for (CommandResolver resolver : resolvers) {
+			Collection<RegisteredCommand> commands = resolver.resolve(command, this);
+			if (!commands.isEmpty()) {
+				commands.forEach(this::register0);
+				break;
+			}
 		}
 		return this;
 	}
@@ -381,6 +383,21 @@ public class DefaultCommandManager implements CommandManager {
 		if (!commandsByName.isEmpty() && !eventCreator.getEventClass().isAssignableFrom(this.eventCreator.getEventClass()))
 			LOGGER.warn("EventCreator was set what changed the event class from " + this.eventCreator.getEventClass().getName() + " to " + eventCreator.getEventClass().getName() + " after commands were registered, this can cause issues");
 		this.eventCreator = eventCreator;
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public Collection<CommandResolver> getResolvers() {
+		return Collections.unmodifiableCollection(resolvers);
+	}
+
+	@Nonnull
+	@Override
+	public CommandManager addResolver(@Nonnull CommandResolver resolver) {
+		if (!commands.isEmpty())
+			LOGGER.warn("CommandResolver was changed after commands were registered, some commands may not be registered as expected");
+		resolvers.add(resolver);
 		return this;
 	}
 

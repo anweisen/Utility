@@ -7,6 +7,7 @@ import net.anweisen.utilities.jda.commandmanager.process.CommandResultHandler;
 import net.anweisen.utilities.jda.commandmanager.registered.CommandOptions;
 import net.anweisen.utilities.jda.commandmanager.registered.CommandTask;
 import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.commandmanager.registered.resolver.CommandResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,6 +68,12 @@ public interface CommandManager {
 
 	@Nonnull
 	CommandManager setEventCreator(@Nonnull EventCreator creator);
+
+	@Nonnull
+	Collection<CommandResolver> getResolvers();
+
+	@Nonnull
+	CommandManager addResolver(@Nonnull CommandResolver resolver);
 
 	boolean getReactToMentionPrefix();
 
