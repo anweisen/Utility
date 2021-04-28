@@ -41,6 +41,8 @@ public @interface Command {
 
 	boolean disableMentions() default true;
 
+	boolean typing() default false;
+
 	@Nonnull
 	CoolDownScope cooldownScope() default CoolDownScope.USER;
 

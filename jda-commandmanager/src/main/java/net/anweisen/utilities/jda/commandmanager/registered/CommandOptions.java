@@ -26,6 +26,7 @@ public final class CommandOptions {
 	private boolean allowWebHooks = false;
 	private boolean allowEdits = true;
 	private boolean disableMentions = true;
+	private boolean autoSendTyping = false;
 	private CoolDownScope cooldownScope = CoolDownScope.USER;
 	private double cooldownSeconds = 0;
 
@@ -38,7 +39,7 @@ public final class CommandOptions {
 	}
 
 	public CommandOptions(@Nonnull String[] name, @Nonnull String usage, @Nonnull CommandScope scope, @Nonnull Permission permission,
-	                      boolean team, boolean async, boolean allowBots, boolean allowWebHooks, boolean allowEdits, boolean disableMentions,
+	                      boolean team, boolean async, boolean allowBots, boolean allowWebHooks, boolean allowEdits, boolean disableMentions, boolean autoSendTyping,
 	                      @Nonnull CoolDownScope cooldownScope, @Nonnegative double cooldownSeconds) {
 		this.name = name;
 		this.usage = usage;
@@ -50,13 +51,14 @@ public final class CommandOptions {
 		this.allowWebHooks = allowWebHooks;
 		this.allowEdits = allowEdits;
 		this.disableMentions = disableMentions;
+		this.autoSendTyping = autoSendTyping;
 		this.cooldownScope = cooldownScope;
 		this.cooldownSeconds = cooldownSeconds;
 	}
 
 	public CommandOptions(@Nonnull Command command) {
 		this(command.name(), command.usage(), command.scope(), command.permission(),
-			 command.team(), command.async(), command.allowBots(), command.allowWebHooks(), command.allowEdits(), command.disableMentions(),
+			 command.team(), command.async(), command.allowBots(), command.allowWebHooks(), command.allowEdits(), command.disableMentions(), command.typing(),
 			 command.cooldownScope(), command.cooldownSeconds());
 	}
 
@@ -121,6 +123,12 @@ public final class CommandOptions {
 	}
 
 	@Nonnull
+	public CommandOptions sendTyping(boolean send) {
+		this.autoSendTyping = send;
+		return this;
+	}
+
+	@Nonnull
 	public CommandOptions cooldown(@Nonnull CoolDownScope scope) {
 		this.cooldownScope = scope;
 		return this;
@@ -129,6 +137,13 @@ public final class CommandOptions {
 	@Nonnull
 	public CommandOptions cooldown(@Nonnegative double seconds) {
 		this.cooldownSeconds = seconds;
+		return this;
+	}
+
+	@Nonnull
+	public CommandOptions cooldown(@Nonnull CoolDownScope scope, @Nonnegative double seconds) {
+		cooldown(scope);
+		cooldown(seconds);
 		return this;
 	}
 
@@ -193,6 +208,10 @@ public final class CommandOptions {
 		return disableMentions;
 	}
 
+	public boolean getAutoSendTyping() {
+		return autoSendTyping;
+	}
+
 	public boolean getTeam() {
 		return team;
 	}
@@ -201,7 +220,7 @@ public final class CommandOptions {
 	public String toString() {
 		return "CommandOptions{" +
 				"name=" + Arrays.toString(name) +
-				", usage='" + usage + '\'' +
+				", usage='" + usage + "'" +
 				", field=" + scope +
 				", permission=" + permission +
 				", team=" + team +
@@ -210,6 +229,7 @@ public final class CommandOptions {
 				", allowWebHooks=" + allowWebHooks +
 				", allowEdits=" + allowEdits +
 				", disableMentions=" + disableMentions +
+				", autoSendTyping=" + autoSendTyping +
 				", cooldownScope=" + cooldownScope +
 				", cooldownSeconds=" + cooldownSeconds +
 				'}';
@@ -220,12 +240,12 @@ public final class CommandOptions {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		CommandOptions that = (CommandOptions) o;
-		return team == that.team && async == that.async && allowBots == that.allowBots && allowWebHooks == that.allowWebHooks && allowEdits == that.allowEdits && disableMentions == that.disableMentions && Double.compare(that.cooldownSeconds, cooldownSeconds) == 0 && Arrays.equals(name, that.name) && Objects.equals(usage, that.usage) && scope == that.scope && permission == that.permission && cooldownScope == that.cooldownScope;
+		return team == that.team && async == that.async && allowBots == that.allowBots && allowWebHooks == that.allowWebHooks && allowEdits == that.allowEdits && disableMentions == that.disableMentions && autoSendTyping == that.autoSendTyping && Double.compare(that.cooldownSeconds, cooldownSeconds) == 0 && Arrays.equals(name, that.name) && Objects.equals(usage, that.usage) && scope == that.scope && permission == that.permission && cooldownScope == that.cooldownScope;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(usage, scope, permission, team, async, allowBots, allowWebHooks, allowEdits, disableMentions, cooldownScope, cooldownSeconds);
+		int result = Objects.hash(usage, scope, permission, team, async, allowBots, allowWebHooks, allowEdits, disableMentions, autoSendTyping, cooldownScope, cooldownSeconds);
 		result = 31 * result + Arrays.hashCode(name);
 		return result;
 	}

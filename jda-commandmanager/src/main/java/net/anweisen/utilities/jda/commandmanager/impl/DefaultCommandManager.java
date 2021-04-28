@@ -248,6 +248,9 @@ public class DefaultCommandManager implements CommandManager {
 		if (!eventCreator.getEventClass().isAssignableFrom(event.getClass()))
 			throw new IllegalArgumentException("EventCreator returned " + event.getClass().getName() + " which is not an instance of " + eventCreator.getEventClass().getName() + " as expected");
 
+		if (command.getOptions().getAutoSendTyping())
+			info.getMessage().getChannel().sendTyping().queue();
+
 		Tuple<Class<?>[], Object[]> parsed = parseArguments(command, stripped, event);
 		if (parsed == null)
 			return callback.call(new CommandResultInfo(CommandProcessResult.INCORRECT_ARGUMENTS, command, commandName, prefix));
