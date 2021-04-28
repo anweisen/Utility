@@ -1,8 +1,8 @@
-package net.anweisen.utilities.jda.commandmanager.utils;
+package net.anweisen.utilities.jda.commandmanager.utils.creator;
 
 import net.anweisen.utilities.commons.common.WrappedException;
+import net.anweisen.utilities.commons.config.FileDocument;
 import net.anweisen.utilities.commons.config.document.GsonDocument;
-import net.anweisen.utilities.commons.config.document.wrapper.FileDocumentWrapper;
 import net.anweisen.utilities.commons.misc.FileUtils;
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.DatabaseConfig;
@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -24,8 +25,12 @@ public final class BotConfigCreator {
 	public static final Object[][] DEFAULT_VALUES = {
 
 			{ "token",                          "secret" },
+			{ "shards",                         1 },
 			{ "auth-token",                     "unknown" },
-			{ "database.type",                  "mysql" },
+			{ "default-language",               "en" },
+			{ "default-prefix",                 "!" },
+			{ "language-files",                 new String[0] },
+			{ "database.type",                  "sqlite" },
 
 			{ "database.mongodb.host",          "127.0.0.1" },
 			{ "database.mongodb.port",          "27017" },
@@ -44,7 +49,7 @@ public final class BotConfigCreator {
 
 	};
 
-	private final FileDocumentWrapper document;
+	private final FileDocument document;
 
 	public BotConfigCreator() throws IOException {
 		this(new File("config.json"), DEFAULT_VALUES);
@@ -56,13 +61,13 @@ public final class BotConfigCreator {
 
 	public BotConfigCreator(@Nonnull File file, @Nonnull Object[][] defaultValues) throws IOException {
 
-		document = new FileDocumentWrapper(file, file.exists() ? new GsonDocument(file) : new GsonDocument());
+		document = FileDocument.wrap(file.exists() ? new GsonDocument(file) : new GsonDocument(), file);
 
 		if (!file.exists()) {
 			FileUtils.createFilesIfNecessary(file);
 			for (Object[] pair : defaultValues) {
 				String key = (String) pair[0];
-				String value = (String) pair[1];
+				Object value = pair[1];
 				document.set(key, value);
 			}
 			document.save();
@@ -72,7 +77,7 @@ public final class BotConfigCreator {
 	}
 
 	@Nonnull
-	public FileDocumentWrapper getDocument() {
+	public FileDocument getDocument() {
 		return document;
 	}
 
@@ -88,8 +93,24 @@ public final class BotConfigCreator {
 		return document.getString("database.type");
 	}
 
+	public String getDefaultLanguage() {
+		return document.getString("default-language");
+	}
+
+	public String getDefaultPrefix() {
+		return document.getString("default-prefix", "!");
+	}
+
+	public List<String> getLanguageFiles() {
+		return document.getStringList("language-files");
+	}
+
 	public DatabaseConfig getTargetDatabaseConfig() {
 		return new DatabaseConfig(document.getDocument("database." + getDatabaseType()));
+	}
+
+	public int getShards() {
+		return document.getInt("shards");
 	}
 
 	public Database createDatabase() {
@@ -103,6 +124,17 @@ public final class BotConfigCreator {
 		} catch (InvocationTargetException ex) {
 			throw new WrappedException(ex);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "BotConfig{" +
+				"shards=" + getShards() +
+				", languageFiles" + getLanguageFiles() +
+				", defaultPrefix='" + getDefaultPrefix() + "'" +
+				", defaultLanguage='" + getDefaultLanguage() + "'" +
+				", databaseType='" + getDatabaseType() + "'" +
+				"}";
 	}
 
 }
