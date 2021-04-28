@@ -13,15 +13,13 @@ public final class CommandHelper {
 
 	@Nonnull
 	public static String removeMarkdown(@Nullable String input, boolean inBlockMarkdown) {
-		input = String.valueOf(input);
+		if (input == null) return "null";
 
 		if (inBlockMarkdown) {
 			input = input.replace("`", "");
 		} else {
-			input = input.replace("*", "");
-			input = input.replace("_", "");
-			input = input.replace("@everyone", "everyone");
-			input = input.replace("@here", "here");
+			input = input.replace("*", "\\*");
+			input = input.replace("_", "\\_");
 		}
 
 		return input;
