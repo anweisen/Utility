@@ -1,9 +1,9 @@
 package net.anweisen.utilities.database.internal.mongodb.insertorupdate;
 
 import net.anweisen.utilities.commons.misc.BsonUtils;
-import net.anweisen.utilities.database.DatabaseInsertion;
-import net.anweisen.utilities.database.DatabaseInsertionOrUpdate;
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
+import net.anweisen.utilities.database.action.DatabaseInsertionOrUpdate;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.update.MongoDBUpdate;
@@ -14,7 +14,6 @@ import org.bson.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen

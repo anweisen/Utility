@@ -2,6 +2,7 @@ package net.anweisen.utilities.database.internal.sql.abstraction;
 
 import net.anweisen.utilities.database.*;
 import net.anweisen.utilities.database.DatabaseConfig;
+import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.deletion.SQLDeletion;
@@ -31,23 +32,14 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void disconnect() throws DatabaseException {
-		verifyConnection();
-		try {
-			connection.close();
-			connection = null;
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public void disconnect0() throws Exception {
+		connection.close();
+		connection = null;
 	}
 
 	@Override
-	public void connect() throws DatabaseException {
-		try {
-			connection = DriverManager.getConnection(createURL(), config.getUser(), config.getPassword());
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public void connect0() throws Exception {
+		connection = DriverManager.getConnection(createURL(), config.getUser(), config.getPassword());
 	}
 
 	protected abstract String createURL();
@@ -68,19 +60,14 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 	public void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		try {
 			StringBuilder command = new StringBuilder();
-			command.append("CREATE TABLE IF NOT EXISTS ");
+			command.append("CREATE TABLE IF NOT EXISTS `");
 			command.append(name);
-			command.append(" (");
+			command.append("` (");
 			{
 				int index = 0;
 				for (SQLColumn column : columns) {
 					if (index > 0) command.append(", ");
-					command.append(column.getName());
-					command.append(" ");
-					command.append(column.getType());
-					command.append("(");
-					command.append(column.getLength());
-					command.append(") ");
+					command.append(column);
 					index++;
 				}
 			}
@@ -135,9 +122,9 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 		return new SQLDeletion(this, table);
 	}
 
-	public PreparedStatement prepare(@Nonnull String command, @Nonnull Object... args) throws SQLException, DatabaseException {
-		verifyConnection();
-		PreparedStatement statement = connection.prepareStatement(command);
+	public PreparedStatement prepare(@Nonnull CharSequence command, @Nonnull Object... args) throws SQLException, DatabaseException {
+		checkConnection();
+		PreparedStatement statement = connection.prepareStatement(command.toString());
 		SQLHelper.fillParams(statement, args);
 		return statement;
 	}

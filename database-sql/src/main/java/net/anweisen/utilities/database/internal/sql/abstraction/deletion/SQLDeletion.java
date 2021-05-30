@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.deletion;
 
-import net.anweisen.utilities.database.DatabaseDeletion;
+import net.anweisen.utilities.database.action.DatabaseDeletion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.where.ObjectWhere;

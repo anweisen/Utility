@@ -1,13 +1,11 @@
 package net.anweisen.utilities.database.internal.abstraction;
 
 import net.anweisen.utilities.commons.config.Document;
-import net.anweisen.utilities.commons.config.document.EmptyDocument;
-import net.anweisen.utilities.database.ExecutedQuery;
+import net.anweisen.utilities.database.action.ExecutedQuery;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 

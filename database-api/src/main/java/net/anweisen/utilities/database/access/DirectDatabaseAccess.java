@@ -52,7 +52,7 @@ public class DirectDatabaseAccess<V> implements DatabaseAccess<V> {
 	}
 
 	@Override
-	public void setValue(@Nonnull String key, @Nonnull V value) throws DatabaseException {
+	public void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException {
 		database.insertOrUpdate(config.getTable())
 				.set(config.getValueField(), value)
 				.where(config.getKeyField(), key)

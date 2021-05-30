@@ -5,7 +5,7 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DeleteOptions;
 import com.mongodb.client.model.Filters;
 import net.anweisen.utilities.commons.misc.BsonUtils;
-import net.anweisen.utilities.database.DatabaseDeletion;
+import net.anweisen.utilities.database.action.DatabaseDeletion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;

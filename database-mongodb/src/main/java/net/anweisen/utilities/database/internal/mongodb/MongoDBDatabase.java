@@ -9,7 +9,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.anweisen.utilities.database.*;
 import net.anweisen.utilities.database.DatabaseConfig;
-import net.anweisen.utilities.database.exceptions.DatabaseAlreadyConnectedException;
+import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
 import net.anweisen.utilities.database.internal.mongodb.deletion.MongoDBDeletion;
@@ -62,38 +62,24 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void connect() throws DatabaseException {
-		if (isConnected()) throw new DatabaseAlreadyConnectedException();
-
-		try {
-
-			MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
-			MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
-					.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
-					.build();
-
-			client = MongoClients.create(settings);
-			database = client.getDatabase(config.getDatabase());
-
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public void connect0() throws Exception {
+		MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
+		MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
+				.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
+				.build();
+		client = MongoClients.create(settings);
+		database = client.getDatabase(config.getDatabase());
 	}
 
 	@Override
-	public void disconnect() throws DatabaseException {
-		verifyConnection();
-		try {
-			client.close();
-			client = null;
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public void disconnect0() throws Exception {
+		client.close();
+		client = null;
 	}
 
 	@Override
 	public void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
-		verifyConnection();
+		checkConnection();
 
 		boolean collectionExists = database.listCollectionNames()
 				.into(new ArrayList<>())
@@ -112,7 +98,6 @@ public class MongoDBDatabase extends AbstractDatabase {
 	public DatabaseQuery query(@Nonnull String table) {
 		return new MongoDBQuery(this, table);
 	}
-
 
 	@Nonnull
 	public DatabaseQuery query(@Nonnull String table, @Nonnull Map<String, MongoDBWhere> where) {

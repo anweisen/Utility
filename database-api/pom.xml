@@ -6,14 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>database-api</artifactId>
-	<name>${artifactId}</name>
-	<version>${parent.version}</version>
+	<version>1.2.7</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
 		<groupId>net.anweisen.utilities</groupId>
 		<artifactId>root</artifactId>
-		<version>1.2.2</version>
+		<version>1.2.7</version>
 	</parent>
 
 	<properties>
@@ -60,7 +59,7 @@
 	<repositories>
 
 		<repository>
-			<id>github-anweisen</id>
+			<id>anweisen</id>
 			<url>https://maven.pkg.github.com/anweisen/*</url>
 		</repository>
 
@@ -86,7 +85,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>github-anweisen</id>
+			<id>anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

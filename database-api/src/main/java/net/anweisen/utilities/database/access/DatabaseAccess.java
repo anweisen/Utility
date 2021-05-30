@@ -24,6 +24,10 @@ public interface DatabaseAccess<V> {
 
 	void setValue(@Nonnull String key, @Nonnull V value) throws DatabaseException;
 
+	default boolean hasValue(@Nonnull String key) throws DatabaseException {
+		return getValueOptional(key).isPresent();
+	}
+
 	@Nonnull
 	Database getDatabase();
 

@@ -1,8 +1,8 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.insertorupdate;
 
-import net.anweisen.utilities.database.DatabaseInsertion;
-import net.anweisen.utilities.database.DatabaseInsertionOrUpdate;
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
+import net.anweisen.utilities.database.action.DatabaseInsertionOrUpdate;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.update.SQLUpdate;

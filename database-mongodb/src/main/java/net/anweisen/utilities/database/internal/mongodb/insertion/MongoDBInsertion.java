@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database.internal.mongodb.insertion;
 
 import net.anweisen.utilities.commons.misc.MongoUtils;
-import net.anweisen.utilities.database.DatabaseInsertion;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import org.bson.Document;

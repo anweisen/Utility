@@ -56,29 +56,34 @@ public class CachedDatabaseAccess<V> extends DirectDatabaseAccess<V> {
 	}
 
 	@Override
-	public void setValue(@Nonnull String key, @Nonnull V value) throws DatabaseException {
+	public void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException {
 		cache.put(key, value);
 		super.setValue(key, value);
 	}
 
 	@Nonnull
-	public static CachedDatabaseAccess<String> newStringDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+	public static CachedDatabaseAccess<String> newStringAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
 		return new CachedDatabaseAccess<>(database, config, Propertyable::getString);
 	}
 
 	@Nonnull
-	public static CachedDatabaseAccess<Integer> newIntDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+	public static CachedDatabaseAccess<Integer> newIntAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
 		return new CachedDatabaseAccess<>(database, config, Propertyable::getInt);
 	}
 
 	@Nonnull
-	public static CachedDatabaseAccess<Long> newLongDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+	public static CachedDatabaseAccess<Long> newLongAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
 		return new CachedDatabaseAccess<>(database, config, Propertyable::getLong);
 	}
 
 	@Nonnull
-	public static CachedDatabaseAccess<Double> newDoubleDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+	public static CachedDatabaseAccess<Double> newDoubleAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
 		return new CachedDatabaseAccess<>(database, config, Propertyable::getDouble);
+	}
+
+	@Nonnull
+	public static CachedDatabaseAccess<Document> newDocumentAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+		return new CachedDatabaseAccess<>(database, config, Document::getDocument);
 	}
 
 }

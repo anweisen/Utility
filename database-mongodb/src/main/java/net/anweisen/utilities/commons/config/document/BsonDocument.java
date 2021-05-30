@@ -7,8 +7,12 @@ import org.bson.BsonValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.*;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
@@ -163,6 +167,44 @@ public class BsonDocument extends AbstractDocument {
 		} catch (Exception ex) {
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public Date getDate(@Nonnull String path) {
+		return bsonDocument.getDate(path);
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		Object value = getObject(path);
+
+		if (value == null)
+			return null;
+		if (value instanceof OffsetDateTime)
+			return (OffsetDateTime) value;
+		if (value instanceof Date)
+			return ((Date)value).toInstant().atOffset(ZoneOffset.UTC);
+		if (value instanceof String)
+			return OffsetDateTime.parse((CharSequence) value);
+
+		throw new IllegalStateException(value.getClass().getName() + " cannot be converted to java.time.OffsetDateTime");
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		Object value = getObject(path);
+
+		if (value == null)
+			return null;
+		if (value instanceof Color)
+			return (Color) value;
+		if (value instanceof String)
+			return Color.decode((String) value);
+
+		throw new IllegalStateException(value.getClass().getName() + " cannot be converted to java.awt.Color");
 	}
 
 	@Override

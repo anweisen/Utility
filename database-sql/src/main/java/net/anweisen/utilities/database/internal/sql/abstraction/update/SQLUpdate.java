@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.update;
 
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.where.ObjectWhere;

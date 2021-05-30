@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.insertion;
 
-import net.anweisen.utilities.database.DatabaseInsertion;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 

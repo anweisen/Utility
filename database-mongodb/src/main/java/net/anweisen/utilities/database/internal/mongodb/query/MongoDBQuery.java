@@ -3,8 +3,8 @@ package net.anweisen.utilities.database.internal.mongodb.query;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import net.anweisen.utilities.commons.misc.MongoUtils;
-import net.anweisen.utilities.database.DatabaseQuery;
-import net.anweisen.utilities.database.ExecutedQuery;
+import net.anweisen.utilities.database.action.DatabaseQuery;
+import net.anweisen.utilities.database.action.ExecutedQuery;
 import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
@@ -16,7 +16,6 @@ import org.bson.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen

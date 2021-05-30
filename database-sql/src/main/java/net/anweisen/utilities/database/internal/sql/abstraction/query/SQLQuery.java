@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.query;
 
-import net.anweisen.utilities.database.DatabaseQuery;
-import net.anweisen.utilities.database.ExecutedQuery;
+import net.anweisen.utilities.database.action.DatabaseQuery;
+import net.anweisen.utilities.database.action.ExecutedQuery;
 import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
@@ -88,6 +88,7 @@ public class SQLQuery implements DatabaseQuery {
 	@Nonnull
 	@Override
 	public DatabaseQuery select(@Nonnull String... selection) {
+		if (selection.length == 0) throw new IllegalArgumentException("Cannot select noting");
 		this.selection = selection;
 		return this;
 	}

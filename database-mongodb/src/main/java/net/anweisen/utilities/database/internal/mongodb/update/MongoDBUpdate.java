@@ -7,7 +7,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import net.anweisen.utilities.commons.misc.BsonUtils;
 import net.anweisen.utilities.commons.misc.MongoUtils;
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
