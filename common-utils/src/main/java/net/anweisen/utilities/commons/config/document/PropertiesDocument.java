@@ -1,15 +1,21 @@
 package net.anweisen.utilities.commons.config.document;
 
+import net.anweisen.utilities.commons.common.Colors;
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.PropertyHelper;
 import net.anweisen.utilities.commons.misc.FileUtils;
 import net.anweisen.utilities.commons.misc.PropertiesUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
@@ -24,8 +30,8 @@ public class PropertiesDocument extends AbstractDocument {
 
 	protected final Properties properties;
 
-	public PropertiesDocument(@Nonnull Properties properties) {
-		this.properties = properties;
+	public PropertiesDocument(@Nullable Properties properties) {
+		this.properties = properties == null ? new Properties() : properties;
 	}
 
 	public PropertiesDocument(@Nonnull File file) throws IOException {
@@ -135,6 +141,29 @@ public class PropertiesDocument extends AbstractDocument {
 
 	@Nullable
 	@Override
+	public Date getDate(@Nonnull String path) {
+		return PropertyHelper.parseDate(getString(path));
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		try {
+			return OffsetDateTime.parse(getString(path));
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		String string = getString(path);
+		return string == null ? null : Color.decode(string);
+	}
+
+	@Nullable
+	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
 		try {
 			String name = getString(path);
@@ -193,7 +222,14 @@ public class PropertiesDocument extends AbstractDocument {
 
 	@Override
 	public void set0(@Nonnull String path, @Nullable Object value) {
-		properties.setProperty(path, String.valueOf(value));
+		final String asString;
+		if (value instanceof Color) {
+			asString = Colors.asHTML((Color) value);
+		} else {
+			asString = String.valueOf(value);
+		}
+
+		properties.setProperty(path, asString);
 	}
 
 	@Override

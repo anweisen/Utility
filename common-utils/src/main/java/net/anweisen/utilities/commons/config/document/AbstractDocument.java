@@ -64,7 +64,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	}
 
 	@Override
-	public void save(@Nonnull File file) throws IOException {
+	public void saveToFile(@Nonnull File file) throws IOException {
 		Writer writer = FileUtils.newBufferedWriter(file);
 		write(writer);
 		writer.flush();

@@ -6,7 +6,11 @@ import net.anweisen.utilities.commons.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 /**
@@ -84,6 +88,27 @@ public abstract class AbstractConfig implements Config {
 	@Override
 	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
 		UUID value = getUUID(path);
+		return value == null ? def : value;
+	}
+
+	@Nonnull
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path, @Nonnull OffsetDateTime def) {
+		OffsetDateTime value = getDateTime(path);
+		return value == null ? def : value;
+	}
+
+	@Nonnull
+	@Override
+	public Date getDate(@Nonnull String path, @Nonnull Date def) {
+		Date value = getDate(path);
+		return value == null ? def : value;
+	}
+
+	@Nonnull
+	@Override
+	public Color getColor(@Nonnull String path, @Nonnull Color def) {
+		Color value = getColor(path);
 		return value == null ? def : value;
 	}
 
@@ -210,6 +235,12 @@ public abstract class AbstractConfig implements Config {
 	@Override
 	public <K, V> Map<K, V> mapValues(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super String, ? extends V> valueMapper) {
 		return map(valuesAsStrings(), keyMapper, valueMapper);
+	}
+
+	@Nonnull
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		return values().entrySet();
 	}
 
 	@Nonnull

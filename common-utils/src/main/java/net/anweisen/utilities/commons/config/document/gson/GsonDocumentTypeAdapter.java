@@ -14,7 +14,7 @@ import java.io.IOException;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class GsonDocumentTypeAdapter implements GsonTypeAdapter<GsonDocument> {
+public class GsonDocumentTypeAdapter implements GsonTypeAdapter<GsonDocument> {
 
 	@Override
 	public void write(@Nonnull Gson gson, @Nonnull JsonWriter writer, @Nonnull GsonDocument document) throws IOException {

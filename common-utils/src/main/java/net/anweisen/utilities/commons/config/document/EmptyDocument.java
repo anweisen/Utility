@@ -6,10 +6,14 @@ import net.anweisen.utilities.commons.config.exceptions.ConfigReadOnlyException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -74,7 +78,7 @@ public class EmptyDocument implements Document {
 	}
 
 	@Override
-	public void save(@Nonnull File file) throws IOException {
+	public void saveToFile(@Nonnull File file) throws IOException {
 		throw new UnsupportedOperationException("EmptyDocument.save(File)");
 	}
 
@@ -92,7 +96,7 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
-	public <T, O> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
+	public <T, O extends Propertyable> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
 		return Optional.empty();
 	}
 
@@ -274,6 +278,42 @@ public class EmptyDocument implements Document {
 
 	@Nullable
 	@Override
+	public Date getDate(@Nonnull String path) {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public Date getDate(@Nonnull String path, @Nonnull Date def) {
+		return def;
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path, @Nonnull OffsetDateTime def) {
+		return def;
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public Color getColor(@Nonnull String path, @Nonnull Color def) {
+		return def;
+	}
+
+	@Nullable
+	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
 		return null;
 	}
@@ -377,6 +417,12 @@ public class EmptyDocument implements Document {
 	@Override
 	public Collection<String> keys() {
 		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		return Collections.emptySet();
 	}
 
 	@Override

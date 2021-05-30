@@ -1,5 +1,7 @@
 package net.anweisen.utilities.commons.misc;
 
+import net.anweisen.utilities.commons.common.ArrayWalker;
+import net.anweisen.utilities.commons.common.ClassWalker;
 import net.anweisen.utilities.commons.common.PublicSecurityManager;
 import net.anweisen.utilities.commons.common.WrappedException;
 
@@ -18,28 +20,30 @@ import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 2.0
+ * @since 1.0
  */
 public final class ReflectionUtils {
 
 	private ReflectionUtils() {}
 
 	@Nonnull
-	public static Collection<Method> getDeclaredMethodsAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> classOfAnnotation) {
-		return filterMethodsAnnotatedWith(clazz.getDeclaredMethods(), classOfAnnotation);
+	public static Collection<Method> getPublicMethodsAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> classOfAnnotation) {
+		List<Method> annotatedMethods = new ArrayList<>();
+		for (Method method : clazz.getMethods()) {
+			if (!method.isAnnotationPresent(classOfAnnotation)) continue;
+			annotatedMethods.add(method);
+		}
+		return annotatedMethods;
 	}
 
 	@Nonnull
 	public static Collection<Method> getMethodsAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> classOfAnnotation) {
-		return filterMethodsAnnotatedWith(clazz.getMethods(), classOfAnnotation);
-	}
-
-	@Nonnull
-	private static Collection<Method> filterMethodsAnnotatedWith(@Nonnull Method[] methods, @Nonnull Class<? extends Annotation> classOfAnnotation) {
 		List<Method> annotatedMethods = new ArrayList<>();
-		for (Method method : methods) {
-			if (!method.isAnnotationPresent(classOfAnnotation)) continue;
-			annotatedMethods.add(method);
+		for (Class<?> currentClass : ClassWalker.walk(clazz)) {
+			for (Method method : currentClass.getDeclaredMethods()) {
+				if (!method.isAnnotationPresent(classOfAnnotation)) continue;
+				annotatedMethods.add(method);
+			}
 		}
 		return annotatedMethods;
 	}
@@ -73,29 +77,27 @@ public final class ReflectionUtils {
 	 * @see Array#get(Object, int)
 	 */
 	public static <T> void forEachInArray(@Nonnull Object array, @Nonnull Consumer<T> action) {
-		int length = Array.getLength(array);
-		for (int i = 0; i < length; i++) {
-			Object object = Array.get(array, i);
-			action.accept((T) object);
-		}
+		ReflectionUtils.<T>iterableArray(array).forEach(action);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static <T> Iterable<T> iterableArray(@Nonnull Object array) {
+		return ArrayWalker.walk(array);
 	}
 
 	@CheckReturnValue
 	public static Class<?> getCaller(int index) {
 		try {
 			return new PublicSecurityManager().getPublicClassContext()[index + 2];
-		} catch (Exception ignored) {
-			return null;
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
 		}
 	}
 
 	@CheckReturnValue
 	public static Class<?> getCaller() {
-		try {
-			return getCaller(2);
-		} catch (Exception ignored) {
-			return null;
-		}
+		return getCaller(2);
 	}
 
 	/**
@@ -153,6 +155,65 @@ public final class ReflectionUtils {
 		} catch (Exception ex) {
 			return null;
 		}
+	}
+
+	@Nullable
+	@SuppressWarnings("unchecked")
+	public static <T> T invokeMethodOrNull(@Nullable Object instance, @Nonnull Method method) {
+		try {
+			if (!method.isAccessible()) method.setAccessible(true);
+			return (T) method.invoke(instance);
+		} catch (Throwable ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	public static <T> T invokeStaticMethodOrNull(@Nonnull Class<?> clazz, @Nonnull String method) {
+		try {
+			return invokeMethodOrNull(null, clazz.getMethod(method));
+		} catch (NoSuchMethodException ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	public static <T> T invokeMethodOrNull(@Nonnull Object instance, @Nonnull String method) {
+		try {
+			return invokeMethodOrNull(instance, instance.getClass().getDeclaredMethod(method));
+		} catch (NoSuchMethodException ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	public static <T> T getAnnotationValue(@Nonnull Annotation annotation) {
+		return invokeMethodOrNull(annotation, "value");
+	}
+
+	@Nullable
+	public static <E extends Enum<?>> E getEnumByAlternateNames(@Nonnull Class<E> classOfE, @Nonnull String input) {
+		E[] values = invokeStaticMethodOrNull(classOfE, "values");
+		String[] methodNames = { "getName", "getNames", "getAlias", "getAliases", "getKey", "getKeys", "name", "toString" };
+		for (E value : values) {
+			for (String method : methodNames) {
+				if (check(input, invokeMethodOrNull(value, method)))
+					return value;
+			}
+		}
+
+		return null;
+	}
+
+	private static boolean check(@Nonnull String input, @Nullable Object value) {
+		if (value == null) return false;
+		if (value.getClass().isArray()) {
+			for (Object key : iterableArray(value)) {
+				if (input.equalsIgnoreCase(String.valueOf(key)))
+					return true;
+			}
+		}
+		return input.equalsIgnoreCase(String.valueOf(value));
 	}
 
 }

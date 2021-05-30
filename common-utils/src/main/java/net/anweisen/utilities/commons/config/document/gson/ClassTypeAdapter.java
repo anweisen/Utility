@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author anweisen | https://github.com/anweisen
  * @since 1.1
  */
-public final class ClassTypeAdapter implements GsonTypeAdapter<Class<?>> {
+public class ClassTypeAdapter implements GsonTypeAdapter<Class<?>> {
 
 	@Override
 	public void write(@Nonnull Gson gson, @Nonnull JsonWriter writer, @Nonnull Class<?> object) throws IOException {

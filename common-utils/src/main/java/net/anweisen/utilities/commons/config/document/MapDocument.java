@@ -2,19 +2,26 @@ package net.anweisen.utilities.commons.config.document;
 
 import com.google.gson.JsonArray;
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.PropertyHelper;
 import net.anweisen.utilities.commons.misc.GsonUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Array;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
+ * This class is not thread safe.
+ * Documents of this type are not able to be saved or loaded.
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
@@ -101,7 +108,8 @@ public class MapDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public String getString(@Nonnull String path) {
-		return String.valueOf(values.get(path));
+		Object value = values.get(path);
+		return value == null ? null : value.toString();
 	}
 
 	@Override
@@ -188,6 +196,33 @@ public class MapDocument extends AbstractDocument {
 		} catch (Exception ex) {
 			return null;
 		}
+	}
+
+	@Nullable
+	@Override
+	public Date getDate(@Nonnull String path) {
+		Object object = getObject(path);
+		if (object instanceof String) return PropertyHelper.parseDate((String) object);
+		if (object instanceof Date) return (Date) object;
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		Object object = getObject(path);
+		if (object instanceof CharSequence) return OffsetDateTime.parse((CharSequence) object);
+		if (object instanceof OffsetDateTime) return (OffsetDateTime) object;
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		Object object = getObject(path);
+		if (object instanceof Color) return (Color) object;
+		if (object instanceof String) return Color.decode((String) object);
+		return null;
 	}
 
 	@Override

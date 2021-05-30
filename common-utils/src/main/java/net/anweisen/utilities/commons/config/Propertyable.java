@@ -3,7 +3,11 @@ package net.anweisen.utilities.commons.config;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -22,7 +26,7 @@ public interface Propertyable {
 
 	@Nonnull
 	@SuppressWarnings("unchecked")
-	default <T, O> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
+	default <T, O extends Propertyable> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
 		return Optional.ofNullable(extractor.apply((O) this, key));
 	}
 
@@ -104,6 +108,24 @@ public interface Propertyable {
 	UUID getUUID(@Nonnull String path, @Nonnull UUID def);
 
 	@Nullable
+	OffsetDateTime getDateTime(@Nonnull String path);
+
+	@Nonnull
+	OffsetDateTime getDateTime(@Nonnull String path, @Nonnull OffsetDateTime def);
+
+	@Nullable
+	Date getDate(@Nonnull String path);
+
+	@Nonnull
+	Date getDate(@Nonnull String path, @Nonnull Date def);
+
+	@Nullable
+	Color getColor(@Nonnull String path);
+
+	@Nonnull
+	Color getColor(@Nonnull String path, @Nonnull Color def);
+
+	@Nullable
 	<E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum);
 
 	@Nonnull
@@ -140,6 +162,9 @@ public interface Propertyable {
 
 	@Nonnull
 	Collection<String> keys();
+
+	@Nonnull
+	Set<Entry<String, Object>> entrySet();
 
 	void forEach(@Nonnull BiConsumer<? super String, ? super Object> action);
 

@@ -31,7 +31,7 @@ public class FileDocumentWrapper extends DocumentWrapper implements FileDocument
 
 	@Override
 	public void saveExceptionally() throws IOException {
-		document.save(file);
+		document.saveToFile(file);
 	}
 
 	public void saveAsync() {

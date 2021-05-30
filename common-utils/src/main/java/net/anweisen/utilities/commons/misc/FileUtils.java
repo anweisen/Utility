@@ -1,5 +1,6 @@
 package net.anweisen.utilities.commons.misc;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -53,6 +55,8 @@ public final class FileUtils {
 		return filename.substring(0, index);
 	}
 
+	@Nonnull
+	@CheckReturnValue
 	public static String stripFolders(@Nonnull String filename) {
 		int index = filename.lastIndexOf('/');
 		if (index == -1) return filename;
@@ -85,6 +89,14 @@ public final class FileUtils {
 				}
 			}
 		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static File createTempFile(@Nonnull String type) throws IOException {
+		File file = File.createTempFile(UUID.randomUUID().toString(), type);
+		file.deleteOnExit();
+		return file;
 	}
 
 }

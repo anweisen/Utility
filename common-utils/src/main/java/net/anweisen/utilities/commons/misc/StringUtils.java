@@ -1,10 +1,13 @@
 package net.anweisen.utilities.commons.misc;
 
+import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.logging.ILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -18,17 +21,22 @@ public final class StringUtils {
 
 	@Nonnull
 	public static String getEnumName(@Nonnull Enum<?> enun) {
+		return getEnumName(enun.name());
+	}
+
+	@Nonnull
+	public static String getEnumName(@Nonnull String name) {
 		StringBuilder builder = new StringBuilder();
-		boolean lastWasSpace = true;
-		for (char letter : enun.name().toCharArray()) {
+		boolean nextUpperCase = true;
+		for (char letter : name.toCharArray()) {
 			// Replace _ with space
 			if (letter == '_') {
 				builder.append(' ');
-				lastWasSpace = true;
+				nextUpperCase = true;
 				continue;
 			}
-			builder.append(lastWasSpace ? Character.toUpperCase(letter) : Character.toLowerCase(letter));
-			lastWasSpace = false;
+			builder.append(nextUpperCase ? Character.toUpperCase(letter) : Character.toLowerCase(letter));
+			nextUpperCase = false;
 		}
 		return builder.toString();
 	}
@@ -44,10 +52,17 @@ public final class StringUtils {
 				inArgument = false;
 				try {
 					int arg = Integer.parseInt(argument.toString());
-					builder.append(args[arg]);
+					Object current = args[arg];
+					Object replacement =
+							current instanceof Supplier ? ((Supplier<?>)current).get() :
+							current instanceof Callable ? ((Callable<?>)current).call() :
+							current;
+					builder.append(replacement);
 				} catch (NumberFormatException | IndexOutOfBoundsException ex) {
-					logger.warn("Invalid argument index '{}'");
+					logger.warn("Invalid argument index '{}'", argument);
 					builder.append(start).append(argument).append(end);
+				} catch (Exception ex) {
+					throw new WrappedException(ex);
 				}
 				argument = new StringBuilder();
 				continue;
@@ -119,12 +134,13 @@ public final class StringUtils {
 		}
 	}
 
-	public static int parseSeconds(@Nonnull String input) {
-		int current = 0;
-		int seconds = 0;
+	public static long parseSeconds(@Nonnull String input) {
+		if (input.toLowerCase().startsWith("perm")) return -1;
+		long current = 0;
+		long seconds = 0;
 		for (char c : input.toCharArray()) {
 			try {
-				int i = Integer.parseInt(String.valueOf(c));
+				long i = Long.parseUnsignedLong(String.valueOf(c));
 				current *= 10;
 				current += i;
 			} catch (Exception ignored) {

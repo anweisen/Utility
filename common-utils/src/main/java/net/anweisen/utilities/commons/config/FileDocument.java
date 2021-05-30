@@ -54,8 +54,8 @@ public interface FileDocument extends Document {
 
 	@Nonnull
 	@CheckReturnValue
-	static FileDocument create(@Nonnull Class<? extends Document> classOfDocument, @Nonnull File file) {
-		return wrap(Document.create(classOfDocument, file), file);
+	static FileDocument read(@Nonnull Class<? extends Document> classOfDocument, @Nonnull File file) {
+		return wrap(Document.readFile(classOfDocument, file), file);
 	}
 
 }

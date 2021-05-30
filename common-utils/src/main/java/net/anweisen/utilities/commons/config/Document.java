@@ -2,6 +2,8 @@ package net.anweisen.utilities.commons.config;
 
 import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.config.document.EmptyDocument;
+import net.anweisen.utilities.commons.config.document.GsonDocument;
+import net.anweisen.utilities.commons.misc.FileUtils;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -36,7 +38,8 @@ public interface Document extends Config, Json {
 	 * The returned list will not contain any null elements.
 	 * If there are no documents, the list will be empty.
 	 * Elements which are no documents in the original list will be skipped.
-	 * If a element is {@code null} an empty document will be added.
+	 * If an element is {@code null} an empty document will be added
+	 * if this document is not {@link #isReadonly() readonly}.
 	 *
 	 * @return the list of documents assigned to this path
 	 */
@@ -57,7 +60,7 @@ public interface Document extends Config, Json {
 
 	/**
 	 * Returns the parent document of this document.
-	 * If {@code this} is the {@link #getRoot() root} the this method will return {@code null}.
+	 * If {@code this} is the {@link #getRoot() root} this method will return {@code null}.
 	 *
 	 * @return the parent document of this document
 	 */
@@ -111,7 +114,13 @@ public interface Document extends Config, Json {
 
 	void write(@Nonnull Writer writer) throws IOException;
 
-	void save(@Nonnull File file) throws IOException;
+	void saveToFile(@Nonnull File file) throws IOException;
+
+	@Nonnull
+	@CheckReturnValue
+	default FileDocument asFileDocument(@Nonnull File file) {
+		return (this instanceof FileDocument) ? (FileDocument) this :  FileDocument.wrap(this, file);
+	}
 
 	/**
 	 * @return a new empty and immutable document
@@ -126,15 +135,43 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	@CheckReturnValue
-	static Document create(@Nonnull Class<? extends Document> classOfDocument, @Nonnull File file) {
+	static Document readFile(@Nonnull Class<? extends Document> classOfDocument, @Nonnull File file) {
 		try {
-			Constructor<? extends Document> constructor = classOfDocument.getDeclaredConstructor(File.class);
-			return constructor.newInstance(file);
+			if (file.exists()) {
+				Constructor<? extends Document> constructor = classOfDocument.getConstructor(File.class);
+				return constructor.newInstance(file);
+			} else {
+				Constructor<? extends Document> constructor = classOfDocument.getConstructor();
+				return constructor.newInstance();
+			}
 		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
-			throw new IllegalArgumentException(classOfDocument.getName() + " does not support File creation");
+			throw new UnsupportedOperationException(classOfDocument.getName() + " does not support File creation");
 		} catch (InvocationTargetException ex) {
 			throw new WrappedException(ex);
 		}
+	}
+
+	/**
+	 * @return a json document parsed by the input
+	 *
+	 * @see GsonDocument
+	 */
+	@Nonnull
+	@CheckReturnValue
+	static Document parseJson(@Nonnull String jsonInput) {
+		return new GsonDocument(jsonInput);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document readJsonFile(@Nonnull File file) {
+		return readFile(GsonDocument.class, file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document newJsonDocument() {
+		return new GsonDocument();
 	}
 
 }

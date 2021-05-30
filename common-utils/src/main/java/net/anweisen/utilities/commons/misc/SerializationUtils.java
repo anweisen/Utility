@@ -4,6 +4,8 @@ import net.anweisen.utilities.commons.logging.ILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -15,15 +17,13 @@ public final class SerializationUtils {
 
 	private SerializationUtils() {}
 
-	public static final String SERIALIZE_METHOD = "serialize",
-							   DESERIALIZE_METHOD = "deserialize";
 	protected static final ILogger logger = ILogger.forThisClass();
 
 	public static boolean isSerializable(@Nonnull Class<?> clazz) {
 		try {
-			clazz.getMethod(SERIALIZE_METHOD);
+			clazz.getMethod("serialize");
 			return true;
-		} catch (NoSuchMethodException e) {
+		} catch (Throwable ex) {
 			return false;
 		}
 	}
@@ -33,7 +33,7 @@ public final class SerializationUtils {
 		Class<?> classOfObject = object.getClass();
 		try {
 
-			Method method = classOfObject.getMethod(SERIALIZE_METHOD);
+			Method method = classOfObject.getMethod("serialize");
 			method.setAccessible(true);
 			Object serialized = method.invoke(object);
 
@@ -50,17 +50,57 @@ public final class SerializationUtils {
 	}
 
 	@Nullable
-	public static <T> T deserializeObject(@Nonnull Map<String, Object> map, @Nonnull Class<T> classOfT) {
+	@SuppressWarnings("unchecked")
+	public static <T> T deserializeObject(@Nonnull Map<String, Object> map, @Nullable Class<T> classOfT) {
 		try {
-			Method method = classOfT.getMethod(DESERIALIZE_METHOD, Map.class);
+
+			Class<?> configurationSerializationClass = Class.forName("org.bukkit.configuration.serialization.ConfigurationSerialization");
+			Method method = configurationSerializationClass.getMethod("deserializeObject", Map.class);
 			method.setAccessible(true);
 			Object object = method.invoke(null, map);
+
+			return (T) object;
+
+		} catch (Throwable ex) {
+		}
+
+		if (classOfT == null)
+			return null;
+
+		try {
+
+			Method method = classOfT.getMethod("deserialize", Map.class);
+			method.setAccessible(true);
+			Object object = method.invoke(null, map);
+
 			if (!classOfT.isInstance(object)) throw new IllegalStateException("Deserialization of " + classOfT.getName() + " failed: returned " + (object == null ? null : object.getClass().getName()));
 			return classOfT.cast(object);
+
 		} catch (Throwable ex) {
 			logger.error("Could not deserialize object of type {}", classOfT, ex);
 			return null;
 		}
+	}
+
+	@Nonnull
+	public static String getSerializationName(@Nonnull Class<?> clazz) {
+		for (Annotation annotation : clazz.getAnnotations()) {
+			Class<? extends Annotation> annotationType = annotation.annotationType();
+			Object value = ReflectionUtils.getAnnotationValue(annotation);
+			switch (annotationType.getSimpleName()) {
+				case "DelegateDeserialization":
+				case "DelegateSerialization":
+				case "SerializableAs":
+					if (value instanceof Class) {
+						return getSerializationName((Class<?>) value);
+					} else if (value instanceof String) {
+						return (String) value;
+					}
+					break;
+			}
+		}
+
+		return clazz.getName();
 	}
 
 }

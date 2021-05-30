@@ -6,10 +6,14 @@ import net.anweisen.utilities.commons.config.Propertyable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -73,8 +77,8 @@ public abstract class DocumentWrapper implements Document {
 	}
 
 	@Override
-	public void save(@Nonnull File file) throws IOException {
-		document.save(file);
+	public void saveToFile(@Nonnull File file) throws IOException {
+		document.saveToFile(file);
 	}
 
 	@Nonnull
@@ -98,7 +102,7 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nonnull
 	@Override
-	public <T, O> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
+	public <T, O extends Propertyable> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
 		return document.getOptional(key, extractor);
 	}
 
@@ -280,6 +284,42 @@ public abstract class DocumentWrapper implements Document {
 
 	@Nullable
 	@Override
+	public Date getDate(@Nonnull String path) {
+		return document.getDate(path);
+	}
+
+	@Nonnull
+	@Override
+	public Date getDate(@Nonnull String path, @Nonnull Date def) {
+		return document.getDate(path, def);
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		return document.getDateTime(path);
+	}
+
+	@Nonnull
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path, @Nonnull OffsetDateTime def) {
+		return document.getDateTime(path, def);
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		return document.getColor(path);
+	}
+
+	@Nonnull
+	@Override
+	public Color getColor(@Nonnull String path, @Nonnull Color def) {
+		return document.getColor(path, def);
+	}
+
+	@Nullable
+	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
 		return document.getEnum(path, classOfEnum);
 	}
@@ -385,6 +425,12 @@ public abstract class DocumentWrapper implements Document {
 		return document.keys();
 	}
 
+	@Nonnull
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		return document.entrySet();
+	}
+
 	@Override
 	public void forEach(@Nonnull BiConsumer<? super String, ? super Object> action) {
 		document.forEach(action);
@@ -407,4 +453,11 @@ public abstract class DocumentWrapper implements Document {
 	public Document getRoot() {
 		return document.getRoot();
 	}
+
+	@Override
+	public String toString() {
+		String string = document.toString();
+		return "Wrapped(" + (string.contains("\n") ? "\n" + string : string) + ")";
+	}
+
 }

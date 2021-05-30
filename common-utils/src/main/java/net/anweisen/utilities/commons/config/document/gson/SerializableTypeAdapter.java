@@ -18,9 +18,9 @@ import java.util.Optional;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
+public class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 
-	public static final String KEY = "classOfType";
+	public static final String ALTERNATE_KEY = "classOfType", KEY = "==";
 
 	@Override
 	public void write(@Nonnull Gson gson, @Nonnull JsonWriter writer, @Nonnull Object object) throws IOException {
@@ -29,8 +29,8 @@ public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 		if (map == null) return;
 
 		JsonObject json = new JsonObject();
+		json.addProperty(KEY, SerializationUtils.getSerializationName(object.getClass()));
 		GsonUtils.setDocumentProperties(gson, json, map);
-		json.addProperty(KEY, object.getClass().getName());
 		TypeAdapters.JSON_ELEMENT.write(writer, json);
 
 	}
@@ -42,18 +42,23 @@ public final class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 		if (element == null || !element.isJsonObject()) return null;
 
 		JsonObject json = element.getAsJsonObject();
-		String classOfType = Optional.ofNullable(json.get(KEY)).map(JsonElement::getAsString).orElse(null);
+		String classOfType = Optional.ofNullable(findClassContainer(json)).filter(JsonElement::isJsonPrimitive).map(JsonElement::getAsString).orElse(null);
 
-		Class<?> clazz;
+		Class<?> clazz = null;
 		try {
 			clazz = Class.forName(classOfType);
 		} catch (ClassNotFoundException | NullPointerException ex) {
-			return null;
 		}
 
 		Map<String, Object> map = GsonUtils.convertJsonObjectToMap(json);
 		return SerializationUtils.deserializeObject(map, clazz);
 
+	}
+
+	private JsonElement findClassContainer(@Nonnull JsonObject json) {
+		if (json.has(ALTERNATE_KEY))
+			return json.get(ALTERNATE_KEY);
+		return json.get(KEY);
 	}
 
 }

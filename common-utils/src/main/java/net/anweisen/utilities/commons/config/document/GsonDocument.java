@@ -1,23 +1,24 @@
 package net.anweisen.utilities.commons.config.document;
 
 import com.google.gson.*;
+import com.google.gson.internal.bind.TypeAdapters;
+import net.anweisen.utilities.commons.common.WrappedException;
 import net.anweisen.utilities.commons.config.Document;
-import net.anweisen.utilities.commons.config.document.gson.ClassTypeAdapter;
-import net.anweisen.utilities.commons.config.document.gson.GsonDocumentTypeAdapter;
-import net.anweisen.utilities.commons.config.document.gson.GsonTypeAdapter;
-import net.anweisen.utilities.commons.config.document.gson.SerializableTypeAdapter;
+import net.anweisen.utilities.commons.config.document.gson.*;
 import net.anweisen.utilities.commons.misc.FileUtils;
 import net.anweisen.utilities.commons.misc.GsonUtils;
 import net.anweisen.utilities.commons.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.*;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -31,7 +32,19 @@ public class GsonDocument extends AbstractDocument {
 			.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializationUtils::isSerializable, new SerializableTypeAdapter()))
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(GsonDocument.class, new GsonDocumentTypeAdapter()))
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
+			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()))
 			.create();
+
+	private static boolean cleanupEmptyObjects = false;
+	private static boolean cleanupEmptyArrays = false;
+
+	public static void setCleanupEmptyArrays(boolean clean) {
+		cleanupEmptyArrays = clean;
+	}
+
+	public static void setCleanupEmptyObjects(boolean clean) {
+		cleanupEmptyObjects = clean;
+	}
 
 	protected JsonObject jsonObject;
 
@@ -39,8 +52,12 @@ public class GsonDocument extends AbstractDocument {
 		this(FileUtils.newBufferedReader(file));
 	}
 
-	public GsonDocument(@Nonnull Reader reader) {
-		this(GSON.fromJson(reader, JsonObject.class));
+	public GsonDocument(@Nonnull Reader reader) throws IOException {
+		this(new BufferedReader(reader));
+	}
+
+	public GsonDocument(@Nonnull BufferedReader reader) throws IOException {
+		this(reader.ready() ? GSON.fromJson(reader, JsonObject.class) : new JsonObject());
 	}
 
 	public GsonDocument(@Nonnull String json) {
@@ -52,7 +69,6 @@ public class GsonDocument extends AbstractDocument {
 	}
 
 	public GsonDocument(@Nullable JsonObject jsonObject) {
-		super();
 		this.jsonObject = jsonObject == null ? new JsonObject() : jsonObject;
 	}
 
@@ -125,56 +141,76 @@ public class GsonDocument extends AbstractDocument {
 
 	@Override
 	public char getChar(@Nonnull String path, char def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsCharacter();
+		return getPrimitive(path).map(JsonPrimitive::getAsCharacter).orElse(def);
 	}
 
 	@Override
 	public long getLong(@Nonnull String path, long def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsLong();
+		return getPrimitive(path).map(JsonPrimitive::getAsLong).orElse(def);
 	}
 
 	@Override
 	public int getInt(@Nonnull String path, int def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsInt();
+		return getPrimitive(path).map(JsonPrimitive::getAsInt).orElse(def);
 	}
 
 	@Override
 	public short getShort(@Nonnull String path, short def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsShort();
+		return getPrimitive(path).map(JsonPrimitive::getAsShort).orElse(def);
 	}
 
 	@Override
 	public byte getByte(@Nonnull String path, byte def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsByte();
+		return getPrimitive(path).map(JsonPrimitive::getAsByte).orElse(def);
 	}
 
 	@Override
 	public double getDouble(@Nonnull String path, double def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsDouble();
+		return getPrimitive(path).map(JsonPrimitive::getAsDouble).orElse(def);
 	}
 
 	@Override
 	public float getFloat(@Nonnull String path, float def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsFloat();
+		return getPrimitive(path).map(JsonPrimitive::getAsFloat).orElse(def);
 	}
 
 	@Override
 	public boolean getBoolean(@Nonnull String path, boolean def) {
-		return getElement(path).orElse(new JsonPrimitive(def)).getAsBoolean();
+		return getPrimitive(path).map(JsonPrimitive::getAsBoolean).orElse(def);
 	}
 
 	@Nonnull
 	@Override
 	public List<String> getStringList(@Nonnull String path) {
-		JsonElement array = jsonObject.get(path);
-		if (array == null || array.isJsonNull()) return new ArrayList<>();
-		return GsonUtils.convertJsonArrayToStringList(array.getAsJsonArray());
+		JsonElement element = jsonObject.get(path);
+		if (element == null || element.isJsonNull()) return new ArrayList<>();
+		if (element.isJsonPrimitive()) return new ArrayList<>(Collections.singletonList(GsonUtils.convertJsonElementToString(element)));
+		if (element.isJsonObject()) throw new IllegalStateException("Cannot extract list out of json object at '" + path + "'");
+		return GsonUtils.convertJsonArrayToStringList(element.getAsJsonArray());
 	}
 
 	@Nullable
 	@Override
 	public UUID getUUID(@Nonnull String path) {
 		return get(path, UUID.class);
+	}
+
+	@Nullable
+	@Override
+	public Date getDate(@Nonnull String path) {
+		return get(path, Date.class);
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		return get(path, OffsetDateTime.class);
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		return get(path, Color.class);
 	}
 
 	@Nullable
@@ -209,7 +245,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Override
 	public int size() {
-		return jsonObject.size();
+		return GsonUtils.getSize(jsonObject);
 	}
 
 	@Override
@@ -241,11 +277,18 @@ public class GsonDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public Collection<String> keys() {
-		Collection<String> keys = new ArrayList<>(jsonObject.size());
+		Collection<String> keys = new ArrayList<>(size());
 		for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 			keys.add(entry.getKey());
 		}
 		return keys;
+	}
+
+	@Nonnull
+	private Optional<JsonPrimitive> getPrimitive(@Nonnull String path) {
+		return getElement(path)
+				.filter(JsonPrimitive.class::isInstance)
+				.map(JsonPrimitive.class::cast);
 	}
 
 	@Nonnull
@@ -286,7 +329,7 @@ public class GsonDocument extends AbstractDocument {
 				object.add(current, element = new JsonObject());
 			}
 
-			if (!element.isJsonObject()) throw new IllegalArgumentException("Cannot replace '" + current + "' on '" + path + "'; It's not an object");
+			if (!element.isJsonObject()) throw new IllegalArgumentException("Cannot replace '" + current + "' on '" + path + "'; It's not an object (" + element.getClass().getName() + ")");
 			object = element.getAsJsonObject();
 
 		}
@@ -358,15 +401,15 @@ public class GsonDocument extends AbstractDocument {
 		cleanup(jsonObject);
 	}
 
-	public void cleanup(@Nonnull JsonObject jsonObject) {
+	public static void cleanup(@Nonnull JsonObject jsonObject) {
 		Iterator<Entry<String, JsonElement>> iterator = jsonObject.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, JsonElement> entry = iterator.next();
 			JsonElement value = entry.getValue();
-			if (value.isJsonNull()) iterator.remove();
 			if (value.isJsonObject()) cleanup(value.getAsJsonObject());
-			if (value.isJsonObject() && value.getAsJsonObject().size() == 0) iterator.remove();
-			if (value.isJsonArray() && value.getAsJsonArray().size() == 0) iterator.remove();
+//			if (cleanupNulls && value.isJsonNull()) iterator.remove();
+			if (cleanupEmptyObjects && value.isJsonObject() && GsonUtils.getSize(value.getAsJsonObject()) == 0) iterator.remove();
+			if (cleanupEmptyArrays && value.isJsonArray() && value.getAsJsonArray().size() == 0) iterator.remove();
 		}
 	}
 

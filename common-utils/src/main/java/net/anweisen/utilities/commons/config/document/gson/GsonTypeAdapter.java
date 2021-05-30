@@ -25,6 +25,10 @@ public interface GsonTypeAdapter<T> {
 		return new TypeAdapter<T>() {
 			@Override
 			public void write(JsonWriter writer, T object) throws IOException {
+				if (object == null) {
+					writer.nullValue();
+					return;
+				}
 				GsonTypeAdapter.this.write(gson, writer, object);
 			}
 
