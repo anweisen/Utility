@@ -1,8 +1,9 @@
-package net.anweisen.utilities.commons.logging.internal;
+package net.anweisen.utilities.commons.logging.internal.factory;
 
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.logging.ILoggerFactory;
 import net.anweisen.utilities.commons.logging.JavaILogger;
+import net.anweisen.utilities.commons.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,16 +27,9 @@ public class ConstantLoggerFactory implements ILoggerFactory {
 		return logger;
 	}
 
-	@Nonnull
 	@Override
-	public ILogger forClass(@Nullable Class<?> clazz) {
-		return logger;
-	}
-
-	@Nonnull
-	@Override
-	public JavaILogger forJavaLogger(@Nonnull Logger javaLogger) {
-		return logger;
+	public void setDefaultLevel(@Nonnull LogLevel level) {
+		logger.setMinLevel(level);
 	}
 
 }

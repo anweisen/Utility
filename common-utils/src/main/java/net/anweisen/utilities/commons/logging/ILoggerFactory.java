@@ -3,6 +3,7 @@ package net.anweisen.utilities.commons.logging;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 /**
@@ -15,12 +16,6 @@ public interface ILoggerFactory {
 	@CheckReturnValue
 	ILogger forName(@Nullable String name);
 
-	@Nonnull
-	@CheckReturnValue
-	ILogger forClass(@Nullable Class<?> clazz);
-
-	@Nonnull
-	@CheckReturnValue
-	JavaILogger forJavaLogger(@Nonnull Logger logger);
+	void setDefaultLevel(@Nonnull LogLevel level);
 
 }
