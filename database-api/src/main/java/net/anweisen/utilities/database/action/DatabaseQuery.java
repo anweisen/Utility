@@ -1,5 +1,6 @@
-package net.anweisen.utilities.database;
+package net.anweisen.utilities.database.action;
 
+import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;

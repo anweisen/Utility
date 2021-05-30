@@ -11,6 +11,14 @@ import javax.annotation.Nonnull;
  */
 public class MySQLDatabase extends AbstractSQLDatabase {
 
+	static {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException ex) {
+			LOGGER.error("Could not load mysql driver");
+		}
+	}
+
 	public MySQLDatabase(@Nonnull DatabaseConfig config) {
 		super(config);
 	}

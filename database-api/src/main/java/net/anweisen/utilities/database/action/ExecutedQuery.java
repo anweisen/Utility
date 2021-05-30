@@ -1,4 +1,4 @@
-package net.anweisen.utilities.database;
+package net.anweisen.utilities.database.action;
 
 import net.anweisen.utilities.commons.config.Document;
 
@@ -33,6 +33,7 @@ public interface ExecutedQuery extends Iterable<Document> {
 	Stream<Document> all();
 
 	@Nonnull
+	@CheckReturnValue
 	<C extends Collection<? super Document>> C into(@Nonnull C collection);
 
 	int index(@Nonnull Predicate<? super Document> filter);

@@ -1,4 +1,4 @@
-package net.anweisen.utilities.database;
+package net.anweisen.utilities.database.action;
 
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 

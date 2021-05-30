@@ -6,23 +6,28 @@ import net.anweisen.utilities.commons.logging.LogLevel;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.2
  */
-public final class SimpleMapUtils {
+public final class SimpleCollectionUtils {
 
 	@Deprecated
 	public static final String REGEX_1 = ",",
 							   REGEX_2 = "=";
-	protected static final ILogger logger = ILogger.forThisClass();
+	private static final ILogger logger = ILogger.forThisClass();
+	private static boolean logMappingError = true;
 
-	private SimpleMapUtils() {}
+	private SimpleCollectionUtils() {}
+
+	public static void disableErrorLogging() {
+		logMappingError = false;
+	}
 
 	/**
 	 * You should not use this to serialize maps due to it's unsafe because of strings which may contain the regex chars = or ,
@@ -72,7 +77,8 @@ public final class SimpleMapUtils {
 				map.put(keyElement, valueElement);
 
 			} catch (Exception ex) {
-				logger.error("Cannot generate key/value: " + ex.getClass().getName() + ": " + ex.getMessage());
+				if (logMappingError)
+					logger.error("Cannot generate key/value: " + ex.getClass().getName() + ": " + ex.getMessage());
 			}
 		}
 
@@ -82,18 +88,53 @@ public final class SimpleMapUtils {
 
 	@Nonnull
 	@CheckReturnValue
-	public static <FromK, FromV, ToK, ToV> Map<ToK, ToV> map(@Nonnull Map<FromK, FromV> map,
-	                                                         @Nonnull Function<? super FromK, ? extends ToK> keyMapper,
-	                                                         @Nonnull Function<? super FromV, ? extends ToV> valueMapper) {
+	public static <FromK, FromV, ToK, ToV> Map<ToK, ToV> convertMap(@Nonnull Map<FromK, FromV> map,
+	                                                                @Nonnull Function<? super FromK, ? extends ToK> keyMapper,
+	                                                                @Nonnull Function<? super FromV, ? extends ToV> valueMapper) {
 		Map<ToK, ToV> result = new HashMap<>();
 		map.forEach((key, value) -> {
 			try {
 				result.put(keyMapper.apply(key), valueMapper.apply(value));
 			} catch (Exception ex) {
-				logger.error("Unable to map '{}'='{}'", key, value, ex);
+				if (logMappingError)
+					logger.error("Unable to map '{}'='{}'", key, value, ex);
 			}
 		});
 		return result;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static <From, To> List<To> convertList(@Nonnull List<From> list,
+	                                              @Nonnull Function<? super From, ? extends To> mapper) {
+		List<To> result = new ArrayList<>(list.size());
+		list.forEach(value -> {
+			try {
+				result.add(mapper.apply(value));
+			} catch (Exception ex) {
+				if (logMappingError)
+					logger.error("Unable map '{}'", value, ex);
+			}
+		});
+		return result;
+	}
+
+	public static <K, V> V getMostFrequentValue(@Nonnull Map<K, V> map) {
+		Collection<V> values = map.values();
+		List<V> list = new ArrayList<>(values);
+		Set<V> set = new HashSet<>(values);
+
+		V valueMax = null;
+		int max = 0;
+		for (V value : set) {
+			int frequency = Collections.frequency(list, value);
+			if (frequency > max) {
+				max = frequency;
+				valueMax = value;
+			}
+		}
+
+		return valueMax;
 	}
 
 }

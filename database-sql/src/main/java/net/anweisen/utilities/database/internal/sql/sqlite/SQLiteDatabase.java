@@ -15,6 +15,14 @@ import java.io.IOException;
  */
 public class SQLiteDatabase extends AbstractSQLDatabase {
 
+	static {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException ex) {
+			LOGGER.error("Could not load sqlite driver");
+		}
+	}
+
 	protected final File file;
 
 	public SQLiteDatabase(@Nonnull DatabaseConfig config) {
