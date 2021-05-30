@@ -57,4 +57,16 @@ public class Tuple<A, B> {
 				'}';
 	}
 
+	public static <A, B> Tuple<A, B> ofA(@Nullable A a) {
+		return new Tuple<>(a, null);
+	}
+
+	public static <A, B> Tuple<A, B> ofB(@Nullable B b) {
+		return new Tuple<>(null, b);
+	}
+
+	public static <A, B> Tuple<A, B> of(@Nullable A a, @Nullable B b) {
+		return new Tuple<>(a, b);
+	}
+
 }

@@ -10,6 +10,7 @@ import java.util.logging.Level;
  */
 public enum LogLevel {
 
+	TRACE(Level.FINEST),
 	DEBUG(Level.FINE),
 	STATUS(Level.CONFIG),
 	INFO(Level.INFO),
@@ -28,7 +29,7 @@ public enum LogLevel {
 	}
 
 	@CheckReturnValue
-	public boolean showAtLoggerLevel(@Nonnull LogLevel loggerLevel) {
+	public boolean isShownAtLoggerLevel(@Nonnull LogLevel loggerLevel) {
 		return this.ordinal() >= loggerLevel.ordinal();
 	}
 

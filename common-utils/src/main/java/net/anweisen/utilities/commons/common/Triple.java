@@ -68,4 +68,20 @@ public class Triple<A, B, C> {
 				'}';
 	}
 
+	public static <A, B, C> Triple<A, B, C> ofA(@Nullable A a) {
+		return new Triple<>(a, null, null);
+	}
+
+	public static <A, B, C> Triple<A, B, C> ofB(@Nullable B b) {
+		return new Triple<>(null, b, null);
+	}
+
+	public static <A, B, C> Triple<A, B, C> ofC(@Nullable C c) {
+		return new Triple<>(null, null, c);
+	}
+
+	public static <A, B, C> Triple<A, B, C> of(@Nullable A a, @Nullable B b, @Nullable C c) {
+		return new Triple<>(a, b, c);
+	}
+
 }

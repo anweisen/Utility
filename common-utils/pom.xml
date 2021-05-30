@@ -6,14 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>common-utils</artifactId>
-	<name>${artifactId}</name>
-	<version>${parent.version}</version>
+	<version>1.2.7</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
 		<groupId>net.anweisen.utilities</groupId>
 		<artifactId>root</artifactId>
-		<version>1.2.2</version>
+		<version>1.2.7</version>
 	</parent>
 
 	<properties>
@@ -68,6 +67,12 @@
 
 	<dependencies>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+
 		<!-- Good Java JSON api -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -86,7 +91,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>github-anweisen</id>
+			<id>anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

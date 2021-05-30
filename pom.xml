@@ -7,22 +7,22 @@
 
 	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>root</artifactId>
-	<version>1.2.2</version>
+	<version>1.2.7</version>
 	<packaging>pom</packaging>
 	<name>root</name>
 
 	<modules>
 		<module>common-utils</module>
-		<module>bukkit-utils</module>
 		<module>database-api</module>
 		<module>database-mongodb</module>
 		<module>database-sql</module>
+		<module>bukkit-utils</module>
 		<module>jda-commandmanager</module>
 	</modules>
 
 	<distributionManagement>
 		<repository>
-			<id>github-anweisen</id>
+			<id>anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

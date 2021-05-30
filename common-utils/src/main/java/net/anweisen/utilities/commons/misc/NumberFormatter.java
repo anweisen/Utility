@@ -18,8 +18,38 @@ public interface NumberFormatter {
 
 	@Nonnull
 	@CheckReturnValue
+	default String format(float value) {
+		return format(Float.valueOf(value));
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	default String format(long value) {
-		return format((double) (value));
+		return format(Long.valueOf(value));
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default String format(int value) {
+		return format(Integer.valueOf(value));
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default String format(short value) {
+		return format(Short.valueOf(value));
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default String format(byte value) {
+		return format(Byte.valueOf(value));
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default String format(@Nonnull Number number) {
+		return format(number.doubleValue());
 	}
 
 	public static final NumberFormatter
@@ -28,6 +58,7 @@ public interface NumberFormatter {
 			SPACE_SPLIT = fromPattern("###,##0.###############", null, false,
 									  init -> updateSymbols(init, symbols -> symbols.setGroupingSeparator(' '))),
 			FLOATING_POINT = fromPattern("0.0", null, false),
+			DOUBLE_FLOATING_POINT = fromPattern("0.00", null, false),
 			BIG_FLOATING_POINT = fromPattern("###,##0.00000", null, false),
 			PERCENTAGE = fromPattern("0.##", "%", true),
 			FLOATING_PERCENTAGE = fromPattern("0.00", "%", true),

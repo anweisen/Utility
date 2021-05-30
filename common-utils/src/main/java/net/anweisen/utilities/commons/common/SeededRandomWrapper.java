@@ -9,7 +9,7 @@ import java.util.Random;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class SeededRandomWrapper extends Random {
+public class SeededRandomWrapper extends Random implements IRandom {
 
 	protected long seed;
 
