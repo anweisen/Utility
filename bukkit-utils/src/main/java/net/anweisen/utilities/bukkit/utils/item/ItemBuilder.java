@@ -100,6 +100,11 @@ public class ItemBuilder {
 	}
 
 	@Nonnull
+	public ItemBuilder lore(@Nonnull String... lore) {
+		return setLore(lore);
+	}
+
+	@Nonnull
 	public ItemBuilder setName(@Nullable String name) {
 		getMeta().setDisplayName(name);
 		return this;
@@ -148,6 +153,11 @@ public class ItemBuilder {
 	public ItemBuilder addFlag(@Nonnull ItemFlag... flags) {
 		getMeta().addItemFlags(flags);
 		return this;
+	}
+
+	@Nonnull
+	public ItemBuilder flag(@Nonnull ItemFlag... flags) {
+		return addFlag(flags);
 	}
 
 	@Nonnull

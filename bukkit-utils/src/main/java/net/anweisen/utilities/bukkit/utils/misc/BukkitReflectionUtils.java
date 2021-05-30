@@ -10,7 +10,9 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**
- * This class is intended to give access to api functions which are not implemented in some versions of bukkit or spigot.
+ * This class gives access to
+ * - api functions which are not directly implemented in some versions of bukkit or spigot
+ * - some basic nms functionality.
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.2.1

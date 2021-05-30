@@ -33,7 +33,7 @@ public final class SoundSample {
 			WIN             = new SoundSample().addSound(Sound.UI_TOAST_CHALLENGE_COMPLETE, 1),
 			DRAGON_BREATH   = new SoundSample().addSound(Sound.ENTITY_ENDER_DRAGON_GROWL, 0.5F);
 
-	public static void playEnablingSound(@Nonnull Player player, boolean enabled) {
+	public static void playStatusSound(@Nonnull Player player, boolean enabled) {
 		(enabled ? BASS_ON : BASS_OFF).play(player);
 	}
 

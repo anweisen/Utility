@@ -17,9 +17,11 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.1
  */
-public class GameProfileUtils {
+public final class GameProfileUtils {
 
 	protected static final ILogger logger = ILogger.forThisClass();
+
+	private GameProfileUtils() {}
 
 	@Nonnull
 	public static GameProfile getGameProfile(@Nonnull Player player) {
@@ -51,9 +53,28 @@ public class GameProfileUtils {
 			Method setProfileMethod = classOfMeta.getDeclaredMethod("setProfile", GameProfile.class);
 			setProfileMethod.setAccessible(true);
 			setProfileMethod.invoke(meta, profile);
+			return;
 		} catch (Exception ex) {
-			logger.error("Unable to apply textures to item", ex);
 		}
+
+		try {
+			Field field = classOfMeta.getDeclaredField("profile");
+			field.setAccessible(true);
+			field.set(meta, profile);
+
+			// This field is not implemented in every version
+			try {
+				field = classOfMeta.getDeclaredField("serializedProfile");
+				field.setAccessible(true);
+				field.set(meta, profile);
+			} catch (Exception ex) {
+			}
+
+			return;
+		} catch (Exception ex) {
+		}
+
+		logger.warn("Unable to apply textures to item");
 
 	}
 

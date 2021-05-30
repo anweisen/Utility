@@ -1,6 +1,11 @@
 package net.anweisen.utilities.bukkit.utils.misc;
 
 import net.anweisen.utilities.commons.version.Version;
+import net.anweisen.utilities.commons.version.VersionInfo;
+import org.bukkit.Bukkit;
+
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -26,6 +31,7 @@ public enum MinecraftVersion implements Version {
 	V1_14,      // 1.14
 	V1_15,      // 1.15
 	V1_16,      // 1.16
+	V1_16_5,    // 1.16.5
 	V1_17;      // 1.17
 
 	private final int major, minor, revision;
@@ -62,6 +68,15 @@ public enum MinecraftVersion implements Version {
 	@Override
 	public String toString() {
 		return this.format();
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static MinecraftVersion parse() {
+		String version = Bukkit.getBukkitVersion();
+		version = version.substring(0, version.indexOf("-"));
+
+		return Version.findNearest(Version.parse(version), values());
 	}
 
 }

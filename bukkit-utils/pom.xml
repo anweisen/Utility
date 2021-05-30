@@ -2,18 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.anweisen.utilities</groupId>
 	<artifactId>bukkit-utils</artifactId>
-	<name>bukkit-utils</name>
-	<version>1.2.1</version>
+	<version>1.2.7</version>
 	<url>https://github.com/anweisen</url>
 
 	<parent>
 		<groupId>net.anweisen.utilities</groupId>
 		<artifactId>root</artifactId>
-		<version>1.0</version>
+		<version>1.2.7</version>
 	</parent>
 
 	<properties>
@@ -70,7 +69,7 @@
 		</repository>
 
 		<repository>
-			<id>github</id>
+			<id>github-anweisen</id>
 			<url>https://maven.pkg.github.com/anweisen/*</url>
 		</repository>
 
@@ -82,7 +81,7 @@
 		<dependency>
 			<groupId>net.anweisen.utilities</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>1.2</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Spigot development api -->
@@ -105,7 +104,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>github-anweisen</id>
+			<id>anweisen</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
 		</repository>

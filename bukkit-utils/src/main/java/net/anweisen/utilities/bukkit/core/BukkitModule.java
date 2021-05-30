@@ -1,16 +1,18 @@
 package net.anweisen.utilities.bukkit.core;
 
+import net.anweisen.utilities.bukkit.utils.menu.MenuPosition;
+import net.anweisen.utilities.bukkit.utils.menu.MenuPositionListener;
 import net.anweisen.utilities.bukkit.utils.wrapper.SimpleEventExecutor;
 import net.anweisen.utilities.bukkit.utils.wrapper.ActionListener;
 import net.anweisen.utilities.commons.annotations.ReplaceWith;
+import net.anweisen.utilities.commons.common.NamedThreadFactory;
 import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.commons.config.FileDocument;
 import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.commons.logging.JavaILogger;
-import net.anweisen.utilities.commons.logging.LoggingExceptionHandler;
 import net.anweisen.utilities.commons.logging.internal.BukkitLoggerWrapper;
-import net.anweisen.utilities.commons.logging.internal.ConstantLoggerFactory;
+import net.anweisen.utilities.commons.logging.internal.factory.ConstantLoggerFactory;
 import net.anweisen.utilities.commons.version.Version;
-import net.anweisen.utilities.commons.version.VersionInfo;
 import net.anweisen.utilities.bukkit.utils.misc.MinecraftVersion;
 import net.anweisen.utilities.commons.config.document.YamlDocument;
 import org.bukkit.Bukkit;
@@ -21,11 +23,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -35,35 +41,46 @@ import java.util.logging.Level;
  */
 public abstract class BukkitModule extends JavaPlugin {
 
+	private static volatile BukkitModule firstInstance;
+	private static boolean setFirstInstance = true;
+	private static boolean wasShutdown;
+
 	private final Map<String, CommandExecutor> commands = new HashMap<>();
 	private final List<Listener> listeners = new ArrayList<>();
+	private final SimpleConfigManager configManager = new SimpleConfigManager(this);
 
 	private JavaILogger logger;
+	private ExecutorService executorService;
 	private Document config;
 	private Version version;
 	private MinecraftVersion serverVersion;
 	private boolean devMode;
 	private boolean firstInstall;
-	private boolean isReload;
-	private boolean wasShutdown;
+	private boolean isReloaded;
+	private boolean isLoaded;
 
 	@Override
 	public void onLoad() {
+		isLoaded = true;
+
+		if (setFirstInstance || firstInstance == null) {
+			setFirstInstance(this);
+		}
+
 		ILogger.setFactory(new ConstantLoggerFactory(this.getLogger()));
-		version = VersionInfo.parse(getDescription().getVersion());
-		serverVersion = VersionInfo.findNearest(VersionInfo.parseFromCraftBukkit(getServer().getClass()), MinecraftVersion.values());
-		getLogger().info("Detected server version {}", serverVersion);
-		if (wasShutdown) isReload = true;
+		getLogger().info("Detected server version {}", getServerVersion());
+		trySaveDefaultConfig();
+		executorService = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("%s-Task-%s", this.getName(), threadId)));
+		if (wasShutdown) isReloaded = true;
 		if (firstInstall = !getDataFolder().exists()) {
 			getLogger().info("Detected first install!");
 		}
-		if (devMode = getConfigDocument().getBoolean("dev-mode")) {
+		if (devMode = getConfigDocument().getBoolean("dev-mode") || getConfigDocument().getBoolean("dev-mode.enabled")) {
 			getLogger().setLevel(Level.ALL);
 			getLogger().debug("Devmode is enabled: Showing debug messages. This can be disabled in the plugin.yml ('dev-mode')");
 		} else {
 			getLogger().setLevel(Level.INFO);
 		}
-		saveDefaultConfig();
 	}
 
 	@Override
@@ -74,12 +91,18 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		setFirstInstance = true;
 		wasShutdown = true;
+		isLoaded = false;
 		commands.clear();
 		listeners.clear();
+		executorService.shutdown();
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.getOpenInventory().close();
+			InventoryView view = player.getOpenInventory();
+			Inventory inventory = view.getTopInventory();
+			if (inventory.getHolder() == MenuPosition.HOLDER)
+				view.close();
 		}
 	}
 
@@ -87,12 +110,20 @@ public abstract class BukkitModule extends JavaPlugin {
 		return devMode;
 	}
 
-	public boolean isFirstInstall() {
+	public final boolean isFirstInstall() {
 		return firstInstall;
 	}
 
-	public boolean isReload() {
-		return isReload;
+	public final boolean isReloaded() {
+		return isReloaded;
+	}
+
+	public final boolean isLoaded() {
+		return isLoaded;
+	}
+
+	public final boolean isFirstInstance() {
+		return firstInstance == this;
 	}
 
 	@Nonnull
@@ -103,17 +134,23 @@ public abstract class BukkitModule extends JavaPlugin {
 
 	@Nonnull
 	public Document getConfigDocument() {
-		return config != null ? config : (config = new YamlDocument(super.getConfig()).readonly());
+		checkLoaded();
+		return config != null ? config : (config = new YamlDocument(super.getConfig()));
+	}
+
+	@Nonnull
+	public FileDocument getConfig(@Nonnull String filename) {
+		return configManager.getDocument(filename);
 	}
 
 	@Nonnull
 	public Version getVersion() {
-		return version;
+		return version != null ? version : (version = Version.parse(getDescription().getVersion()));
 	}
 
 	@Nonnull
 	public MinecraftVersion getServerVersion() {
-		return serverVersion;
+		return serverVersion != null ? serverVersion : (serverVersion = MinecraftVersion.parse());
 	}
 
 	@Nonnull
@@ -131,7 +168,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	}
 
 	public final void registerListenerCommand(@Nonnull Object listenerAndExecutor, @Nonnull String... names) {
-		if (!(listenerAndExecutor instanceof Listener && listenerAndExecutor instanceof CommandExecutor)) throw new IllegalArgumentException("listenerAndExecutor is not an instance of Listener or CommandExecutor");
+		if (!(listenerAndExecutor instanceof Listener && listenerAndExecutor instanceof CommandExecutor)) throw new IllegalArgumentException("listenerAndExecutor is not an instance of Listener and CommandExecutor");
 		registerCommand((CommandExecutor) listenerAndExecutor, names);
 		registerListener((Listener) listenerAndExecutor);
 	}
@@ -204,10 +241,49 @@ public abstract class BukkitModule extends JavaPlugin {
 	}
 
 	public void runAsync(@Nonnull Runnable task) {
-		Thread thread = new Thread(task);
-		thread.setName(getName() + "-AsyncPluginTask-" + thread.getId());
-		thread.setUncaughtExceptionHandler(new LoggingExceptionHandler(this.getLogger()));
-		thread.start();
+		executorService.submit(task);
+	}
+
+	public final void checkLoaded() {
+		if (!isLoaded())
+			throw new IllegalStateException("Plugin is not loaded yet");
+	}
+
+	public final void checkEnabled() {
+		if (!isEnabled())
+			throw new IllegalStateException("Plugin is not enabled yet");
+	}
+
+	private void registerOnFirstInstance() {
+		getLogger().info(getName() + " was loaded as the first BukkitModule");
+		registerListener(
+			new MenuPositionListener()
+		);
+	}
+
+	private void trySaveDefaultConfig() {
+		try {
+			saveDefaultConfig();
+		} catch (IllegalArgumentException ex) {
+			// No default config exists
+		}
+	}
+
+	@Nonnull
+	public static BukkitModule getFirstInstance() {
+		if (firstInstance == null) {
+			JavaPlugin provider = JavaPlugin.getProvidingPlugin(BukkitModule.class);
+			if (!(provider instanceof BukkitModule)) throw new IllegalStateException("No BukkitModule was initialized yet & BukkitModule class was not loaded by a BukkitModule");
+			firstInstance = (BukkitModule) provider;
+		}
+
+		return firstInstance;
+	}
+
+	private static synchronized void setFirstInstance(@Nonnull BukkitModule module) {
+		setFirstInstance = false;
+		firstInstance = module;
+		module.registerOnFirstInstance();
 	}
 
 }

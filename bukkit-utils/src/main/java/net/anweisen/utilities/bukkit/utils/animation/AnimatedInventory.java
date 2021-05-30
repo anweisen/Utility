@@ -1,5 +1,6 @@
 package net.anweisen.utilities.bukkit.utils.animation;
 
+import net.anweisen.utilities.bukkit.core.BukkitModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -36,6 +37,10 @@ public class AnimatedInventory {
 		this.holder = holder;
 	}
 
+	public void open(@Nonnull Player player) {
+		open(player, BukkitModule.getFirstInstance());
+	}
+
 	public void open(@Nonnull Player player, @Nonnull JavaPlugin plugin) {
 		if (!Bukkit.isPrimaryThread()) {
 			Bukkit.getScheduler().runTask(plugin, () -> open(player, plugin));
@@ -49,7 +54,8 @@ public class AnimatedInventory {
 		AtomicInteger index = new AtomicInteger(1);
 		Bukkit.getScheduler().runTaskTimer(plugin, task -> {
 
-			if (index.get() >= frames.size() || player.getOpenInventory().getTopInventory() != inventory) {
+			boolean opened = inventory.getViewers().contains(player);
+			if (index.get() >= frames.size() || !opened) {
 				task.cancel();
 				return;
 			}
@@ -58,8 +64,12 @@ public class AnimatedInventory {
 
 			index.incrementAndGet();
 
-		}, 0, frameDelay);
+		}, frameDelay, frameDelay);
 
+	}
+
+	public void openNotAnimated(@Nonnull Player player, boolean playSound) {
+		openNotAnimated(player, playSound, BukkitModule.getFirstInstance());
 	}
 
 	public void openNotAnimated(@Nonnull Player player, boolean playSound, @Nonnull JavaPlugin plugin) {

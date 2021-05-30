@@ -13,10 +13,14 @@ import org.yaml.snakeyaml.representer.Representer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
@@ -189,11 +193,34 @@ public class YamlDocument extends AbstractDocument {
 		}
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
-	public UUID getUUID(@Nonnull String path, @Nonnull UUID def) {
-		UUID value = getUUID(path);
-		return value == null ? def : value;
+	public Date getDate(@Nonnull String path) {
+		try {
+			return DateFormat.getDateTimeInstance().parse(path);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	@Override
+	public OffsetDateTime getDateTime(@Nonnull String path) {
+		try {
+			return OffsetDateTime.parse(getString(path));
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	@Override
+	public Color getColor(@Nonnull String path) {
+		try {
+			return Color.decode(getString(path));
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 
 	@Nullable
@@ -206,13 +233,6 @@ public class YamlDocument extends AbstractDocument {
 		} catch (Throwable ex) {
 			return null;
 		}
-	}
-
-	@Nonnull
-	@Override
-	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull E def) {
-		E value = getEnum(path, (Class<E>) def.getClass());
-		return value == null ? def : value;
 	}
 
 	@Override
