@@ -57,6 +57,8 @@ public class VersionInfo implements Version {
 		return this.format();
 	}
 
+	@Nonnull
+	@CheckReturnValue
 	public static Version parse(@Nullable String input) {
 		try {
 			String[] array = input.split("\\.");
@@ -69,52 +71,6 @@ public class VersionInfo implements Version {
 			logger.error("Could not parse version for input '{}': {}", input, ex.getMessage());
 			return new VersionInfo(1, 0, 0);
 		}
-	}
-
-	@Nonnull
-	@CheckReturnValue
-	public static <V extends Version> V findNearest(@Nonnull Version target, @Nonnull V[] versionsArray) {
-		List<V> versions = new ArrayList<>(Arrays.asList(versionsArray));
-		Collections.reverse(versions);
-		for (V version : versions) {
-			if (version.isNewerThan(target)) continue;
-			return version;
-		}
-		throw new IllegalArgumentException("No version found for '" + target + "'");
-	}
-
-	@Nonnull
-	@CheckReturnValue
-	public static Version getSince(@Nonnull Object object) {
-		if (!object.getClass().isAnnotationPresent(Since.class)) return new VersionInfo(1, 0, 0);
-		return VersionInfo.parse(object.getClass().getAnnotation(Since.class).value());
-	}
-
-	@Nonnull
-	@CheckReturnValue
-	public static Version parseFromCraftBukkit(@Nonnull Class<?> clazz) {
-
-		String prefix = "org.bukkit.craftbukkit.";
-		String name = clazz.getName();
-		if (!name.startsWith(prefix)) {
-			logger.error(clazz.getName() + " is not a craftbukkit class");
-			return new VersionInfo();
-		}
-
-		String version = name.substring(prefix.length()); // v{major}_{minor}_R{revision}
-		version = version.substring(0, version.indexOf("."));
-		String[] split = version.split("_");
-		if (split.length != 3) {
-			logger.error(version + " does not match pattern of v{major}_{minor}_R{revision}");
-			return new VersionInfo();
-		}
-
-		int major    = Integer.parseInt(split[0].substring(1));
-		int minor    = Integer.parseInt(split[1]);
-		int revision = Integer.parseInt(split[2].substring(1));
-
-		return new VersionInfo(major, minor, revision);
-
 	}
 
 }
