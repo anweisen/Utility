@@ -1,20 +1,26 @@
 package net.anweisen.utilities.jda.commandmanager.impl.entities;
 
-import net.anweisen.utilities.jda.commandmanager.CommandEvent;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandEvent;
 import net.anweisen.utilities.jda.commandmanager.CommandManager;
+import net.anweisen.utilities.jda.commandmanager.hooks.CommandScope;
 import net.anweisen.utilities.jda.commandmanager.language.Language;
+import net.anweisen.utilities.commons.common.Colors;
 import net.anweisen.utilities.jda.commandmanager.utils.OrderedRestAction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.AttachmentOption;
 import net.dv8tion.jda.internal.entities.UserImpl;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.io.File;
 import java.util.EnumSet;
 
 /**
@@ -39,21 +45,14 @@ public class CommandEventImpl implements CommandEvent {
 	}
 
 	@Nonnull
-	protected MessageAction applyDefaults(@Nonnull MessageAction action) {
-		if (disableMentions) action.allowedMentions(EnumSet.noneOf(MentionType.class));
-		return action.mentionRepliedUser(false);
-	}
-
-	@Nonnull
-	@Override
-	public MessageAction reply() {
-		return reply("");
+	protected MessageAction applySettings(@Nonnull MessageAction action) {
+		return (disableMentions ? action.allowedMentions(EnumSet.noneOf(MentionType.class)) : action).mentionRepliedUser(false);
 	}
 
 	@Nonnull
 	@Override
 	public MessageAction reply(@Nonnull CharSequence content) {
-		return applyDefaults(message.reply(content));
+		return applySettings(message.reply(content));
 	}
 
 	@Nonnull
@@ -65,7 +64,13 @@ public class CommandEventImpl implements CommandEvent {
 	@Nonnull
 	@Override
 	public MessageAction reply(@Nonnull MessageEmbed content) {
-		return applyDefaults(message.reply(content));
+		return applySettings(message.reply(content));
+	}
+
+	@Nonnull
+	@Override
+	public MessageAction replyFile(@Nonnull File file, @Nonnull String filename, @Nonnull AttachmentOption... options) {
+		return applySettings(message.reply(file, filename, options));
 	}
 
 	@Nonnull
@@ -76,14 +81,8 @@ public class CommandEventImpl implements CommandEvent {
 
 	@Nonnull
 	@Override
-	public MessageAction send() {
-		return send("");
-	}
-
-	@Nonnull
-	@Override
 	public MessageAction send(@Nonnull CharSequence content) {
-		return applyDefaults(channel.sendMessage(content));
+		return applySettings(channel.sendMessage(content));
 	}
 
 	@Nonnull
@@ -95,7 +94,13 @@ public class CommandEventImpl implements CommandEvent {
 	@Nonnull
 	@Override
 	public MessageAction send(@Nonnull MessageEmbed content) {
-		return applyDefaults(channel.sendMessage(content));
+		return applySettings(channel.sendMessage(content));
+	}
+
+	@Nonnull
+	@Override
+	public MessageAction sendFile(@Nonnull File file, @Nonnull String filename, @Nonnull AttachmentOption... options) {
+		return applySettings(channel.sendFile(file, filename, options));
 	}
 
 	@Nonnull
@@ -106,25 +111,31 @@ public class CommandEventImpl implements CommandEvent {
 
 	@Nonnull
 	@Override
-	public RestAction<Void> sendPrivate(@Nonnull CharSequence message) {
-		return new OrderedRestAction(getJDA(), () -> getUser().openPrivateChannel(), () -> ((UserImpl) getUser()).getPrivateChannel().sendMessage(message));
+	public RestAction<Message> sendPrivate(@Nonnull CharSequence message) {
+		return new OrderedRestAction<>(getJDA(), () -> getUser().openPrivateChannel(), () -> ((UserImpl) getUser()).getPrivateChannel().sendMessage(message));
 	}
 
 	@Nonnull
 	@Override
-	public RestAction<Void> sendPrivate(@Nonnull EmbedBuilder message) {
+	public RestAction<Message> sendPrivate(@Nonnull EmbedBuilder message) {
 		return sendPrivate(message.build());
 	}
 
 	@Nonnull
 	@Override
-	public RestAction<Void> sendPrivate(@Nonnull MessageEmbed message) {
-		return new OrderedRestAction(getJDA(), () -> getUser().openPrivateChannel(), () -> ((UserImpl) getUser()).getPrivateChannel().sendMessage(message));
+	public RestAction<Message> sendPrivate(@Nonnull MessageEmbed message) {
+		return new OrderedRestAction<>(getJDA(), () -> getUser().openPrivateChannel(), () -> ((UserImpl) getUser()).getPrivateChannel().sendMessage(message));
 	}
 
 	@Nonnull
 	@Override
-	public RestAction<Void> sendMessagePrivate(@Nonnull String name, @Nonnull Object... args) {
+	public RestAction<Message> sendFilePrivate(@Nonnull File file, @Nonnull String filename, @Nonnull AttachmentOption... options) {
+		return new OrderedRestAction<>(getJDA(), () -> getUser().openPrivateChannel(), () -> ((UserImpl) getUser()).getPrivateChannel().sendFile(file, filename, options));
+	}
+
+	@Nonnull
+	@Override
+	public RestAction<Message> sendMessagePrivate(@Nonnull String name, @Nonnull Object... args) {
 		return sendPrivate(getLanguage().getMessage(name).asString(args));
 	}
 
@@ -132,6 +143,12 @@ public class CommandEventImpl implements CommandEvent {
 	@Override
 	public JDA getJDA() {
 		return member.getJDA();
+	}
+
+	@Nullable
+	@Override
+	public ShardManager getShardManager() {
+		return getJDA().getShardManager();
 	}
 
 	@Nonnull
@@ -144,6 +161,18 @@ public class CommandEventImpl implements CommandEvent {
 	@Override
 	public SelfUser getSelfUser() {
 		return getJDA().getSelfUser();
+	}
+
+	@Nullable
+	@Override
+	public Color getSelfColor() {
+		return isGuild() ? getSelfMember().getColor() : null;
+	}
+
+	@Nonnull
+	@Override
+	public Color getSelfColorNonnull() {
+		return getColorNonnull(getSelfColor());
 	}
 
 	@Nonnull
@@ -165,8 +194,31 @@ public class CommandEventImpl implements CommandEvent {
 
 	@Nonnull
 	@Override
+	public String getUserTag() {
+		return getUser().getAsTag();
+	}
+
+	@Nonnull
+	@Override
 	public String getEffectiveUserName() {
 		return member != null ? member.getEffectiveName() : getUserName();
+	}
+
+	@Nullable
+	@Override
+	public Color getUserColor() {
+		return isGuild() ? getMember().getColor() : null;
+	}
+
+	@Nonnull
+	@Override
+	public Color getUserColorNonnull() {
+		return getColorNonnull(getUserColor());
+	}
+
+	@Nonnull
+	protected Color getColorNonnull(@Nullable Color origin) {
+		return origin == null ? Colors.EMBED : origin;
 	}
 
 	@Nonnull
@@ -194,6 +246,12 @@ public class CommandEventImpl implements CommandEvent {
 	@Override
 	public boolean isPrivate() {
 		return !message.isFromGuild();
+	}
+
+	@Nonnull
+	@Override
+	public CommandScope getScope() {
+		return isGuild() ? CommandScope.GUILD : CommandScope.PRIVATE;
 	}
 
 	@Nonnull
@@ -226,6 +284,21 @@ public class CommandEventImpl implements CommandEvent {
 		return getGuild().getSelfMember();
 	}
 
+	@Override
+	public boolean hasMemberPermission(@Nonnull Permission... permission) {
+		return getMember().hasPermission(permission);
+	}
+
+	@Override
+	public boolean hasMemberChannelPermission(@Nonnull Permission... permissions) {
+		return getMember().hasPermission(getTextChannel(), permissions);
+	}
+
+	@Override
+	public boolean hasTeamRole() {
+		return manager.getTeamRoleManager() != null && (!manager.getTeamRoleManager().isTeamRoleSet(getMember().getGuild()) || !manager.getTeamRoleManager().hasTeamRole(getMember()));
+	}
+
 	@Nonnull
 	@Override
 	public MessageChannel getChannel() {
@@ -239,11 +312,22 @@ public class CommandEventImpl implements CommandEvent {
 		return (TextChannel) channel;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PrivateChannel getPrivateChannel() {
 		if (!isPrivate()) throw new IllegalStateException("Not from a private channel");
 		return (PrivateChannel) channel;
+	}
+
+	@Nonnull
+	@Override
+	public String getChannelId() {
+		return channel.getId();
+	}
+
+	@Override
+	public long getChannelIdLong() {
+		return channel.getIdLong();
 	}
 
 	@Nonnull

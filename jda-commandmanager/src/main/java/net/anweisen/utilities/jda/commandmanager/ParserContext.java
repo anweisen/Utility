@@ -13,9 +13,9 @@ import javax.annotation.Nullable;
 public interface ParserContext {
 
 	@Nonnull
-	ParserContext registerParser(@Nonnull String key, @Nonnull Class<?> clazz, ArgumentParser<?> parser);
+	ParserContext registerParser(@Nonnull String key, @Nonnull Class<?> clazz, @Nonnull ArgumentParser<?, ?> parser);
 
 	@Nullable
-	Tuple<ArgumentParser<?>, Class<?>> getParser(@Nonnull String key);
+	Tuple<ArgumentParser<?, ?>, Class<?>> getParser(@Nonnull String key);
 
 }

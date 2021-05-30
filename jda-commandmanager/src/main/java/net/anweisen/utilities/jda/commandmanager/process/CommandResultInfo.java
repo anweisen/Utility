@@ -1,6 +1,7 @@
 package net.anweisen.utilities.jda.commandmanager.process;
 
-import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
+import net.anweisen.utilities.commons.common.Tuple;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.RegisteredCommand;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,6 +20,7 @@ public final class CommandResultInfo {
 	private final String commandName;
 	private final String prefix;
 	private final double cooldown;
+	private final Tuple<String, Object[]> errorMessage;
 
 	public CommandResultInfo(@Nonnull CommandProcessResult result) {
 		this(result, null, null);
@@ -30,6 +32,16 @@ public final class CommandResultInfo {
 
 	public CommandResultInfo(@Nonnull CommandProcessResult result, @Nullable RegisteredCommand command, @Nullable String commandName, @Nullable String prefix) {
 		this(result, command, new ArrayList<>(), commandName, prefix);
+	}
+
+	public CommandResultInfo(@Nonnull CommandProcessResult result, @Nullable RegisteredCommand command, @Nullable String commandName, @Nullable String prefix, @Nullable Tuple<String, Object[]> errorMessage) {
+		this.result = result;
+		this.command = command;
+		this.commandName = commandName;
+		this.prefix = prefix;
+		this.cooldown = 0;
+		this.matchingName = new ArrayList<>();
+		this.errorMessage = errorMessage;
 	}
 
 	public CommandResultInfo(@Nonnull CommandProcessResult result, @Nonnull List<RegisteredCommand> matchingName, @Nullable String commandName, @Nullable String prefix) {
@@ -51,6 +63,7 @@ public final class CommandResultInfo {
 		this.commandName = commandName;
 		this.prefix = prefix;
 		this.cooldown = cooldown;
+		this.errorMessage = null;
 	}
 
 	@Nonnull
@@ -80,6 +93,11 @@ public final class CommandResultInfo {
 	@Nonnull
 	public String getCorrectSyntax() {
 		return getPrefix() + getCommandName() + " " + (getCommand() == null ? new ArrayList<>(getCommandsMatchingName()).get(0) : getCommand()).getSyntax();
+	}
+
+	@Nullable
+	public Tuple<String, Object[]> getErrorMessage() {
+		return errorMessage;
 	}
 
 	public double getCoolDown() {

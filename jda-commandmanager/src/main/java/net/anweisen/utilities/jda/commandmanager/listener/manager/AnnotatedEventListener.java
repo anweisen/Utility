@@ -48,7 +48,7 @@ public final class AnnotatedEventListener implements EventListener {
 				try {
 					method.setAccessible(true);
 					method.invoke(holder instanceof Class ? null : holder, event);
-				} catch (IllegalAccessException | InvocationTargetException ex) {
+				} catch (IllegalAccessException ex) {
 					JDAImpl.LOG.error("Couldn't access annotated EventListener method", ex);
 				} catch (Throwable ex) {
 					JDAImpl.LOG.error("One of the EventListeners had an uncaught exception", ex);

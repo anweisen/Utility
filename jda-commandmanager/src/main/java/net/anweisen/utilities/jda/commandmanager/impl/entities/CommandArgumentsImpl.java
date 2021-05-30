@@ -1,6 +1,6 @@
 package net.anweisen.utilities.jda.commandmanager.impl.entities;
 
-import net.anweisen.utilities.jda.commandmanager.CommandArguments;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandArguments;
 
 import javax.annotation.Nonnull;
 

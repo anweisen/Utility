@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class OrderedRestAction implements RestAction<Void> {
+public class OrderedRestAction<T> implements RestAction<T> {
 
 	protected final JDA api;
 	protected final List<? extends Supplier<? extends RestAction<?>>> actions;
@@ -46,19 +46,19 @@ public class OrderedRestAction implements RestAction<Void> {
 
 	@Nonnull
 	@Override
-	public RestAction<Void> setCheck(@Nullable BooleanSupplier checks) {
+	public RestAction<T> setCheck(@Nullable BooleanSupplier checks) {
 		throw new UnsupportedOperationException("Checks are unsupported in OrderedRestAction");
 	}
 
 	@Override
-	public void queue(@Nullable Consumer<? super Void> success, @Nullable Consumer<? super Throwable> failure) {
+	public void queue(@Nullable Consumer<? super T> success, @Nullable Consumer<? super Throwable> failure) {
 		if (success == null) success = RestAction.getDefaultSuccess();
 		if (failure == null) failure = RestAction.getDefaultFailure();
 		next(new AtomicInteger(), success, failure);
 	}
 
 	@Override
-	public Void complete(boolean shouldQueue) throws RateLimitedException {
+	public T complete(boolean shouldQueue) throws RateLimitedException {
 		try {
 			return submit(shouldQueue).join();
 		} catch (CompletionException ex) {
@@ -79,13 +79,13 @@ public class OrderedRestAction implements RestAction<Void> {
 
 	@Nonnull
 	@Override
-	public CompletableFuture<Void> submit(boolean shouldQueue) {
-		CompletableFuture<Void> future = new CompletableFuture<>();
+	public CompletableFuture<T> submit(boolean shouldQueue) {
+		CompletableFuture<T> future = new CompletableFuture<>();
 		next(new AtomicInteger(), future::complete, future::completeExceptionally);
 		return future;
 	}
 
-	protected void next(@Nonnull AtomicInteger index, @Nonnull Consumer<? super Void> success, @Nonnull Consumer<? super Throwable> failure) {
+	protected void next(@Nonnull AtomicInteger index, @Nonnull Consumer<? super T> success, @Nonnull Consumer<? super Throwable> failure) {
 		if (index.get() >= actions.size()) {
 			success.accept(null);
 			return;
@@ -99,7 +99,11 @@ public class OrderedRestAction implements RestAction<Void> {
 		}
 
 		action.queue(result -> {
-			index.getAndIncrement();
+			if (index.incrementAndGet() >= actions.size()) {
+				success.accept((T) result);
+				return;
+			}
+
 			next(index, success, failure);
 		}, failure);
 	}

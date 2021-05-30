@@ -4,10 +4,10 @@ import net.anweisen.utilities.commons.logging.ILogger;
 import net.anweisen.utilities.jda.commandmanager.language.LanguageManager;
 import net.anweisen.utilities.jda.commandmanager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultHandler;
-import net.anweisen.utilities.jda.commandmanager.registered.CommandOptions;
-import net.anweisen.utilities.jda.commandmanager.registered.CommandTask;
-import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
-import net.anweisen.utilities.jda.commandmanager.registered.resolver.CommandResolver;
+import net.anweisen.utilities.jda.commandmanager.hooks.CommandOptions;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.CommandTask;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.CommandResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,6 +26,9 @@ public interface CommandManager {
 
 	@Nonnull
 	CommandManager register(@Nonnull Object... commands);
+
+	@Nonnull
+	CommandManager register(@Nonnull Iterable<Object> commands);
 
 	@Nonnull
 	CommandManager register(@Nonnull CommandTask task, @Nonnull CommandOptions options);

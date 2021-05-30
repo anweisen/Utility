@@ -7,17 +7,23 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/example/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/example/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: net.anweisen.utilities:common-utils:1.2.1" level="project" />
+    <orderEntry type="module" module-name="database-api" />
+    <orderEntry type="module" module-name="common-utils" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
-    <orderEntry type="library" name="Maven: net.anweisen.utilities:database-api:1.2.2" level="project" />
-    <orderEntry type="library" name="Maven: net.anweisen.utilities:database-sql:1.2" level="project" />
+    <orderEntry type="module" module-name="database-sql" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.23" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.11.4" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.34.0" level="project" />
+    <orderEntry type="module" module-name="database-mongodb" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver:3.12.7" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:bson:3.12.7" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:3.12.7" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: net.dv8tion:JDA:4.2.1_256" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.1" level="project" />

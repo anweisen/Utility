@@ -1,11 +1,14 @@
 package net.anweisen.utilities.jda.commandmanager.utils;
 
-import net.anweisen.utilities.jda.commandmanager.CommandEvent;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandEvent;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -17,13 +20,13 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static Role findRole(@Nonnull CommandEvent event, String search) {
+	public static Role findRole(@Nonnull CommandEvent event, @Nonnull String search) {
 		return findRole(event.getGuild(), search);
 	}
 
 	@Nullable
 	@CheckReturnValue
-	public static Role findRole(@Nonnull Guild guild, String search) {
+	public static Role findRole(@Nonnull Guild guild, @Nonnull String search) {
 		search = search.trim();
 		try {
 			String id = search.substring(3).substring(0, 18);
@@ -52,13 +55,13 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static TextChannel findTextChannel(@Nonnull CommandEvent event, String search) {
+	public static TextChannel findTextChannel(@Nonnull CommandEvent event, @Nonnull String search) {
 		return findTextChannel(event.getGuild(), search);
 	}
 
 	@Nullable
 	@CheckReturnValue
-	public static TextChannel findTextChannel(@Nonnull Guild guild, String search) {
+	public static TextChannel findTextChannel(@Nonnull Guild guild, @Nonnull String search) {
 		search = search.trim();
 		try {
 			String id = search.substring(3).substring(0, 18);
@@ -87,13 +90,13 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static VoiceChannel findVoiceChannel(@Nonnull CommandEvent event, String search) {
+	public static VoiceChannel findVoiceChannel(@Nonnull CommandEvent event, @Nonnull String search) {
 		return findVoiceChannel(event.getGuild(), search);
 	}
 
 	@Nullable
 	@CheckReturnValue
-	public static VoiceChannel findVoiceChannel(@Nonnull Guild guild, String search) {
+	public static VoiceChannel findVoiceChannel(@Nonnull Guild guild, @Nonnull String search) {
 		search = search.trim();
 		try {
 			VoiceChannel channel = guild.getVoiceChannelById(search);
@@ -110,13 +113,13 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static Category findCategory(@Nonnull CommandEvent event, String search) {
+	public static Category findCategory(@Nonnull CommandEvent event, @Nonnull String search) {
 		return findCategory(event.getGuild(), search);
 	}
 
 	@Nullable
 	@CheckReturnValue
-	public static Category findCategory(@Nonnull Guild guild, String search) {
+	public static Category findCategory(@Nonnull Guild guild, @Nonnull String search) {
 		search = search.trim();
 		try {
 			return guild.getCategoryById(search);
@@ -129,24 +132,27 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static Member findMember(@Nonnull CommandEvent event, String search) {
+	public static Member findMember(@Nonnull CommandEvent event, @Nonnull String search) {
 		return findMember(event.getGuild(), search);
 	}
 
 	@Nullable
 	@CheckReturnValue
-	public static Member findMember(@Nonnull Guild guild, String search) {
+	public static Member findMember(@Nonnull Guild guild, @Nonnull String search) {
 		search = search.trim();
 		try {
 			String id = search.substring(3).substring(0, 18);
-			return guild.getMemberById(id);
+			Member member = guild.retrieveMemberById(id).complete();
+			if (member != null) return member;
 		} catch (Exception ignored) {}
 		try {
 			String id = search.substring(2).substring(0, 18);
-			return guild.getMemberById(id);
+			Member member = guild.retrieveMemberById(id).complete();
+			if (member != null) return member;
 		} catch (Exception ex) {}
 		try {
-			return guild.getMemberById(search);
+			Member member = guild.retrieveMemberById(search).complete();
+			if (member != null) return member;
 		} catch (Exception ex) {}
 		try {
 			return guild.getMemberByTag(search);
@@ -162,11 +168,8 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static Message findMessage(@Nonnull MessageChannel channel, @Nonnull String search) {
-		try {
-			return channel.retrieveMessageById(search).complete();
-		} catch (Exception ex) {}
-		return null;
+	public static GuildChannel findGuildChannel(@Nonnull CommandEvent event, @Nonnull String search) {
+		return findGuildChannel(event.getGuild(), search);
 	}
 
 	@Nullable
@@ -201,8 +204,62 @@ public final class SearchHelper {
 
 	@Nullable
 	@CheckReturnValue
-	public static GuildChannel findGuildChannel(@Nonnull CommandEvent event, String search) {
-		return findGuildChannel(event.getGuild(), search);
+	public static User findUser(@Nonnull JDA bot, @Nonnull String search) {
+		search = search.trim();
+		try {
+			String id = search.substring(3).substring(0, 18);
+			User user = bot.retrieveUserById(id).complete();
+			if (user != null) return user;
+		} catch (Exception ignored) {}
+		try {
+			String id = search.substring(2).substring(0, 18);
+			User user = bot.retrieveUserById(id).complete();
+			if (user != null) return user;
+		} catch (Exception ex) {}
+		try {
+			User user = bot.retrieveUserById(search).complete();
+			if (user != null) return user;
+		} catch (Exception ex) {}
+		try {
+			return bot.getUserByTag(search);
+		} catch (Exception ex) {}
+		try {
+			return bot.getUsersByName(search, true).get(0);
+		} catch (Exception ex) {}
+		return null;
+	}
+
+	@Nullable
+	@CheckReturnValue
+	public static User findUser(@Nonnull ShardManager bot, @Nonnull String search) {
+		try {
+			String id = search.substring(3).substring(0, 18);
+			User user = bot.retrieveUserById(id).complete();
+			if (user != null) return user;
+		} catch (Exception ignored) {}
+		try {
+			String id = search.substring(2).substring(0, 18);
+			User user = bot.retrieveUserById(id).complete();
+			if (user != null) return user;
+		} catch (Exception ex) {}
+		try {
+			User user = bot.retrieveUserById(search).complete();
+			if (user != null) return user;
+		} catch (Exception ex) {}
+		try {
+			return bot.getUserByTag(search);
+		} catch (Exception ex) {}
+		try {
+			// TODO: Shortcut is not implemented in ShardManager yet.. (status jda ver 4.2.1)
+			return bot.getShardCache().applyStream(stream ->
+					stream.map(jda -> jda.getUsersByName(search, true))
+							.filter(list -> !list.isEmpty())
+							.findFirst()
+							.orElse(Collections.emptyList())
+							.get(0)
+			);
+		} catch (Exception ex) {}
+		return null;
 	}
 
 }

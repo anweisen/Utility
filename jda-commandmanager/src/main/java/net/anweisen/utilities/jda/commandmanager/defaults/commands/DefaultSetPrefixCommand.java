@@ -1,8 +1,12 @@
 package net.anweisen.utilities.jda.commandmanager.defaults.commands;
 
 import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.jda.commandmanager.*;
+import net.anweisen.utilities.jda.commandmanager.hooks.*;
+import net.anweisen.utilities.jda.commandmanager.hooks.CoolDownScope;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandArguments;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandEvent;
 import net.anweisen.utilities.jda.commandmanager.utils.CommandHelper;
+import net.dv8tion.jda.api.Permission;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -23,11 +27,12 @@ public class DefaultSetPrefixCommand {
 			name = "setprefix",
 			usage = "[string prefix]",
 			scope = CommandScope.GUILD,
+			permission = Permission.ADMINISTRATOR,
 			cooldownScope = CoolDownScope.GUILD,
-			cooldownSeconds = 10
+			cooldownSeconds = 5
 	)
 	public void onCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) throws DatabaseException {
-		String prefix = args.get(0);
+		String prefix = args.<String>get(0).replace("`", "");
 		if (prefix.length() > maxLength) {
 			event.replyMessage("command-set-prefix-max-length", maxLength).queue();
 			return;

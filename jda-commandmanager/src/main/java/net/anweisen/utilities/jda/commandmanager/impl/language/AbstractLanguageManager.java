@@ -106,8 +106,7 @@ public abstract class AbstractLanguageManager implements LanguageManager {
 	@Nonnull
 	@Override
 	public LanguageManager readResource(@Nonnull String filename) throws IOException {
-		ClassLoader loader = getClass().getClassLoader();
-		InputStream input = loader.getResourceAsStream(filename);
+		InputStream input = getClass().getClassLoader().getResourceAsStream(filename);
 		if (input == null) throw new FileNotFoundException("No such resource \"" + filename + '"');
 		Document document = new GsonDocument(new InputStreamReader(input));
 		Language language = languages.computeIfAbsent(FileUtils.getFileName(filename), LanguageImpl::new);

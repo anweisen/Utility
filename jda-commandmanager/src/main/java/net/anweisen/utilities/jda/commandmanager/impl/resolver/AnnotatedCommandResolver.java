@@ -1,11 +1,11 @@
 package net.anweisen.utilities.jda.commandmanager.impl.resolver;
 
 import net.anweisen.utilities.commons.misc.ReflectionUtils;
-import net.anweisen.utilities.jda.commandmanager.Command;
-import net.anweisen.utilities.jda.commandmanager.CommandArguments;
+import net.anweisen.utilities.jda.commandmanager.hooks.Command;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandArguments;
 import net.anweisen.utilities.jda.commandmanager.CommandManager;
-import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
-import net.anweisen.utilities.jda.commandmanager.registered.resolver.CommandResolver;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.CommandResolver;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;

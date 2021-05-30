@@ -1,12 +1,15 @@
 package net.anweisen.utilities.jda.commandmanager.impl;
 
+import net.anweisen.utilities.commons.common.NamedThreadFactory;
 import net.anweisen.utilities.commons.common.Tuple;
 import net.anweisen.utilities.commons.common.WrappedException;
-import net.anweisen.utilities.commons.misc.ReflectionUtils;
 import net.anweisen.utilities.jda.commandmanager.*;
 import net.anweisen.utilities.jda.commandmanager.arguments.ArgumentParser;
-import net.anweisen.utilities.jda.commandmanager.arguments.InvalidArgumentParseValueException;
+import net.anweisen.utilities.jda.commandmanager.arguments.IllegalArgumentParserValueException;
 import net.anweisen.utilities.jda.commandmanager.arguments.ParserOptions;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandArguments;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandEvent;
+import net.anweisen.utilities.jda.commandmanager.hooks.CommandScope;
 import net.anweisen.utilities.jda.commandmanager.impl.entities.CommandArgumentsImpl;
 import net.anweisen.utilities.jda.commandmanager.impl.entities.CommandEventImpl;
 import net.anweisen.utilities.jda.commandmanager.impl.language.ConstantLanguageManager;
@@ -19,17 +22,16 @@ import net.anweisen.utilities.jda.commandmanager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.commandmanager.process.CommandProcessResult;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultHandler;
 import net.anweisen.utilities.jda.commandmanager.process.CommandResultInfo;
-import net.anweisen.utilities.jda.commandmanager.registered.CommandOptions;
-import net.anweisen.utilities.jda.commandmanager.registered.CommandTask;
-import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
-import net.anweisen.utilities.jda.commandmanager.registered.RequiredArgument;
-import net.anweisen.utilities.jda.commandmanager.registered.resolver.CommandResolver;
+import net.anweisen.utilities.jda.commandmanager.hooks.CommandOptions;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.CommandTask;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.RequiredArgument;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.CommandResolver;
 import net.dv8tion.jda.api.Permission;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -39,6 +41,8 @@ import java.util.function.Consumer;
  * @since 1.0
  */
 public class DefaultCommandManager implements CommandManager {
+
+	private static final Object CALLBACK_RESULT = new Object();
 
 	protected class Callback {
 
@@ -56,9 +60,9 @@ public class DefaultCommandManager implements CommandManager {
 			try {
 				action.accept(info);
 			} catch (Throwable ex) {
-				LOGGER.error("An error occurred while handling callback of command handling");
+				LOGGER.error("An error occurred while handling callback of command handling", ex);
 			}
-			return null;
+			return CALLBACK_RESULT;
 		}
 
 		public Object call(@Nonnull CommandProcessResult result, @Nullable String prefix, @Nullable String commandName) {
@@ -75,8 +79,19 @@ public class DefaultCommandManager implements CommandManager {
 
 	}
 
-	protected final Map<String, RegisteredCommand> commandsByName = new HashMap<>();
-	protected final ExecutorService executorService = Executors.newCachedThreadPool();
+	protected static class ArgumentParseResult {
+
+		private final Tuple<Class<?>[], Object[]> success;
+		private final Tuple<String, Object[]> failure;
+
+		public ArgumentParseResult(@Nullable Tuple<Class<?>[], Object[]> success, @Nullable Tuple<String, Object[]> failure) {
+			this.success = success;
+			this.failure = failure;
+		}
+	}
+
+	protected final Collection<RegisteredCommand> commands = new ArrayList<>();
+	protected final ExecutorService executor = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("Commands-Thread-%s", threadId)));
 	protected final Collection<CommandResolver> resolvers = new ArrayList<>(Arrays.asList(new AnnotatedCommandResolver(), new InterfacedCommandResolver()));
 	protected LanguageManager languageManager = new ConstantLanguageManager(new FallbackLanguage());
 	protected CommandResultHandler resultHandler = new LanguageResultHandler();
@@ -97,7 +112,7 @@ public class DefaultCommandManager implements CommandManager {
 	@Nonnull
 	@Override
 	public Collection<RegisteredCommand> getRegisteredCommands() {
-		return Collections.unmodifiableCollection(commandsByName.values());
+		return Collections.unmodifiableCollection(commands);
 	}
 
 	@Nonnull
@@ -139,35 +154,36 @@ public class DefaultCommandManager implements CommandManager {
 	}
 
 	private void register0(@Nonnull RegisteredCommand command) {
-		for (String name : command.getOptions().getName()) {
-			commandsByName.put(name, command);
-		}
+		commands.add(command);
 	}
 
 	@Nonnull
 	public Optional<Tuple<String, RegisteredCommand>> findCommand(@Nonnull String input, @Nonnull Collection<RegisteredCommand> matchingName) {
-		for (Entry<String, RegisteredCommand> entry : commandsByName.entrySet()) {
-			String name = entry.getKey();
-			if (!input.startsWith(name)) continue;
-			if (input.length() > name.length() && !input.substring(name.length()).startsWith(" ")) continue;
-			RegisteredCommand command = entry.getValue();
-			matchingName.add(command);
-			RequiredArgument[] arguments = command.getArguments();
-			String argumentInput = input.substring(name.length()).trim();
-			if (!isArgumentLengthAssignable(argumentInput, arguments)) continue;
-			return Optional.of(new Tuple<>(name, command));
+		for (RegisteredCommand command : commands) {
+			for (String name : command.getOptions().getName()) {
+				boolean beginsWithName = input.startsWith(name);
+				if (!(beginsWithName || name.startsWith(input))) continue;
+				matchingName.add(command);
+				if (!beginsWithName) continue;
+				if (input.length() > name.length() && !input.substring(name.length()).startsWith(" ")) continue;
+				RequiredArgument[] arguments = command.getArguments();
+				String argumentInput = input.substring(name.length()).trim();
+				if (!isArgumentLengthAssignable(argumentInput, arguments)) continue;
+				return Optional.of(new Tuple<>(name, command));
+			}
 		}
 		return Optional.empty();
 	}
 
 	private boolean isArgumentLengthAssignable(@Nonnull String input, @Nonnull RequiredArgument[] arguments) {
-		if (input.isEmpty() && arguments.length > 0) return false;
-		String[] splitted = input.split(" ");
+		if (input.isEmpty()) return arguments.length == 0;
+		if (arguments.length == 0) return false;
+		String[] split = input.split(" ");
 		int index = 0;
 		for (RequiredArgument argument : arguments) {
-			if (argument.getLength() == 0 && splitted.length > (index == 0 ? 1 : index)) return true; // We want all following arguments
+			if (argument.getLength() == 0 && split.length > (index == 0 ? 1 : index)) return true; // We want all following arguments
 			index += argument.getLength();
-			if (index > splitted.length) return false;
+			if (index > split.length) return false;
 		}
 		return true;
 	}
@@ -215,7 +231,9 @@ public class DefaultCommandManager implements CommandManager {
 			if (matchingName.isEmpty()) {
 				return callback.call(CommandProcessResult.UNKNOWN_COMMAND, prefix, content);
 			} else {
-				return callback.call(new CommandResultInfo(CommandProcessResult.INCORRECT_ARGUMENTS, matchingName, matchingName.get(0).getOptions().getFirstName(), prefix));
+				RegisteredCommand matchingCommand = matchingName.get(0);
+				doCommonChecks(matchingCommand, callback, prefix, matchingCommand.getOptions().getFirstName(), info);
+				return callback.call(new CommandResultInfo(CommandProcessResult.INCORRECT_ARGUMENTS, matchingName, matchingCommand.getOptions().getFirstName(), prefix));
 			}
 		}
 
@@ -223,20 +241,8 @@ public class DefaultCommandManager implements CommandManager {
 		String commandName = pair.getFirst();
 		RegisteredCommand command = pair.getSecond();
 
-		if (!command.getOptions().getAllowEdits() && info.getMessage().isEdited())
-			return callback.call(CommandProcessResult.EDITS_UNSUPPORTED, command, prefix, commandName);
-		if (!command.getOptions().getAllowBots() && info.getMessage().getAuthor().isBot())
-			return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
-		if (!command.getOptions().getAllowWebHooks() && info.getMessage().isWebhookMessage())
-			return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
-		if (command.getOptions().getScope() == CommandScope.GUILD && !info.getMessage().isFromGuild())
-			return callback.call(CommandProcessResult.INVALID_SCOPE, command, prefix, commandName);
-		if (command.getOptions().getScope() == CommandScope.PRIVATE && info.getMessage().isFromGuild())
-			return callback.call(CommandProcessResult.INVALID_SCOPE, command, prefix, commandName);
-		if (command.getOptions().getPermission() != Permission.UNKNOWN && !info.getMember().hasPermission(command.getOptions().getPermission()))
-			return callback.call(CommandProcessResult.MISSING_PERMISSION, command, prefix, commandName);
-		if (command.getOptions().getTeam() && teamRoleManager != null && (!teamRoleManager.isTeamRoleSet(info.getMember().getGuild()) || !teamRoleManager.hasTeamRole(info.getMember())) && !info.getMember().hasPermission(command.getOptions().getPermissionOrAdmin()))
-			return callback.call(CommandProcessResult.MISSING_TEAM_ROLE, command, prefix, commandName);
+		if (doCommonChecks(command, callback, prefix, commandName, info) == CALLBACK_RESULT)
+			return CALLBACK_RESULT;
 		if (command.getCoolDown().isOnCoolDown(info.getMessage().getAuthor(), info.getMessage().isFromGuild() ? info.getMessage().getGuild() : null))
 			return callback.call(new CommandResultInfo(CommandProcessResult.COOLDOWN, command, commandName, prefix, command.getCoolDown().getCoolDown(info.getMessage().getAuthor(), info.getMessage().isFromGuild() ? info.getMessage().getGuild() : null)));
 
@@ -251,14 +257,13 @@ public class DefaultCommandManager implements CommandManager {
 		if (command.getOptions().getAutoSendTyping())
 			info.getMessage().getChannel().sendTyping().queue();
 
-		Tuple<Class<?>[], Object[]> parsed = parseArguments(command, stripped, event);
-		if (parsed == null)
-			return callback.call(new CommandResultInfo(CommandProcessResult.INCORRECT_ARGUMENTS, command, commandName, prefix));
+		ArgumentParseResult parsed = parseArguments(command, stripped, event);
+		if (parsed.success == null)
+			return callback.call(new CommandResultInfo(CommandProcessResult.INCORRECT_ARGUMENTS, command, commandName, prefix, parsed.failure));
 
-		CommandArguments args = new CommandArgumentsImpl(parsed.getFirst(), parsed.getSecond());
-
+		CommandArguments args = new CommandArgumentsImpl(parsed.success.getFirst(), parsed.success.getSecond());
 		if (command.getOptions().isAsync()) {
-			executorService.submit(() -> execute0(command, callback, event, args, prefix, commandName));
+			executor.submit(() -> execute0(command, callback, event, args, prefix, commandName));
 		} else {
 			execute0(command, callback, event, args, prefix, commandName);
 		}
@@ -276,16 +281,35 @@ public class DefaultCommandManager implements CommandManager {
 		}
 	}
 
-	@Nullable
-	private Tuple<Class<?>[], Object[]> parseArguments(@Nonnull RegisteredCommand command, @Nonnull String message, @Nonnull CommandEvent event) {
-		if (message.isEmpty()) return new Tuple<Class<?>[], Object[]>(new Class[0], new Object[0]);
+	protected Object doCommonChecks(@Nonnull RegisteredCommand command, @Nonnull Callback callback, @Nonnull String prefix, @Nonnull String commandName, @Nonnull CommandPreProcessInfo info) {
+		if (!command.getOptions().getAllowEdits() && info.getMessage().isEdited())
+			return callback.call(CommandProcessResult.EDITS_UNSUPPORTED, command, prefix, commandName);
+		if (!command.getOptions().getAllowBots() && info.getMessage().getAuthor().isBot())
+			return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
+		if (!command.getOptions().getAllowWebHooks() && info.getMessage().isWebhookMessage())
+			return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
+		if (command.getOptions().getScope() == CommandScope.GUILD && !info.getMessage().isFromGuild())
+			return callback.call(CommandProcessResult.INVALID_SCOPE, command, prefix, commandName);
+		if (command.getOptions().getScope() == CommandScope.PRIVATE && info.getMessage().isFromGuild())
+			return callback.call(CommandProcessResult.INVALID_SCOPE, command, prefix, commandName);
+		if (command.getOptions().getPermission() != Permission.UNKNOWN && !info.getMember().hasPermission(command.getOptions().getPermission()))
+			return callback.call(CommandProcessResult.MISSING_PERMISSION, command, prefix, commandName);
+		if (command.getOptions().getTeam() && teamRoleManager != null && (!teamRoleManager.isTeamRoleSet(info.getMember().getGuild()) || !teamRoleManager.hasTeamRole(info.getMember())) && !info.getMember().hasPermission(command.getOptions().getPermissionOrAdmin()))
+			return callback.call(CommandProcessResult.MISSING_TEAM_ROLE, command, prefix, commandName);
+
+		return null;
+	}
+
+	@Nonnull
+	private ArgumentParseResult parseArguments(@Nonnull RegisteredCommand command, @Nonnull String message, @Nonnull CommandEvent event) {
+		if (message.isEmpty()) return new ArgumentParseResult(new Tuple<>(new Class<?>[0], new Object[0]), null);
 		List<Class<?>> types = new ArrayList<>(command.getArguments().length);
 		List<Object> values = new ArrayList<>(command.getArguments().length);
 		String[] args = message.split(" ");
 		int index = 0;
 		for (RequiredArgument argument : command.getArguments()) {
 			int collectArgs = argument.getLength() == 0 ? args.length - index : argument.getLength();
-			ArgumentParser<?> parser = argument.getParser();
+			ArgumentParser<?, ?> parser = argument.getParser();
 			ParserOptions options = parser.options();
 			StringBuilder builder = new StringBuilder();
 			for (int i = 0; i < collectArgs; i++, index++) {
@@ -293,20 +317,25 @@ public class DefaultCommandManager implements CommandManager {
 				if (i > 0) builder.append(options.getMultiWordSeparator());
 				builder.append(args[index]);
 			}
+			Object parsed = null;
 			try {
-				Object parsed = parser.parse(event, builder.toString());
+				parsed = parser.parseCasted(event, argument.getInfoContainer(), builder.toString());
 				if (parsed == null) throw new NullPointerException("No value for input '" + builder + "'");
 				if (!argument.getClassOfArgument().isInstance(parsed))
-					throw new InvalidArgumentParseValueException("Parser for class " + argument.getClassOfArgument().getName() + " returned " + parsed.getClass().getName());
+					throw new IllegalArgumentParserValueException("Parser for class " + argument.getClassOfArgument().getName() + " returned " + parsed.getClass().getName());
+				if (argument.getInfoContainer() != null && !parser.validateInfoContainerCasted(argument.getInfoContainer(), parsed))
+					throw new IllegalArgumentException("Info container is not valid for the given input");
+
 				types.add(argument.getClassOfArgument());
 				values.add(parsed);
-			} catch (InvalidArgumentParseValueException ex) {
+			} catch (IllegalArgumentParserValueException ex) {
 				throw new WrappedException(ex); // Internal error
 			} catch (Exception ex) {
-				return null; // Invalid usage
+				Tuple<String, Object[]> errorMessage = parser.getErrorMessageCasted(argument.getInfoContainer(), parsed);
+				return new ArgumentParseResult(null, errorMessage); // Invalid usage
 			}
 		}
-		return new Tuple<>(types.toArray(new Class[0]), values.toArray());
+		return new ArgumentParseResult(new Tuple<>(types.toArray(new Class[0]), values.toArray()), null);
 	}
 
 	@Nonnull
@@ -383,7 +412,7 @@ public class DefaultCommandManager implements CommandManager {
 	@Nonnull
 	@Override
 	public CommandManager setEventCreator(@Nonnull EventCreator eventCreator) {
-		if (!commandsByName.isEmpty() && !eventCreator.getEventClass().isAssignableFrom(this.eventCreator.getEventClass()))
+		if (!commands.isEmpty() && !eventCreator.getEventClass().isAssignableFrom(this.eventCreator.getEventClass()))
 			LOGGER.warn("EventCreator was set what changed the event class from " + this.eventCreator.getEventClass().getName() + " to " + eventCreator.getEventClass().getName() + " after commands were registered, this can cause issues");
 		this.eventCreator = eventCreator;
 		return this;

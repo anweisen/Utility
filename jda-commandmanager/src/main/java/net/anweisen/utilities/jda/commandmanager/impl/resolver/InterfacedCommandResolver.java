@@ -1,9 +1,9 @@
 package net.anweisen.utilities.jda.commandmanager.impl.resolver;
 
 import net.anweisen.utilities.jda.commandmanager.CommandManager;
-import net.anweisen.utilities.jda.commandmanager.InterfacedCommand;
-import net.anweisen.utilities.jda.commandmanager.registered.RegisteredCommand;
-import net.anweisen.utilities.jda.commandmanager.registered.resolver.CommandResolver;
+import net.anweisen.utilities.jda.commandmanager.hooks.InterfacedCommand;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.commandmanager.hooks.registered.CommandResolver;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

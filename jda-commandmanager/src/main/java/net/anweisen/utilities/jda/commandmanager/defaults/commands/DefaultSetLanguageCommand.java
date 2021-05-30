@@ -1,7 +1,11 @@
 package net.anweisen.utilities.jda.commandmanager.defaults.commands;
 
-import net.anweisen.utilities.jda.commandmanager.*;
+import net.anweisen.utilities.jda.commandmanager.hooks.*;
+import net.anweisen.utilities.jda.commandmanager.hooks.CoolDownScope;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandArguments;
+import net.anweisen.utilities.jda.commandmanager.hooks.event.CommandEvent;
 import net.anweisen.utilities.jda.commandmanager.language.Language;
+import net.dv8tion.jda.api.Permission;
 
 import javax.annotation.Nonnull;
 
@@ -15,8 +19,9 @@ public class DefaultSetLanguageCommand {
 			name = { "setlanguage", "setlang", "lang", "language" },
 			usage = "[string language]",
 			scope = CommandScope.GUILD,
+			permission = Permission.ADMINISTRATOR,
 			cooldownScope = CoolDownScope.GUILD,
-			cooldownSeconds = 10
+			cooldownSeconds = 5
 	)
 	public void onCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) throws Exception {
 		Language language = event.getManager().getLanguageManager().getLanguageByName(args.get(0));

@@ -18,7 +18,6 @@ public class ConstantLanguageManager extends AbstractLanguageManager {
 		register(language);
 	}
 
-
 	@Nonnull
 	@Override
 	public Language getLanguage(@Nonnull Guild guild) {

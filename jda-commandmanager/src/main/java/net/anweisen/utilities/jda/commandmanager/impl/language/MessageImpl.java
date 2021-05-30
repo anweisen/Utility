@@ -1,5 +1,6 @@
 package net.anweisen.utilities.jda.commandmanager.impl.language;
 
+import net.anweisen.utilities.commons.common.IRandom;
 import net.anweisen.utilities.commons.misc.StringUtils;
 import net.anweisen.utilities.jda.commandmanager.language.Message;
 
@@ -44,14 +45,20 @@ public class MessageImpl implements Message {
 	@Nonnull
 	@Override
 	public String asRandomString(@Nonnull Random random, @Nonnull Object... args) {
-		String[] array = asArray(args);
-		return array[random.nextInt(array.length)];
+		return asRandomString(IRandom.wrap(random), args);
 	}
 
 	@Nonnull
 	@Override
 	public String asRandomString(@Nonnull Object... args) {
-		return asRandomString(ThreadLocalRandom.current(), args);
+		return asRandomString(IRandom.threadLocal(), args);
+	}
+
+	@Nonnull
+	@Override
+	public String asRandomString(@Nonnull IRandom random, @Nonnull Object... args) {
+		String[] array = asArray(args);
+		return random.choose(array);
 	}
 
 	@Override

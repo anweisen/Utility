@@ -1,10 +1,15 @@
 package net.anweisen.utilities.jda.commandmanager.message;
 
 import net.anweisen.utilities.jda.commandmanager.CommandManager;
+import net.anweisen.utilities.jda.commandmanager.hooks.CommandScope;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -18,11 +23,20 @@ public interface MessageInfo {
 	@Nonnull
 	JDA getJDA();
 
-	@Nonnull
-	User getUser();
+	@Nullable
+	ShardManager getShardManager();
 
 	@Nonnull
 	SelfUser getSelfUser();
+
+	@Nullable
+	Color getSelfColor();
+
+	@Nonnull
+	Color getSelfColorNonnull();
+
+	@Nonnull
+	User getUser();
 
 	@Nonnull
 	String getUserId();
@@ -41,6 +55,15 @@ public interface MessageInfo {
 	String getEffectiveUserName();
 
 	@Nonnull
+	String getUserTag();
+
+	@Nullable
+	Color getUserColor();
+
+	@Nonnull
+	Color getUserColorNonnull();
+
+	@Nonnull
 	Message getMessage();
 
 	@Nonnull
@@ -50,6 +73,12 @@ public interface MessageInfo {
 
 	boolean isGuild();
 	boolean isPrivate();
+
+	/**
+	 * @return either {@link CommandScope#GUILD} if {@link #isGuild()} or {@link CommandScope#PRIVATE} otherwise
+	 */
+	@Nonnull
+	CommandScope getScope();
 
 	/**
 	 * @throws IllegalStateException
@@ -90,6 +119,27 @@ public interface MessageInfo {
 	@Nonnull
 	Member getSelfMember();
 
+	/**
+	 * @throws IllegalStateException
+	 *         If this event was not triggered in a guild.
+	 *         You can check this using {@link #isGuild()}
+	 */
+	boolean hasMemberPermission(@Nonnull Permission... permission);
+
+	/**
+	 * @throws IllegalStateException
+	 *         If this event was not triggered in a guild.
+	 *         You can check this using {@link #isGuild()}
+	 */
+	boolean hasMemberChannelPermission(@Nonnull Permission... permissions);
+
+	/**
+	 * @throws IllegalStateException
+	 *         If this event was not triggered in a guild.
+	 *         You can check this using {@link #isGuild()}
+	 */
+	boolean hasTeamRole();
+
 	@Nonnull
 	MessageChannel getChannel();
 
@@ -108,5 +158,10 @@ public interface MessageInfo {
 	 */
 	@Nonnull
 	PrivateChannel getPrivateChannel();
+
+	@Nonnull
+	String getChannelId();
+
+	long getChannelIdLong();
 
 }

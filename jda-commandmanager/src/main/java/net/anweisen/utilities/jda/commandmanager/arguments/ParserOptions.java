@@ -1,7 +1,12 @@
 package net.anweisen.utilities.jda.commandmanager.arguments;
 
+import net.anweisen.utilities.jda.commandmanager.hooks.CommandScope;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumSet;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -9,12 +14,15 @@ import javax.annotation.Nonnull;
  */
 public final class ParserOptions {
 
+	private Collection<CommandScope> scopes = EnumSet.allOf(CommandScope.class);
 	private String multiWordSeparator;
 	private int maxMultiWords;
+	private boolean requireExtraInfo;
 
 	public ParserOptions() {
 		multiWordSeparator = " ";
 		maxMultiWords = 0;
+		requireExtraInfo = false;
 	}
 
 	@Nonnull
@@ -43,6 +51,19 @@ public final class ParserOptions {
 	}
 
 	@Nonnull
+	public ParserOptions requireExtraInfo() {
+		requireExtraInfo = true;
+		return this;
+	}
+
+	@Nonnull
+	public ParserOptions withScopes(@Nonnull CommandScope... scopes) {
+		if (scopes.length == 0) throw new IllegalArgumentException("Cannot use no scopes");
+		this.scopes = Arrays.asList(scopes);
+		return this;
+	}
+
+	@Nonnull
 	public String getMultiWordSeparator() {
 		return multiWordSeparator;
 	}
@@ -54,6 +75,15 @@ public final class ParserOptions {
 
 	public boolean hasMultiWorldEnabled() {
 		return maxMultiWords > 1;
+	}
+
+	public boolean isExtraInfoRequired() {
+		return requireExtraInfo;
+	}
+
+	@Nonnull
+	public Collection<CommandScope> getScopes() {
+		return scopes;
 	}
 
 }
