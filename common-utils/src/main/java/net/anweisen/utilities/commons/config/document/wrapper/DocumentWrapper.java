@@ -87,6 +87,12 @@ public abstract class DocumentWrapper implements Document {
 		return document.toJson();
 	}
 
+	@Nonnull
+	@Override
+	public String toPrettyJson() {
+		return document.toPrettyJson();
+	}
+
 	@Nullable
 	@Override
 	public Object getObject(@Nonnull String path) {

@@ -329,6 +329,12 @@ public class YamlDocument extends AbstractDocument {
 		return new GsonDocument(values()).toJson();
 	}
 
+	@Nonnull
+	@Override
+	public String toPrettyJson() {
+		return new GsonDocument(values()).toPrettyJson();
+	}
+
 	@Override
 	public boolean isReadonly() {
 		return false;

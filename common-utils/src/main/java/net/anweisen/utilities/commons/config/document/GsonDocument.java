@@ -26,14 +26,19 @@ import java.util.function.Function;
  */
 public class GsonDocument extends AbstractDocument {
 
-	public static final Gson GSON = new GsonBuilder()
-			.disableHtmlEscaping()
-			.setPrettyPrinting()
-			.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializationUtils::isSerializable, new SerializableTypeAdapter()))
-			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(GsonDocument.class, new GsonDocumentTypeAdapter()))
-			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
-			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()))
-			.create();
+	static {
+		GsonBuilder builder = new GsonBuilder()
+				.disableHtmlEscaping()
+				.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializationUtils::isSerializable, new SerializableTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(GsonDocument.class, new GsonDocumentTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()));
+
+		GSON = builder.create();
+		GSON_PRETTY_PRINT = builder.setPrettyPrinting().create();
+	}
+
+	public static final Gson GSON, GSON_PRETTY_PRINT;
 
 	private static boolean cleanupEmptyObjects = false;
 	private static boolean cleanupEmptyArrays = false;
@@ -360,7 +365,13 @@ public class GsonDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public String toJson() {
-		return jsonObject.toString();
+		return GSON.toJson(jsonObject);
+	}
+
+	@Nonnull
+	@Override
+	public String toPrettyJson() {
+		return GSON_PRETTY_PRINT.toJson(jsonObject);
 	}
 
 	@Override

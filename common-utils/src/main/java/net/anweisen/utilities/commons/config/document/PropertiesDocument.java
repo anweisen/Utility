@@ -260,6 +260,14 @@ public class PropertiesDocument extends AbstractDocument {
 		return new GsonDocument(map).toJson();
 	}
 
+	@Nonnull
+	@Override
+	public String toPrettyJson() {
+		Map<String, Object> map = new HashMap<>();
+		PropertiesUtils.setProperties(properties, map);
+		return new GsonDocument(map).toPrettyJson();
+	}
+
 	@Override
 	public boolean isReadonly() {
 		return false;

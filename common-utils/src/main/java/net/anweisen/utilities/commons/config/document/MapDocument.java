@@ -99,6 +99,12 @@ public class MapDocument extends AbstractDocument {
 		return new GsonDocument(values).toJson();
 	}
 
+	@Nonnull
+	@Override
+	public String toPrettyJson() {
+		return new GsonDocument(values).toPrettyJson();
+	}
+
 	@Nullable
 	@Override
 	public Object getObject(@Nonnull String path) {
@@ -170,7 +176,13 @@ public class MapDocument extends AbstractDocument {
 	public boolean getBoolean(@Nonnull String path, boolean def) {
 		try {
 			if (!contains(path)) return def;
-			return Boolean.parseBoolean(getString(path));
+			switch (getString(path).toLowerCase()) {
+				case "true":
+				case "1":
+					return true;
+				default:
+					return false;
+			}
 		} catch (Exception ex) {
 			return def;
 		}

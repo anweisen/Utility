@@ -435,6 +435,12 @@ public class EmptyDocument implements Document {
 		return "{}";
 	}
 
+	@Nonnull
+	@Override
+	public String toPrettyJson() {
+		return "{}";
+	}
+
 	@Override
 	public boolean isReadonly() {
 		return true;
