@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.mongodb.insertorupdate;
 
-import net.anweisen.utilities.commons.misc.BsonUtils;
+import net.anweisen.utilities.common.misc.BsonUtils;
 import net.anweisen.utilities.database.action.DatabaseInsertion;
 import net.anweisen.utilities.database.action.DatabaseInsertionOrUpdate;
 import net.anweisen.utilities.database.action.DatabaseUpdate;

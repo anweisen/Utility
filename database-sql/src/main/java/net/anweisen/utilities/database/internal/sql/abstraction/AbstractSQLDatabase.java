@@ -105,7 +105,6 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 	}
 
 	@Nonnull
-	@Override
 	public DatabaseInsertion insert(@Nonnull String table, @Nonnull Map<String, Object> values) {
 		return new SQLInsertion(this, table, values);
 	}

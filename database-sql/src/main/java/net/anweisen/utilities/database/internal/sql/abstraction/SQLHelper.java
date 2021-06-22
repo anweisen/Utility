@@ -1,8 +1,8 @@
 package net.anweisen.utilities.database.internal.sql.abstraction;
 
-import net.anweisen.utilities.commons.config.Json;
-import net.anweisen.utilities.commons.config.document.GsonDocument;
-import net.anweisen.utilities.commons.misc.GsonUtils;
+import net.anweisen.utilities.common.config.Json;
+import net.anweisen.utilities.common.config.document.GsonDocument;
+import net.anweisen.utilities.common.misc.GsonUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

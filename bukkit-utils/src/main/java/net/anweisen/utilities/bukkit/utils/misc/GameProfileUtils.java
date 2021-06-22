@@ -2,8 +2,8 @@ package net.anweisen.utilities.bukkit.utils.misc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.anweisen.utilities.commons.logging.ILogger;
-import net.anweisen.utilities.commons.common.WrappedException;
+import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.collection.WrappedException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 

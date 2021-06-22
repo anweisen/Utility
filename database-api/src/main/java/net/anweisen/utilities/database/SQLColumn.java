@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database;
 
-import net.anweisen.utilities.commons.misc.StringUtils;
+import net.anweisen.utilities.common.misc.StringUtils;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

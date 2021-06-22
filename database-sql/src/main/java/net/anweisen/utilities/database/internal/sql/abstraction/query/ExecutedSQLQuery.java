@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.query;
 
-import net.anweisen.utilities.commons.config.Document;
+import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.internal.abstraction.AbstractExecutedQuery;
 
 import javax.annotation.Nonnull;

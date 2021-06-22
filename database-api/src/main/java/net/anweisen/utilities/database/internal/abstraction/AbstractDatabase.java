@@ -3,6 +3,7 @@ package net.anweisen.utilities.database.internal.abstraction;
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.DatabaseConfig;
 import net.anweisen.utilities.database.SQLColumn;
+import net.anweisen.utilities.database.SpecificDatabase;
 import net.anweisen.utilities.database.exceptions.DatabaseAlreadyConnectedException;
 import net.anweisen.utilities.database.exceptions.DatabaseConnectionClosedException;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
@@ -77,6 +78,12 @@ public abstract class AbstractDatabase implements Database {
 		} catch (DatabaseException ex) {
 			LOGGER.error("Could not create table (" + this.getClass().getSimpleName() + ")", ex);
 		}
+	}
+
+	@Nonnull
+	@Override
+	public SpecificDatabase getSpecificDatabase(@Nonnull String name) {
+		return new DefaultSpecificDatabase(this, name);
 	}
 
 	@Nonnull

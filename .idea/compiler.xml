@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="bukkit-utils" />
-        <module name="jda-commandmanager" />
         <module name="database-sql" />
+        <module name="bukkit-utils" />
+        <module name="jda-manager" />
         <module name="common-utils" />
         <module name="database-api" />
         <module name="database-mongodb" />
@@ -21,7 +21,8 @@
       <module name="database-api" target="1.8" />
       <module name="database-mongodb" target="1.8" />
       <module name="database-sql" target="1.8" />
-      <module name="jda-commandmanager" target="1.8" />
+      <module name="jda-manager" target="1.8" />
+      <module name="jda-together" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database.access;
 
-import net.anweisen.utilities.commons.config.Document;
-import net.anweisen.utilities.commons.config.Propertyable;
+import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.common.config.Propertyable;
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 

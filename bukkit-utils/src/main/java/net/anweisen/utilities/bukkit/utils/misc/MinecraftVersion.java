@@ -1,7 +1,6 @@
 package net.anweisen.utilities.bukkit.utils.misc;
 
-import net.anweisen.utilities.commons.version.Version;
-import net.anweisen.utilities.commons.version.VersionInfo;
+import net.anweisen.utilities.common.version.Version;
 import org.bukkit.Bukkit;
 
 import javax.annotation.CheckReturnValue;
@@ -32,7 +31,8 @@ public enum MinecraftVersion implements Version {
 	V1_15,      // 1.15
 	V1_16,      // 1.16
 	V1_16_5,    // 1.16.5
-	V1_17;      // 1.17
+	V1_17,      // 1.17
+	;
 
 	private final int major, minor, revision;
 
@@ -72,11 +72,34 @@ public enum MinecraftVersion implements Version {
 
 	@Nonnull
 	@CheckReturnValue
-	public static MinecraftVersion parse() {
-		String version = Bukkit.getBukkitVersion();
-		version = version.substring(0, version.indexOf("-"));
+	public static Version parseExact(@Nonnull String bukkitVersion) {
+		bukkitVersion = bukkitVersion.substring(0, bukkitVersion.indexOf("-"));
+		return Version.parse(bukkitVersion);
+	}
 
-		return Version.findNearest(Version.parse(version), values());
+	@Nonnull
+	@CheckReturnValue
+	public static MinecraftVersion findNearest(@Nonnull Version realVersion) {
+		return Version.findNearest(realVersion, values());
+	}
+
+	private static Version currentExact;
+	private static MinecraftVersion current;
+
+	@Nonnull
+	@CheckReturnValue
+	public static Version currentExact() {
+		if (currentExact == null)
+		    currentExact = parseExact(Bukkit.getBukkitVersion());
+		return currentExact;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static MinecraftVersion current() {
+		if (current == null)
+			current = findNearest(currentExact());
+		return current;
 	}
 
 }

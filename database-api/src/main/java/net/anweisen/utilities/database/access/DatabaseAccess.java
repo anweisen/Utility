@@ -22,7 +22,7 @@ public interface DatabaseAccess<V> {
 	@Nonnull
 	Optional<V> getValueOptional(@Nonnull String key) throws DatabaseException;
 
-	void setValue(@Nonnull String key, @Nonnull V value) throws DatabaseException;
+	void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException;
 
 	default boolean hasValue(@Nonnull String key) throws DatabaseException {
 		return getValueOptional(key).isPresent();

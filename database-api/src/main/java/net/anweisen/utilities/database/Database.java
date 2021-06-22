@@ -1,12 +1,11 @@
 package net.anweisen.utilities.database;
 
-import net.anweisen.utilities.commons.logging.ILogger;
+import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.*;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -71,15 +70,15 @@ public interface Database {
 
 	@Nonnull
 	@CheckReturnValue
-	DatabaseInsertion insert(@Nonnull String table, @Nonnull Map<String, Object> values);
-
-	@Nonnull
-	@CheckReturnValue
 	DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table);
 
 	@Nonnull
 	@CheckReturnValue
 	DatabaseDeletion delete(@Nonnull String table);
+
+	@Nonnull
+	@CheckReturnValue
+	SpecificDatabase getSpecificDatabase(@Nonnull String name);
 
 	@Nonnull
 	DatabaseConfig getConfig();

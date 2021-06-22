@@ -1,6 +1,6 @@
 package net.anweisen.utilities.bukkit.utils.misc;
 
-import net.anweisen.utilities.commons.logging.ILogger;
+import net.anweisen.utilities.common.logging.ILogger;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -76,7 +76,7 @@ public final class BukkitReflectionUtils {
 
 	/**
 	 * @deprecated not implemented in all forks of bukkit
-	 * @return if the entity is in water, {@code false} if not implemented
+	 * @return if the entity is in water, {@code false} otherwise or if not implemented
 	 */
 	@Deprecated
 	public static boolean isInWater(@Nonnull Entity entity) {

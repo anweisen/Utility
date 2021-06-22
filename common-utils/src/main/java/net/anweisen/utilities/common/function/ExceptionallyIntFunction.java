@@ -1,0 +1,26 @@
+package net.anweisen.utilities.common.function;
+
+import net.anweisen.utilities.common.collection.WrappedException;
+
+import java.util.concurrent.Callable;
+import java.util.function.IntFunction;
+
+/**
+ * @author anweisen | https://github.com/anweisen
+ * @since 1.0
+ */
+@FunctionalInterface
+public interface ExceptionallyIntFunction<R> extends IntFunction<R> {
+
+	@Override
+	default R apply(int value) {
+		try {
+			return applyExceptionally(value);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	R applyExceptionally(int value) throws Exception;
+
+}

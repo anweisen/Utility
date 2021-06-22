@@ -1,6 +1,6 @@
 package net.anweisen.utilities.bukkit.utils.item;
 
-import net.anweisen.utilities.commons.misc.ReflectionUtils;
+import net.anweisen.utilities.common.misc.ReflectionUtils;
 import org.bukkit.Material;
 
 import javax.annotation.Nonnull;

@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database;
 
-import net.anweisen.utilities.commons.misc.ReflectionUtils;
+import net.anweisen.utilities.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

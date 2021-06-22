@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.sqlite;
 
-import net.anweisen.utilities.commons.misc.FileUtils;
+import net.anweisen.utilities.common.misc.FileUtils;
 import net.anweisen.utilities.database.DatabaseConfig;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;

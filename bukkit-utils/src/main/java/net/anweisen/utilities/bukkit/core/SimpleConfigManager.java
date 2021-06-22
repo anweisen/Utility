@@ -1,10 +1,10 @@
 package net.anweisen.utilities.bukkit.core;
 
-import net.anweisen.utilities.commons.config.Document;
-import net.anweisen.utilities.commons.config.FileDocument;
-import net.anweisen.utilities.commons.config.document.GsonDocument;
-import net.anweisen.utilities.commons.config.document.YamlDocument;
-import net.anweisen.utilities.commons.misc.FileUtils;
+import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utilities.common.config.document.GsonDocument;
+import net.anweisen.utilities.common.config.document.YamlDocument;
+import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -32,7 +32,7 @@ public class SimpleConfigManager {
 
 	public synchronized FileDocument getDocument(@Nonnull File file) {
 		String extension = FileUtils.getFileExtension(file);
-		return configs.computeIfAbsent(file.getName(), key -> FileDocument.read(resolveType(extension), file));
+		return configs.computeIfAbsent(file.getName(), key -> FileDocument.readFile(resolveType(extension), file));
 	}
 
 	@Nonnull

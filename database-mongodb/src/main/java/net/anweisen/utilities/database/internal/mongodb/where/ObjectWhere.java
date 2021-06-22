@@ -1,8 +1,7 @@
 package net.anweisen.utilities.database.internal.mongodb.where;
 
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.Filters;
-import net.anweisen.utilities.commons.misc.MongoUtils;
+import net.anweisen.utilities.common.misc.MongoUtils;
 import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;

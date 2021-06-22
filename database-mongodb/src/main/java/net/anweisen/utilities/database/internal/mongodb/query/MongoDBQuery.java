@@ -2,7 +2,7 @@ package net.anweisen.utilities.database.internal.mongodb.query;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
-import net.anweisen.utilities.commons.misc.MongoUtils;
+import net.anweisen.utilities.common.misc.MongoUtils;
 import net.anweisen.utilities.database.action.DatabaseQuery;
 import net.anweisen.utilities.database.action.ExecutedQuery;
 import net.anweisen.utilities.database.Order;

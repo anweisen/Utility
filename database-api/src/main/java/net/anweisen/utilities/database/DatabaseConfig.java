@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database;
 
-import net.anweisen.utilities.commons.config.Propertyable;
+import net.anweisen.utilities.common.config.Propertyable;
 
 import javax.annotation.Nonnull;
 

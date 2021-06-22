@@ -7,7 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/database-api/database-api.iml" filepath="$PROJECT_DIR$/database-api/database-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/database-mongodb/database-mongodb.iml" filepath="$PROJECT_DIR$/database-mongodb/database-mongodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/database-sql/database-sql.iml" filepath="$PROJECT_DIR$/database-sql/database-sql.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jda-commandmanager/jda-commandmanager.iml" filepath="$PROJECT_DIR$/jda-commandmanager/jda-commandmanager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jda-manager/jda-manager.iml" filepath="$PROJECT_DIR$/jda-manager/jda-manager.iml" />
     </modules>
   </component>
 </project>

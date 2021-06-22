@@ -64,7 +64,9 @@ public class MongoDBDatabase extends AbstractDatabase {
 	@Override
 	public void connect0() throws Exception {
 		MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
-		MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
+		MongoClientSettings settings = MongoClientSettings.builder()
+				.retryReads(false).retryReads(false)
+				.credential(credential)
 				.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
 				.build();
 		client = MongoClients.create(settings);
@@ -117,7 +119,6 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Nonnull
-	@Override
 	public DatabaseInsertion insert(@Nonnull String table, @Nonnull Map<String, Object> values) {
 		return new MongoDBInsertion(this, table, new Document(values));
 	}

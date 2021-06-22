@@ -1,9 +1,9 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.query;
 
-import net.anweisen.utilities.commons.config.Document;
-import net.anweisen.utilities.commons.config.document.EmptyDocument;
-import net.anweisen.utilities.commons.config.document.GsonDocument;
-import net.anweisen.utilities.commons.config.document.MapDocument;
+import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.common.config.document.EmptyDocument;
+import net.anweisen.utilities.common.config.document.GsonDocument;
+import net.anweisen.utilities.common.config.document.MapDocument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
