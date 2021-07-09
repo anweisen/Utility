@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.*;
 
 /**
@@ -38,7 +39,7 @@ public class CleanAndWriteDatabaseCache<K, V> implements DatabaseCache<K, V> {
 		this.fallback = fallback;
 		this.writer = writer;
 
-		new Timer(taskName).schedule(new RunnableTimerTask(this::writeCache), cleanAndWriteInterval, cleanAndWriteInterval);
+		EXECUTOR.scheduleAtFixedRate(this::writeCache, cleanAndWriteInterval, cleanAndWriteInterval, TimeUnit.MILLISECONDS);
 		Runtime.getRuntime().addShutdownHook(new Thread(this::writeCache));
 	}
 

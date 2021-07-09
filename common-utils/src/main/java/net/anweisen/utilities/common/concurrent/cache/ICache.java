@@ -1,7 +1,11 @@
 package net.anweisen.utilities.common.concurrent.cache;
 
+import net.anweisen.utilities.common.collection.NamedThreadFactory;
+
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.BiConsumer;
 
 /**
@@ -9,6 +13,8 @@ import java.util.function.BiConsumer;
  * @since 1.0
  */
 public interface ICache<K, V> {
+
+	ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(2, new NamedThreadFactory(threadId -> String.format("CacheTask-%s", threadId)));
 
 	boolean contains(@Nonnull K key);
 
