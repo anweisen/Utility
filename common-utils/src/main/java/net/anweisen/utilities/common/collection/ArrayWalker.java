@@ -31,7 +31,7 @@ public class ArrayWalker<T> implements Iterable<T> {
 
 			@Override
 			public boolean hasNext() {
-				return length < cursor;
+				return cursor < length;
 			}
 
 			@Override
