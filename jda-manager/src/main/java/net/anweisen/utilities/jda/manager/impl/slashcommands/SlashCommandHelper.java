@@ -41,13 +41,11 @@ public final class SlashCommandHelper {
 		StringBuilderPrintWriter writer = new StringBuilderPrintWriter();
 		dump(writer);
 		String dump = writer.toString();
-		CommandManager.LOGGER.debug("Registered slash comamnds:\n" + dump);
 
 		try {
 			convertSlashCommands();
 		} catch (WrappedException ex) {
-			if (!CommandManager.LOGGER.isDebugEnabled())
-				CommandManager.LOGGER.error("Failed to register command hierarchy" + dump);
+			CommandManager.LOGGER.error("Failed to register command hierarchy" + dump);
 			throw ex;
 		}
 
