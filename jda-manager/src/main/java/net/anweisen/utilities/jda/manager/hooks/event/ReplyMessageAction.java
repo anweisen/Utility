@@ -1,5 +1,6 @@
-package net.anweisen.utilities.jda.manager.hooks.action;
+package net.anweisen.utilities.jda.manager.hooks.event;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
@@ -18,7 +19,7 @@ import java.util.function.BooleanSupplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.3.0
  */
-public interface ReplyMessageAction extends RestAction<MessageResponse> {
+public interface ReplyMessageAction extends RestAction<Message> {
 
 	@Nonnull
 	@Override
