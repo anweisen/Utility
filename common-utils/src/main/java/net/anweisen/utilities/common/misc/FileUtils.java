@@ -53,7 +53,19 @@ public final class FileUtils {
 
 	@Nonnull
 	@CheckReturnValue
-	public static String stripFolders(@Nonnull String filename) {
+	public static String getRealFileName(@Nonnull File file) {
+		return getRealFileName(file.getName());
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static String getRealFileName(@Nonnull String filename) {
+		return stripFolders(filename);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	private static String stripFolders(@Nonnull String filename) {
 		int index = filename.lastIndexOf('/');
 		if (index == -1) return filename;
 		return filename.substring(index + 1);

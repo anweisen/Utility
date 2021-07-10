@@ -3,6 +3,8 @@ package net.anweisen.utilities.common.config;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.DoubleFunction;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -11,6 +13,8 @@ import javax.annotation.Nullable;
 public interface Config extends Propertyable {
 
 	/**
+	 * Sets the value at the given path.
+	 *
 	 * Setting a value to {@code null} has the same effect as {@link #remove(String) removing} it.
 	 * {@code config.set(path, null)} is equivalent with {@code config.remove(path)}
 	 *
@@ -50,5 +54,38 @@ public interface Config extends Propertyable {
 	@Nonnull
 	@CheckReturnValue
 	Config readonly();
+
+	@Nonnull
+	@Override
+	default <O extends Propertyable> Config apply(@Nonnull Consumer<O> action) {
+		return (Config) Propertyable.super.apply(action);
+	}
+
+	@Nonnull
+	default Config increment(@Nonnull String path, double amount) {
+		return set(path, getDouble(path) + amount);
+	}
+
+	@Nonnull
+	default Config decrement(@Nonnull String path, double amount) {
+		return set(path, getDouble(path) - amount);
+	}
+
+	@Nonnull
+	default Config multiply(@Nonnull String path, double factor) {
+		return set(path, getDouble(path) * factor);
+	}
+
+	@Nonnull
+	default Config divide(@Nonnull String path, double divisor) {
+		return set(path, getDouble(path) / divisor);
+	}
+
+	@Nonnull
+	default Config setIfAbsent(@Nonnull String path, @Nonnull Object defaultValue) {
+		if (!contains(path))
+			set(path, defaultValue);
+		return this;
+	}
 
 }

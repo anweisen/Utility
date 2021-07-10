@@ -4,17 +4,20 @@ import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.config.document.EmptyDocument;
 import net.anweisen.utilities.common.config.document.GsonDocument;
 import net.anweisen.utilities.common.config.document.PropertiesDocument;
+import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -102,6 +105,24 @@ public interface Document extends Config, Json {
 	 */
 	@Nonnull
 	@Override
+	default <O extends Propertyable> Document apply(@Nonnull Consumer<O> action) {
+		return (Document) Config.super.apply(action);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
+	default Document setIfAbsent(@Nonnull String path, @Nonnull Object defaultValue) {
+		return (Document) Config.super.setIfAbsent(path, defaultValue);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
 	@CheckReturnValue
 	Document readonly();
 
@@ -114,23 +135,38 @@ public interface Document extends Config, Json {
 
 	void write(@Nonnull Writer writer) throws IOException;
 
-	void saveToFile(@Nonnull File file) throws IOException;
+	default void saveToFile(@Nonnull File file) throws IOException {
+		FileUtils.createFilesIfNecessary(file);
+		Writer writer = FileUtils.newBufferedWriter(file);
+		write(writer);
+		writer.flush();
+		writer.close();
+	}
 
 	@Nonnull
 	@CheckReturnValue
 	default FileDocument asFileDocument(@Nonnull File file) {
-		return (this instanceof FileDocument && ((FileDocument)this).getFile().equals(file)) ? (FileDocument) this : FileDocument.wrap(this, file);
+		return (this instanceof FileDocument && ((FileDocument)this).getFile().equals(file))
+			 ? (FileDocument) this : FileDocument.wrap(this, file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default Document copyJson() {
+		Document document = newJsonDocument();
+		this.forEach(document::set);
+		return document;
 	}
 
 	/**
-	 * @return a new empty and immutable document
+	 * @return an empty and immutable document
 	 *
 	 * @see EmptyDocument
 	 */
 	@Nonnull
 	@CheckReturnValue
 	static Document empty() {
-		return new EmptyDocument();
+		return EmptyDocument.ROOT;
 	}
 
 	@Nonnull
@@ -160,6 +196,12 @@ public interface Document extends Config, Json {
 	@CheckReturnValue
 	static Document parseJson(@Nonnull String jsonInput) {
 		return new GsonDocument(jsonInput);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document parseJson(@Nonnull Reader reader) throws IOException {
+		return new GsonDocument(reader);
 	}
 
 	@Nonnull

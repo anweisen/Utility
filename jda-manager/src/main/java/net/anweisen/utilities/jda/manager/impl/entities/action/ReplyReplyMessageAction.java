@@ -1,14 +1,10 @@
 package net.anweisen.utilities.jda.manager.impl.entities.action;
 
-import net.anweisen.utilities.jda.manager.hooks.action.MessageResponse;
-import net.anweisen.utilities.jda.manager.hooks.action.ReplyMessageAction;
+import net.anweisen.utilities.jda.manager.hooks.event.ReplyMessageAction;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +21,7 @@ import java.util.function.Function;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ReplyReplyMessageAction extends AbstractReplyMessageAction<WebhookMessageAction<Message>, Message> {
 
-	public static final Function<Message, MessageResponse> MAPPER = message -> null;
+	public static final Function<Message, Message> MAPPER = Function.identity();
 
 	public ReplyReplyMessageAction(@Nonnull WebhookMessageAction<Message> action) {
 		super(action);
@@ -33,7 +29,7 @@ public class ReplyReplyMessageAction extends AbstractReplyMessageAction<WebhookM
 
 	@Nonnull
 	@Override
-	public Function<Message, MessageResponse> getResponseMapper() {
+	public Function<Message, Message> getResponseMapper() {
 		return MAPPER;
 	}
 

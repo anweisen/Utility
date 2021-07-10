@@ -1,8 +1,8 @@
 package net.anweisen.utilities.jda.manager.impl.entities.action;
 
-import net.anweisen.utilities.jda.manager.hooks.action.MessageResponse;
-import net.anweisen.utilities.jda.manager.hooks.action.ReplyMessageAction;
+import net.anweisen.utilities.jda.manager.hooks.event.ReplyMessageAction;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public abstract class AbstractReplyMessageAction<T extends RestAction<R>, R> imp
 	}
 
 	@Nonnull
-	public abstract Function<R, MessageResponse> getResponseMapper();
+	public abstract Function<R, Message> getResponseMapper();
 
 	@Nonnull
 	@Override
@@ -34,20 +34,20 @@ public abstract class AbstractReplyMessageAction<T extends RestAction<R>, R> imp
 	}
 
 	@Override
-	public void queue(@Nullable Consumer<? super MessageResponse> success, @Nullable Consumer<? super Throwable> failure) {
+	public void queue(@Nullable Consumer<? super Message> success, @Nullable Consumer<? super Throwable> failure) {
 		action.queue(success == null ? null : result -> success.accept(getResponseMapper().apply(result)), failure);
 	}
 
 	@Override
-	public MessageResponse complete(boolean shouldQueue) throws RateLimitedException {
+	public Message complete(boolean shouldQueue) throws RateLimitedException {
 		R result = action.complete(shouldQueue);
 		return result == null ? null : getResponseMapper().apply(result);
 	}
 
 	@Nonnull
 	@Override
-	public CompletableFuture<MessageResponse> submit(boolean shouldQueue) {
-		CompletableFuture<MessageResponse> future = new CompletableFuture<>();
+	public CompletableFuture<Message> submit(boolean shouldQueue) {
+		CompletableFuture<Message> future = new CompletableFuture<>();
 		action.submit(shouldQueue).whenComplete((result, failure) -> {
 			if (failure != null) {
 				future.completeExceptionally(failure);

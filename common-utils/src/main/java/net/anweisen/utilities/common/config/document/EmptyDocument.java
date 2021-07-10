@@ -25,6 +25,8 @@ import java.util.function.Function;
  */
 public class EmptyDocument implements Document {
 
+	public static final EmptyDocument ROOT = new EmptyDocument();
+
 	protected final Document root, parent;
 
 	public EmptyDocument(@Nonnull Document root, @Nullable Document parent) {

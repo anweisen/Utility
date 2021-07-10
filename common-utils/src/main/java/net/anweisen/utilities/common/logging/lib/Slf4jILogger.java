@@ -28,31 +28,16 @@ public abstract class Slf4jILogger implements ILogger, Logger {
 	public abstract boolean isErrorEnabled();
 
 	@Override
-	public abstract void trace(@Nullable Object message, @Nonnull Object... args);
-
-	@Override
 	public abstract void trace(@Nullable String message, @Nonnull Object... args);
-
-	@Override
-	public abstract void debug(@Nullable Object message, @Nonnull Object... args);
 
 	@Override
 	public abstract void debug(@Nullable String message, @Nonnull Object... args);
 
 	@Override
-	public abstract void info(@Nullable Object message, @Nonnull Object... args);
-
-	@Override
 	public abstract void info(@Nullable String message, @Nonnull Object... args);
 
 	@Override
-	public abstract void warn(@Nullable Object message, @Nonnull Object... args);
-
-	@Override
 	public abstract void warn(@Nullable String message, @Nonnull Object... args);
-
-	@Override
-	public abstract void error(@Nullable Object message, @Nonnull Object... args);
 
 	@Override
 	public abstract void error(@Nullable String message, @Nonnull Object... args);

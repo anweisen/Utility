@@ -57,19 +57,22 @@ public abstract class DocumentWrapper implements Document {
 	@Nonnull
 	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
-		return document.set(path, value);
+		document.set(path, value);
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Document clear() {
-		return document.clear();
+		document.clear();
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Document remove(@Nonnull String path) {
-		return document.remove(path);
+		document.remove(path);
+		return this;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package net.anweisen.utilities.common.concurrent.task;
 
-import net.anweisen.utilities.common.function.ExceptionallyFunction;
-import net.anweisen.utilities.common.function.ExceptionallySupplier;
+import net.anweisen.utilities.common.collection.NamedThreadFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -17,7 +15,7 @@ import java.util.function.Supplier;
  */
 public class CompletableTask<V> implements Task<V> {
 
-	private static final ExecutorService SERVICE = Executors.newCachedThreadPool();
+	static final ExecutorService SERVICE = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("TaskProcessor-%s", threadId)));
 
 	private final Collection<TaskListener<V>> listeners = new ArrayList<>();
 	private final CompletableFuture<V> future;
@@ -156,4 +154,9 @@ public class CompletableTask<V> implements Task<V> {
 		return task;
 	}
 
+	@Nonnull
+	@Override
+	public CompletionStage<V> stage() {
+		return future;
+	}
 }

@@ -1,13 +1,11 @@
 package net.anweisen.utilities.jda.manager.impl.entities.action;
 
 import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.jda.manager.hooks.action.MessageResponse;
-import net.anweisen.utilities.jda.manager.hooks.action.ReplyMessageAction;
+import net.anweisen.utilities.jda.manager.hooks.event.ReplyMessageAction;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Component;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +27,7 @@ import java.util.function.Function;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class MessageReplyMessageAction extends AbstractReplyMessageAction<MessageAction, Message> {
 
-	public static final Function<Message, MessageResponse> MAPPER = message -> null;
+	public static final Function<Message, Message> MAPPER = Function.identity();
 
 	public MessageReplyMessageAction(@Nonnull MessageAction action) {
 		super(action);
@@ -37,7 +35,7 @@ public class MessageReplyMessageAction extends AbstractReplyMessageAction<Messag
 
 	@Nonnull
 	@Override
-	public Function<Message, MessageResponse> getResponseMapper() {
+	public Function<Message, Message> getResponseMapper() {
 		return MAPPER;
 	}
 

@@ -1,5 +1,6 @@
 package net.anweisen.utilities.database;
 
+import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.*;
@@ -53,8 +54,13 @@ public interface Database {
 	 */
 	boolean disconnectSafely();
 
-	void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
-	void createTableIfNotExistsSafely(@Nonnull String name, @Nonnull SQLColumn... columns);
+	void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
+	void createTableSafely(@Nonnull String name, @Nonnull SQLColumn... columns);
+
+	@Nonnull
+	default Task<Void> createTableAsync(@Nonnull String name, @Nonnull SQLColumn... columns) {
+		return Task.asyncRunExceptionally(() -> createTable(name, columns));
+	}
 
 	@Nonnull
 	@CheckReturnValue

@@ -2,9 +2,7 @@ package net.anweisen.utilities.common.concurrent.task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.function.Function;
 
 /**
@@ -15,6 +13,8 @@ public class CompletedTask<V> implements Task<V> {
 
 	private final V value;
 	private final Throwable failure;
+
+	private CompletableFuture<V> future;
 
 	public CompletedTask(@Nullable V value) {
 		this.value = value;
@@ -90,4 +90,21 @@ public class CompletedTask<V> implements Task<V> {
 	public V get(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		return value;
 	}
+
+	@Nonnull
+	@Override
+	public CompletionStage<V> stage() {
+		if (future == null) {
+			future = new CompletableFuture<>();
+
+			if (failure != null) {
+				future.completeExceptionally(failure);
+			} else {
+				future.complete(value);
+			}
+		}
+
+		return future;
+	}
+
 }

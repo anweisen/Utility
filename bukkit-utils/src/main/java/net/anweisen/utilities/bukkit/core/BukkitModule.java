@@ -8,6 +8,7 @@ import net.anweisen.utilities.bukkit.utils.wrapper.ActionListener;
 import net.anweisen.utilities.common.annotations.DeprecatedSince;
 import net.anweisen.utilities.common.annotations.ReplaceWith;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
+import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.FileDocument;
 import net.anweisen.utilities.common.logging.ILogger;
@@ -78,9 +79,8 @@ public abstract class BukkitModule extends JavaPlugin {
 			setFirstInstance(this);
 		}
 
-		ILogger.setFactory(new ConstantLoggerFactory(this.getLogger()));
+		ILogger.setConstantFactory(this.getLogger());
 		trySaveDefaultConfig();
-		executorService = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("%s-Task-%s", this.getName(), threadId)));
 		if (wasShutdown) isReloaded = true;
 		if (firstInstall = !getDataFolder().exists()) {
 			getLogger().info("Detected first install!");
@@ -93,7 +93,12 @@ public abstract class BukkitModule extends JavaPlugin {
 		}
 
 		injectInstance();
-		handleLoad();
+
+		try {
+			handleLoad();
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 	@Override
@@ -103,17 +108,31 @@ public abstract class BukkitModule extends JavaPlugin {
 		commands.forEach((name, executor) -> registerCommand0(executor, name));
 		listeners.forEach(this::registerListener);
 
-		handleEnable();
+
+		try {
+			handleEnable();
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 	@Override
 	public final void onDisable() {
+		Throwable error = null;
+		try {
+			handleDisable();
+		} catch (Throwable ex) {
+			error = ex;
+		}
+
 		setFirstInstance = true;
 		wasShutdown = true;
 		isLoaded = false;
 		commands.clear();
 		listeners.clear();
-		executorService.shutdown();
+
+		if (executorService != null)
+			executorService.shutdown();
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			InventoryView view = player.getOpenInventory();
@@ -122,12 +141,13 @@ public abstract class BukkitModule extends JavaPlugin {
 				view.close();
 		}
 
-		handleDisable();
+		if (error != null)
+			throw new WrappedException(error);
 	}
 
-	protected void handleLoad() {}
-	protected void handleEnable() {}
-	protected void handleDisable() {}
+	protected void handleLoad() throws Exception {}
+	protected void handleEnable() throws Exception {}
+	protected void handleDisable() throws Exception {}
 
 	public boolean isDevMode() {
 		return devMode;
@@ -292,8 +312,13 @@ public abstract class BukkitModule extends JavaPlugin {
 		return new File(getDataFile(subfolder), filename);
 	}
 
+	@Nonnull
+	public ExecutorService getService() {
+		return executorService != null ? executorService : (executorService = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("%s-Task-%s", this.getName(), threadId))));
+	}
+
 	public void runAsync(@Nonnull Runnable task) {
-		executorService.submit(task);
+		getService().submit(task);
 	}
 
 	public final void checkLoaded() {

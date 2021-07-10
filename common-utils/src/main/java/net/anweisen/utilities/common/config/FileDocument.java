@@ -8,8 +8,10 @@ import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -41,7 +43,7 @@ public interface FileDocument extends Document {
 
 	@Nonnull
 	default Task<Void> saveAsync() {
-		return Task.asyncRun(this::save);
+		return Task.asyncRunExceptionally(this::save);
 	}
 
 	/**
@@ -57,6 +59,66 @@ public interface FileDocument extends Document {
 
 	@Nonnull
 	File getFile();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
+	FileDocument set(@Nonnull String path, @Nullable Object value);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
+	FileDocument clear();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
+	FileDocument remove(@Nonnull String path);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
+	default <O extends Propertyable> FileDocument apply(@Nonnull Consumer<O> action) {
+		return (FileDocument) Document.super.apply(action);
+	}
+
+	@Nonnull
+	@Override
+	default FileDocument setIfAbsent(@Nonnull String path, @Nonnull Object defaultValue) {
+		return (FileDocument) Document.super.setIfAbsent(path, defaultValue);
+	}
+
+	@Nonnull
+	@Override
+	default FileDocument increment(@Nonnull String path, double amount) {
+		return (FileDocument) Document.super.increment(path, amount);
+	}
+
+	@Nonnull
+	@Override
+	default FileDocument decrement(@Nonnull String path, double amount) {
+		return (FileDocument) Document.super.decrement(path, amount);
+	}
+
+	@Nonnull
+	@Override
+	default FileDocument multiply(@Nonnull String path, double factor) {
+		return (FileDocument) Document.super.multiply(path, factor);
+	}
+
+	@Nonnull
+	@Override
+	default FileDocument divide(@Nonnull String path, double divisor) {
+		return (FileDocument) Document.super.divide(path, divisor);
+	}
 
 	@Nonnull
 	@CheckReturnValue

@@ -39,10 +39,10 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 
 	@Override
 	public void connect0() throws Exception {
-		connection = DriverManager.getConnection(createURL(), config.getUser(), config.getPassword());
+		connection = DriverManager.getConnection(createUrl(), config.getUser(), config.getPassword());
 	}
 
-	protected abstract String createURL();
+	protected abstract String createUrl();
 
 	@Override
 	public boolean isConnected() {
@@ -57,7 +57,7 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
+	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		try {
 			StringBuilder command = new StringBuilder();
 			command.append("CREATE TABLE IF NOT EXISTS `");

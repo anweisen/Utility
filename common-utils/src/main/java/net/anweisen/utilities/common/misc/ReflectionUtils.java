@@ -155,10 +155,22 @@ public final class ReflectionUtils {
 	}
 
 	@Nullable
-	public static Class<?> getClassOrNull(@Nullable String name) {
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> getClassOrNull(@Nullable String name) {
 		try {
 			if (name == null) return null;
-			return Class.forName(name);
+			return (Class<T>) Class.forName(name);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> getClassOrNull(@Nullable String name, boolean initialize, @Nonnull ClassLoader classLoader) {
+		try {
+			if (name == null) return null;
+			return (Class<T>) Class.forName(name, initialize, classLoader);
 		} catch (Exception ex) {
 			return null;
 		}

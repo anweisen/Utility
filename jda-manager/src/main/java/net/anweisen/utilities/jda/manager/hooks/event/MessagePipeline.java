@@ -1,11 +1,9 @@
 package net.anweisen.utilities.jda.manager.hooks.event;
 
-import net.anweisen.utilities.jda.manager.hooks.action.ReplyMessageAction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 
 import javax.annotation.CheckReturnValue;

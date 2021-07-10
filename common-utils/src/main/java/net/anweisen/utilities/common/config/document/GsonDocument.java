@@ -40,6 +40,7 @@ public class GsonDocument extends AbstractDocument {
 
 	private static boolean cleanupEmptyObjects = false;
 	private static boolean cleanupEmptyArrays = false;
+	private static boolean writePrettyJson = true;
 
 	public static void setCleanupEmptyArrays(boolean clean) {
 		cleanupEmptyArrays = clean;
@@ -47,6 +48,10 @@ public class GsonDocument extends AbstractDocument {
 
 	public static void setCleanupEmptyObjects(boolean clean) {
 		cleanupEmptyObjects = clean;
+	}
+
+	public static void setWritePrettyJson(boolean pretty) {
+		writePrettyJson = pretty;
 	}
 
 	protected JsonObject jsonObject;
@@ -393,7 +398,7 @@ public class GsonDocument extends AbstractDocument {
 	@Override
 	public void write(@Nonnull Writer writer) throws IOException {
 		cleanup();
-		GSON_PRETTY_PRINT.toJson(jsonObject, writer);
+		(writePrettyJson ? GSON_PRETTY_PRINT : GSON).toJson(jsonObject, writer);
 	}
 
 	@Nonnull

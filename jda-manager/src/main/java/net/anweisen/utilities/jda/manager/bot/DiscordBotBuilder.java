@@ -9,7 +9,10 @@ import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utilities.jda.manager.hooks.registered.CommandTask;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -18,6 +21,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -31,15 +35,18 @@ public class DiscordBotBuilder {
 	protected static final ILogger logger = ILogger.forThisClass();
 
 	protected final EnumSet<CacheFlag> cacheFlags = EnumSet.allOf(CacheFlag.class);
+	protected final Collection<Consumer<? super DefaultShardManagerBuilder>> settings = new ArrayList<>();
 	protected final Collection<Tuple<CommandTask, CommandOptions>> taskCommands = new ArrayList<>();
 	protected final Collection<Object> commands = new ArrayList<>();
 	protected final Collection<Object> listener = new ArrayList<>();
 	protected final Collection<String> resourceLanguages = new ArrayList<>();
 	protected final Collection<String> fileLanguages = new ArrayList<>();
-	protected final List<Supplier<Activity>> activities = new ArrayList<>();
+	protected final Collection<CommandData> customSlashCommands = new ArrayList<>();
+	protected final List<Supplier<? extends Activity>> activities = new ArrayList<>();
 	protected final Map<String, Tuple<Class<?>, ArgumentParser<?, ?>>> parsers = new HashMap<>();
 	protected final Map<String, SQLColumn[]> tables = new HashMap<>();
 	protected MemberCachePolicy memberCachePolicy = MemberCachePolicy.DEFAULT;
+	protected ChunkingFilter chunkingFilter = null;
 	protected GatewayIntent[] intents;
 	protected BotDatabaseConfig databaseConfig;
 	protected boolean requireDatabase = false;
@@ -47,6 +54,13 @@ public class DiscordBotBuilder {
 	protected boolean disableSlashCommands = false;
 	protected int activityUpdateRate = -1;
 	protected String activityPrefix = "";
+
+	@Nonnull
+	@CheckReturnValue
+	public DiscordBotBuilder apply(@Nonnull Consumer<? super DefaultShardManagerBuilder> action) {
+		settings.add(action);
+		return this;
+	}
 
 	@Nonnull
 	@CheckReturnValue
@@ -65,7 +79,6 @@ public class DiscordBotBuilder {
 	@Nonnull
 	@CheckReturnValue
 	public DiscordBotBuilder enableCache(@Nonnull CacheFlag... flags) {
-		cacheFlags.clear();
 		cacheFlags.addAll(Arrays.asList(flags));
 		return this;
 	}
@@ -89,6 +102,19 @@ public class DiscordBotBuilder {
 	public DiscordBotBuilder memberCachePolicy(@Nonnull MemberCachePolicy policy) {
 		this.memberCachePolicy = policy;
 		return this;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public DiscordBotBuilder chunkingFilter(@Nonnull ChunkingFilter filter) {
+		this.chunkingFilter = filter;
+		return this;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public DiscordBotBuilder command(@Nonnull Object command) {
+		return commands(command);
 	}
 
 	@Nonnull
@@ -168,12 +194,21 @@ public class DiscordBotBuilder {
 		return this;
 	}
 
+	// TODO: better name, disables auto registering
 	@Nonnull
 	@CheckReturnValue
 	public DiscordBotBuilder disableSlashCommands() {
 		this.disableSlashCommands = true;
 		return this;
 	}
+
+	@Nonnull
+	@CheckReturnValue
+	public DiscordBotBuilder slashcommand(@Nonnull CommandData... commands) {
+		customSlashCommands.addAll(Arrays.asList(commands));
+		return this;
+	}
+
 
 	@Nonnull
 	@CheckReturnValue
@@ -184,13 +219,12 @@ public class DiscordBotBuilder {
 	@Nonnull
 	@CheckReturnValue
 	public DiscordBotBuilder activity(@Nonnull Function<String, Activity> creator, @Nonnull String activity, @Nonnull Object... args) {
-		activities.add(() -> creator.apply(StringUtils.format(activityPrefix + activity, args)));
-		return this;
+		return activity(() -> creator.apply(StringUtils.format(activityPrefix + activity, args)));
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	public DiscordBotBuilder activity(@Nonnull Supplier<Activity> activity) {
+	public DiscordBotBuilder activity(@Nonnull Supplier<? extends Activity> activity) {
 		activities.add(activity);
 		return this;
 	}

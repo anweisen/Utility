@@ -19,10 +19,6 @@ import java.util.function.Supplier;
  */
 public class DiscordBotExample extends DiscordBot {
 
-    public static void main(String[] args) throws Exception {
-        new DiscordBotExample();
-    }
-
     public DiscordBotExample() throws Exception {
         // This line is redundant and can be left out, we just left it in for clarity
         // The config is loaded in the super constructor and will throw an IOException if something goes wrong

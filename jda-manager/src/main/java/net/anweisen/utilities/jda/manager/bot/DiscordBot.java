@@ -99,7 +99,7 @@ public abstract class DiscordBot implements IDiscordBot {
 		}
 		if (requireDatabase) {
 			database.connect();
-			builder.tables.forEach((ExceptionallyBiConsumer<String, SQLColumn[]>) (name, columns) -> database.createTableIfNotExists(name, columns));
+			builder.tables.forEach((ExceptionallyBiConsumer<String, SQLColumn[]>) database::createTable);
 		}
 
 		builder.fileLanguages.addAll(config.getLanguageFiles());
@@ -144,6 +144,10 @@ public abstract class DiscordBot implements IDiscordBot {
 				.setStatusProvider(shardId -> config.getOnlineStatus())
 				.addEventListeners(new CommandListener(commandManager), this);
 
+		if (builder.chunkingFilter != null)
+			shardManagerBuilder.setChunkingFilter(builder.chunkingFilter);
+
+		builder.settings.forEach(action -> action.accept(shardManagerBuilder));
 		builder.listener.forEach(shardManagerBuilder::addEventListeners);
 
 		for (CacheFlag cache : CacheFlag.values()) {
@@ -156,7 +160,9 @@ public abstract class DiscordBot implements IDiscordBot {
 
 		shardManager = shardManagerBuilder.build();
 
-		if (!builder.disableSlashCommands)
+		if (!builder.customSlashCommands.isEmpty())
+			getJDA().updateCommands().addCommands(builder.customSlashCommands).queue();
+		else if (!builder.disableSlashCommands)
 			commandManager.setupSlashCommands(getJDA());
 
 		getJDA().retrieveApplicationInfo().queue(applicationInfo -> this.applicationInfo = applicationInfo);
@@ -174,7 +180,7 @@ public abstract class DiscordBot implements IDiscordBot {
 						index = 0;
 					}
 
-					Supplier<Activity> activitySupplier = builder.activities.get(index);
+					Supplier<? extends Activity> activitySupplier = builder.activities.get(index);
 					Activity activity = activitySupplier.get();
 					shardManager.setActivity(activity);
 

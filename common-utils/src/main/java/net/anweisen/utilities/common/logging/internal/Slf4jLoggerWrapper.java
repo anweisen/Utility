@@ -2,6 +2,7 @@ package net.anweisen.utilities.common.logging.internal;
 
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
+import net.anweisen.utilities.common.logging.lib.Slf4jILogger;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
@@ -12,7 +13,7 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.2.4
  */
-public class Slf4jLoggerWrapper implements ILogger, Logger {
+public class Slf4jLoggerWrapper extends Slf4jILogger {
 
 	protected final Logger logger;
 

@@ -4,6 +4,7 @@ import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.action.ExecutedQuery;
 
 import javax.annotation.Nonnull;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -26,12 +27,6 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 	public Optional<Document> first() {
 		if (results.isEmpty()) return Optional.empty();
 		return Optional.ofNullable(results.get(0));
-	}
-
-	@Nonnull
-	@Override
-	public Document firstOrEmpty() {
-		return first().orElse(Document.empty());
 	}
 
 	@Nonnull
@@ -81,19 +76,19 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 	}
 
 	@Override
-	public void print() {
+	public void print(@Nonnull PrintStream out) {
 		if (results.isEmpty()) {
-			System.out.println("<Empty Result>");
+			out.println("<Empty Result>");
 			return;
 		}
 
 		int index = 0;
 		for (Document result : results) {
-			System.out.print(index + ". | ");
+			out.print(index + " | ");
 			for (Entry<String, Object> entry : result.values().entrySet()) {
-				System.out.print(entry.getKey() + " = '" + entry.getValue() + "' ");
+				out.print(entry.getKey() + " = '" + entry.getValue() + "' ");
 			}
-			System.out.println();
+			out.println();
 			index++;
 		}
 	}

@@ -20,10 +20,12 @@ public class DefaultEventCreator implements EventCreator {
 	@Override
 	public CommandEvent createEvent(@Nonnull CommandManager manager, @Nonnull CommandPreProcessInfo info, @Nonnull RegisteredCommand command, boolean useEmbeds) {
 		boolean disableMentions = command.getOptions().getDisableMentions();
-		if (info.getMessage() != null) { // normal execution
+		if (info.getMessage() != null) {            // normal execution
 			return new MessageCommandEvent(manager, info.getMessage(), info.getMember(), disableMentions, useEmbeds);
-		} else { // slash command
+		} else if (info.getInteraction() != null) { // slash command
 			return new SlashCommandEvent(manager, info.getInteraction(), info.getMember(), disableMentions, useEmbeds);
+		} else {
+			throw new IllegalArgumentException();
 		}
 	}
 

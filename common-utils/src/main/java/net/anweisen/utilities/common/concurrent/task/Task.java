@@ -1,12 +1,11 @@
 package net.anweisen.utilities.common.concurrent.task;
 
 import net.anweisen.utilities.common.function.ExceptionallyFunction;
+import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -17,6 +16,16 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public interface Task<V> extends Future<V>, Callable<V> {
+
+	@Nonnull
+	static Executor getExecutor() {
+		return CompletableTask.SERVICE;
+	}
+
+	@Nonnull
+	static <V> Task<V> empty() {
+		return completed(null);
+	}
 
 	@Nonnull
 	static <V> Task<V> completed(@Nullable V value) {
@@ -46,6 +55,11 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	@Nonnull
 	static Task<Void> asyncRun(@Nonnull Runnable runnable) {
 		return asyncCall(() -> { runnable.run(); return null; });
+	}
+
+	@Nonnull
+	static Task<Void> asyncRunExceptionally(@Nonnull ExceptionallyRunnable runnable) {
+		return asyncRun(runnable);
 	}
 
 	@Nonnull
@@ -148,5 +162,13 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	default Task<Void> mapVoid() {
 		return map(v -> null);
 	}
+
+	@Nonnull
+	default <R> Task<R> map(@Nonnull Class<R> classOfC) {
+		return map(classOfC::cast);
+	}
+
+	@Nonnull
+	CompletionStage<V> stage();
 
 }

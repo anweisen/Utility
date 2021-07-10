@@ -4,6 +4,7 @@ import net.anweisen.utilities.common.logging.internal.FallbackLogger;
 import net.anweisen.utilities.common.logging.internal.JavaLoggerWrapper;
 import net.anweisen.utilities.common.logging.internal.SimpleLogger;
 import net.anweisen.utilities.common.logging.internal.Slf4jLoggerWrapper;
+import net.anweisen.utilities.common.logging.internal.factory.ConstantLoggerFactory;
 import net.anweisen.utilities.common.logging.internal.factory.DefaultLoggerFactory;
 import net.anweisen.utilities.common.logging.internal.factory.Slf4jLoggerFactory;
 import net.anweisen.utilities.common.logging.lib.JavaILogger;
@@ -14,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ServiceLoader;
 
 /**
@@ -134,6 +138,10 @@ public interface ILogger {
 		Holder.factory = factory;
 	}
 
+	static void setConstantFactory(@Nonnull ILogger logger) {
+		setFactory(new ConstantLoggerFactory(logger));
+	}
+
 	@Nonnull
 	static ILoggerFactory getFactory() {
 		return Holder.getFactory();
@@ -240,6 +248,26 @@ public interface ILogger {
 		if (this instanceof JavaILogger)
 			return (JavaILogger) this;
 		throw new IllegalStateException(this.getClass().getName() + " cannot be converted to JavaILogger");
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default PrintStream asPrintStream(@Nonnull LogLevel level) {
+		StringBuilder builder = new StringBuilder();
+		return new PrintStream(new OutputStream() {
+
+			@Override
+			public void write(int b) throws IOException {
+				char c = (char) b;
+				if (c == '\n') {
+					builder.append(c);
+				} else {
+					log(level, builder);
+					builder.setLength(0);
+				}
+			}
+
+		});
 	}
 
 }

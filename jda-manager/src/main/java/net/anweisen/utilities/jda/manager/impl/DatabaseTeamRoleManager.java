@@ -47,6 +47,8 @@ public class DatabaseTeamRoleManager implements TeamRoleManager {
 		} catch (DatabaseException ex) {
 			LOGGER.error("Unable to get team role for guild {}", guild, ex);
 			return null;
+		} catch (Exception ex) {
+			return null;
 		}
 	}
 

@@ -18,7 +18,7 @@ public class FallbackLanguage extends LanguageImpl {
 		getMessage("error-incorrect-arguments").setValue("Please use `{0}`");
 		getMessage("error-incorrect-arguments-multiple").setValue("Please use:");
 		getMessage("error-incorrect-arguments-multiple-entry").setValue("• `{0}`");
-		getMessage("error-cooldown").setValue("Please wait `{0}`s");
+		getMessage("error-cooldown").setValue("Please wait `{0}`");
 		getMessage("error-invalid-scope-private").setValue("You can only use this command in private chat");
 		getMessage("error-invalid-scope-guild").setValue("You can only use this command in a guild chat");
 		getMessage("error-missing-permission").setValue("You do not have enough permissions to execute that command");

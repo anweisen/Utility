@@ -82,7 +82,6 @@ public interface CommandEvent extends MessagePipeline {
 	/**
 	 * @throws IllegalStateException
 	 *         If this event was not triggered by a message (eg through a slashcommand).
-	 *         You can check this
 	 */
 	@Nonnull
 	Message getMessage();
@@ -96,6 +95,10 @@ public interface CommandEvent extends MessagePipeline {
 		return getMessage().getIdLong();
 	}
 
+	/**
+	 * @throws IllegalStateException
+	 *         If this event was not triggered by an interaction (eg through a message)
+	 */
 	@Nonnull
 	Interaction getInteraction();
 

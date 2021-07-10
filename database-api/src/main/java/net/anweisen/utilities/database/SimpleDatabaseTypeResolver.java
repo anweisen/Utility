@@ -23,9 +23,13 @@ public final class SimpleDatabaseTypeResolver {
 	}
 
 	@Nullable
-	@SuppressWarnings("unchecked")
 	public static Class<? extends Database> findDatabaseType(@Nonnull String name) {
-		return (Class<? extends Database>) ReflectionUtils.getClassOrNull(registry.get(name));
+		return ReflectionUtils.getClassOrNull(registry.get(name));
+	}
+
+	@Nullable
+	public static Class<? extends Database> findDatabaseType(@Nonnull String name, boolean initialize, @Nonnull ClassLoader classLoader) {
+		return ReflectionUtils.getClassOrNull(registry.get(name), initialize, classLoader);
 	}
 
 	public static void registerType(@Nonnull String name, @Nonnull String className) {

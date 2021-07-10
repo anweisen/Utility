@@ -48,8 +48,8 @@ public final class TimingsHelper {
 	}
 
 	public static void restart() {
-		stop();
-		start();
+		String name = ReflectionUtils.getCallerName();
+		restart(name);
 	}
 
 }

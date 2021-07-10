@@ -5,8 +5,6 @@ package net.anweisen.utilities.database;
  * @since 1.0
  */
 public enum Order {
-
 	HIGHEST,
 	LOWEST
-
 }

@@ -2,7 +2,7 @@ package net.anweisen.utilities.jda.manager.impl.entities.event;
 
 import net.anweisen.utilities.common.collection.Colors;
 import net.anweisen.utilities.jda.manager.CommandManager;
-import net.anweisen.utilities.jda.manager.hooks.action.ReplyMessageAction;
+import net.anweisen.utilities.jda.manager.hooks.event.ReplyMessageAction;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
 import net.anweisen.utilities.jda.manager.impl.entities.action.MessageReplyMessageAction;
 import net.anweisen.utilities.jda.manager.impl.entities.action.ReplyReplyMessageAction;

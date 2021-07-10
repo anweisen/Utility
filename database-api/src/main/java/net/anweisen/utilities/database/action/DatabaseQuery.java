@@ -1,5 +1,6 @@
 package net.anweisen.utilities.database.action;
 
+import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
@@ -44,6 +45,12 @@ public interface DatabaseQuery {
 	@Nonnull
 	@CheckReturnValue
 	ExecutedQuery execute() throws DatabaseException;
+
+	@Nonnull
+	@CheckReturnValue
+	default Task<ExecutedQuery> executeAsync() {
+		return Task.asyncCall(this::execute);
+	}
 
 	boolean equals(@Nonnull ExecutedQuery other);
 

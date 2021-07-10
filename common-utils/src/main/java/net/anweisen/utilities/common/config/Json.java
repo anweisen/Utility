@@ -21,7 +21,7 @@ public interface Json {
 	@Nonnull
 	@CheckReturnValue
 	static Json empty() {
-		return constant("{}");
+		return constant("{}", "{}");
 	}
 
 	@Nonnull
@@ -40,12 +40,6 @@ public interface Json {
 				return pretty.get();
 			}
 		};
-	}
-
-	@Nonnull
-	@CheckReturnValue
-	static Json constant(@Nonnull String json) {
-		return constant(json, json);
 	}
 
 	@Nonnull

@@ -72,9 +72,9 @@ public abstract class AbstractDatabase implements Database {
 	protected abstract void connect0() throws Exception;
 
 	@Override
-	public void createTableIfNotExistsSafely(@Nonnull String name, @Nonnull SQLColumn... columns) {
+	public void createTableSafely(@Nonnull String name, @Nonnull SQLColumn... columns) {
 		try {
-			createTableIfNotExists(name, columns);
+			createTable(name, columns);
 		} catch (DatabaseException ex) {
 			LOGGER.error("Could not create table (" + this.getClass().getSimpleName() + ")", ex);
 		}

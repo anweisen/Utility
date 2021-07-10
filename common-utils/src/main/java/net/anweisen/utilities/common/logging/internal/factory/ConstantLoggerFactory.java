@@ -14,9 +14,9 @@ import javax.annotation.Nullable;
  */
 public class ConstantLoggerFactory implements ILoggerFactory {
 
-	protected final JavaILogger logger;
+	protected final ILogger logger;
 
-	public ConstantLoggerFactory(@Nonnull JavaILogger logger) {
+	public ConstantLoggerFactory(@Nonnull ILogger logger) {
 		this.logger = logger;
 	}
 

@@ -6,12 +6,14 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -33,6 +35,13 @@ public interface Propertyable {
 	@SuppressWarnings("unchecked")
 	default <T, O extends Propertyable> Optional<T> getOptional(@Nonnull String key, @Nonnull BiFunction<O, ? super String, ? extends T> extractor) {
 		return Optional.ofNullable(extractor.apply((O) this, key));
+	}
+
+	@Nonnull
+	@SuppressWarnings("unchecked")
+	default <O extends Propertyable> Propertyable apply(@Nonnull Consumer<O> action) {
+		action.accept((O) this);
+		return this;
 	}
 
 	@Nullable

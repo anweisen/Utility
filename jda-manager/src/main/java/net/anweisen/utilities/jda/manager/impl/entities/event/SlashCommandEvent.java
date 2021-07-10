@@ -1,7 +1,7 @@
 package net.anweisen.utilities.jda.manager.impl.entities.event;
 
 import net.anweisen.utilities.jda.manager.CommandManager;
-import net.anweisen.utilities.jda.manager.hooks.action.ReplyMessageAction;
+import net.anweisen.utilities.jda.manager.hooks.event.ReplyMessageAction;
 import net.anweisen.utilities.jda.manager.utils.Embeds;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;

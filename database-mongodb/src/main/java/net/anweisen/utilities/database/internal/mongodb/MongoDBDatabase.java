@@ -80,7 +80,7 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
+	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		checkConnection();
 
 		boolean collectionExists = database.listCollectionNames()

@@ -1,5 +1,6 @@
 package net.anweisen.utilities.database.action;
 
+import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
@@ -17,6 +18,11 @@ public interface DatabaseInsertion {
 	DatabaseInsertion set(@Nonnull String field, @Nullable Object value);
 
 	void execute() throws DatabaseException;
+
+	@Nonnull
+	default Task<Void> executeAsync() {
+		return Task.asyncRunExceptionally(this::execute);
+	}
 
 	boolean equals(@Nonnull DatabaseInsertion other);
 

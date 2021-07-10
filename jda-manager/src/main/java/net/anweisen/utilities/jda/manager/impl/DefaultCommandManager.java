@@ -258,7 +258,7 @@ public class DefaultCommandManager implements CommandManager {
 		String stripped = content.substring(commandName.length()).trim();
 
 		CommandEvent event = eventCreator.createEvent(this, info, command, useEmbeds);
-		if (command.getOptions().getAutoSendTyping())
+		if (command.getOptions().getAutoSendTyping() && info.getMessage() != null)
 			info.getChannel().sendTyping().queue();
 
 		ArgumentParseResult parsed = parseArguments(command, stripped, event);
@@ -291,6 +291,10 @@ public class DefaultCommandManager implements CommandManager {
 				return callback.call(CommandProcessResult.EDITS_UNSUPPORTED, command, prefix, commandName);
 			if (!command.getOptions().getAllowWebHooks() && info.getMessage().isWebhookMessage())
 				return callback.call(CommandProcessResult.INVALID_AUTHOR, command, prefix, commandName);
+		}
+		if (info.getInteraction() != null) {
+			if (!command.getOptions().getAllowSlashCommands())
+				return callback.call(CommandProcessResult.SLASH_COMMANDS_UNSUPPORTED);
 		}
 
 		if (!command.getOptions().getAllowBots() && info.getUser().isBot())

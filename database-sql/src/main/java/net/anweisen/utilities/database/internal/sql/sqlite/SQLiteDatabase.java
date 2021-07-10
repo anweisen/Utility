@@ -42,7 +42,7 @@ public class SQLiteDatabase extends AbstractSQLDatabase {
 	}
 
 	@Override
-	protected String createURL() {
+	protected String createUrl() {
 		return "jdbc:sqlite:" + file;
 	}
 

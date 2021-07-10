@@ -63,14 +63,6 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 		return map(children(), keyMapper, valueMapper);
 	}
 
-	@Override
-	public void saveToFile(@Nonnull File file) throws IOException {
-		Writer writer = FileUtils.newBufferedWriter(file);
-		write(writer);
-		writer.flush();
-		writer.close();
-	}
-
 	@Nonnull
 	@Override
 	public Document getDocument(@Nonnull String path) {

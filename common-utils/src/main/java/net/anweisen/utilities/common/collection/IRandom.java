@@ -143,7 +143,7 @@ public interface IRandom {
 	@CheckReturnValue
 	default Random asRandom() {
 		if (!(this instanceof Random))
-			throw new IllegalStateException(this.getClass().getName() + " is not a java.util.Random");
+			throw new IllegalStateException(this.getClass().getName() + " cannot be converted a java.util.Random");
 		return (Random) this;
 	}
 
