@@ -3,6 +3,7 @@ package net.anweisen.utilities.common.concurrent.task;
 import net.anweisen.utilities.common.function.ExceptionallyFunction;
 import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.*;
@@ -164,11 +165,12 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	}
 
 	@Nonnull
-	default <R> Task<R> map(@Nonnull Class<R> classOfC) {
-		return map(classOfC::cast);
+	default <R> Task<R> map(@Nonnull Class<R> target) {
+		return map(target::cast);
 	}
 
 	@Nonnull
+	@CheckReturnValue
 	CompletionStage<V> stage();
 
 }
