@@ -1,5 +1,6 @@
 package net.anweisen.utilities.bukkit.core;
 
+import net.anweisen.utilities.bukkit.utils.misc.MinecraftVersion;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.version.Version;
 import org.bukkit.Bukkit;
@@ -73,11 +74,11 @@ public final class RequirementsChecker {
 	}
 
 	private void requireVersion(@Nonnull Version required) {
-		if (module.getServerVersionExact().isOlderThan(required)) {
+		if (MinecraftVersion.currentExact().isOlderThan(required)) {
 			log("");
 			log("============================== {} ==============================", module.getName());
 			log("");
-			log("This plugin requires the server version {} (You have: {})", required.format(), module.getServerVersionExact().format());
+			log("This plugin requires the server version {} (You have: {})", required.format(), MinecraftVersion.currentExact().format());
 			log("Please use this version (or an newer version) to be able to use this plugin!");
 			log("");
 			log("Paper Download: https://papermc.io/downloads");
