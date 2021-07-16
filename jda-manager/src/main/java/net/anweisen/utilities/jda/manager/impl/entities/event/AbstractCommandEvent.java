@@ -64,7 +64,7 @@ public abstract class AbstractCommandEvent implements CommandEvent {
 	@Nonnull
 	@Override
 	public RestAction<Message> sendPrivate(@Nonnull MessageEmbed message) {
-		return getUser().openPrivateChannel().flatMap(channel -> applySettings(channel.sendMessage(message)));
+		return getUser().openPrivateChannel().flatMap(channel -> applySettings(channel.sendMessageEmbeds(message)));
 	}
 
 	@Nonnull

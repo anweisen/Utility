@@ -80,7 +80,7 @@ public class MessageCommandEvent extends AbstractCommandEvent {
 	@Nonnull
 	@Override
 	public ReplyMessageAction send(@Nonnull MessageEmbed content) {
-		return wrap(applySettings(channel.sendMessage(content)));
+		return wrap(applySettings(channel.sendMessageEmbeds(content)));
 	}
 
 	@Nonnull
