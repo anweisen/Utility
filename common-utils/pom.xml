@@ -39,12 +39,13 @@
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+
+		<!-- Utils -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>23.0</version>
 		</dependency>
-
 
 	</dependencies>
 
