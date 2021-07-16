@@ -14,7 +14,6 @@ import net.anweisen.utilities.common.config.FileDocument;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.lib.JavaILogger;
 import net.anweisen.utilities.common.logging.internal.BukkitLoggerWrapper;
-import net.anweisen.utilities.common.logging.internal.factory.ConstantLoggerFactory;
 import net.anweisen.utilities.common.version.Version;
 import net.anweisen.utilities.bukkit.utils.misc.MinecraftVersion;
 import net.anweisen.utilities.common.config.document.YamlDocument;
@@ -313,12 +312,12 @@ public abstract class BukkitModule extends JavaPlugin {
 	}
 
 	@Nonnull
-	public ExecutorService getService() {
+	public ExecutorService getExecutor() {
 		return executorService != null ? executorService : (executorService = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("%s-Task-%s", this.getName(), threadId))));
 	}
 
 	public void runAsync(@Nonnull Runnable task) {
-		getService().submit(task);
+		getExecutor().submit(task);
 	}
 
 	public final void checkLoaded() {
