@@ -14,15 +14,5 @@
         <module name="database-mongodb" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="bukkit-utils" target="1.8" />
-      <module name="common-utils" target="1.8" />
-      <module name="database" target="8" />
-      <module name="database-api" target="1.8" />
-      <module name="database-mongodb" target="1.8" />
-      <module name="database-sql" target="1.8" />
-      <module name="jda-manager" target="1.8" />
-      <module name="jda-together" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
