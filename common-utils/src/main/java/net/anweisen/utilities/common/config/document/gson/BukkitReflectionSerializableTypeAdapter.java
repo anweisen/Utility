@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
 import net.anweisen.utilities.common.misc.GsonUtils;
-import net.anweisen.utilities.common.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -18,18 +18,18 @@ import java.util.Optional;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
+public class BukkitReflectionSerializableTypeAdapter implements GsonTypeAdapter<Object> {
 
 	public static final String ALTERNATE_KEY = "classOfType", KEY = "==";
 
 	@Override
 	public void write(@Nonnull Gson gson, @Nonnull JsonWriter writer, @Nonnull Object object) throws IOException {
 
-		Map<String, Object> map = SerializationUtils.serializeObject(object);
+		Map<String, Object> map = BukkitReflectionSerializationUtils.serializeObject(object);
 		if (map == null) return;
 
 		JsonObject json = new JsonObject();
-		json.addProperty(KEY, SerializationUtils.getSerializationName(object.getClass()));
+		json.addProperty(KEY, BukkitReflectionSerializationUtils.getSerializationName(object.getClass()));
 		GsonUtils.setDocumentProperties(gson, json, map);
 		TypeAdapters.JSON_ELEMENT.write(writer, json);
 
@@ -51,7 +51,7 @@ public class SerializableTypeAdapter implements GsonTypeAdapter<Object> {
 		}
 
 		Map<String, Object> map = GsonUtils.convertJsonObjectToMap(json);
-		return SerializationUtils.deserializeObject(map, clazz);
+		return BukkitReflectionSerializationUtils.deserializeObject(map, clazz);
 
 	}
 

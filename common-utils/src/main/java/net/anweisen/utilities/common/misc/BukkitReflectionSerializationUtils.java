@@ -12,9 +12,9 @@ import java.util.Map;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class SerializationUtils {
+public final class BukkitReflectionSerializationUtils {
 
-	private SerializationUtils() {}
+	private BukkitReflectionSerializationUtils() {}
 
 	protected static final ILogger logger = ILogger.forThisClass();
 

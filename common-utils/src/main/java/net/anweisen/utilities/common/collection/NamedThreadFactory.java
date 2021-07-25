@@ -25,7 +25,7 @@ public class NamedThreadFactory implements ThreadFactory {
 	}
 
 	public NamedThreadFactory(@Nonnull String prefix) {
-		this(id -> String.format("%s-Thread-%s", prefix, id));
+		this(id -> String.format("%s-%s", prefix, id));
 	}
 
 	public Thread newThread(@Nonnull Runnable task) {
