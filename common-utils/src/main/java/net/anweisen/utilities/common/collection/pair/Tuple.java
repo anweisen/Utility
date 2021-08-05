@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @param <F> The type of the first value
  * @param <S> The type of the second value
  */
-public class Tuple<F, S> {
+public class Tuple<F, S> implements Pair {
 
 	protected F first;
 	protected S second;
@@ -24,6 +24,17 @@ public class Tuple<F, S> {
 	public Tuple(@Nullable F first, @Nullable S second) {
 		this.first = first;
 		this.second = second;
+	}
+
+	@Override
+	public final int amount() {
+		return 2;
+	}
+
+	@Nonnull
+	@Override
+	public final Object[] values() {
+		return new Object[] { first, second };
 	}
 
 	public F getFirst() {

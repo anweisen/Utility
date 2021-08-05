@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @param <T> The type of the third value
  * @param <FF> The type of the fourth value
  */
-public class Quadro<F, S, T, FF> {
+public class Quadro<F, S, T, FF> implements Pair {
 
 	protected F first;
 	protected S second;
@@ -30,6 +30,17 @@ public class Quadro<F, S, T, FF> {
 		this.second = second;
 		this.third = third;
 		this.fourth = fourth;
+	}
+
+	@Override
+	public final int amount() {
+		return 4;
+	}
+
+	@Nonnull
+	@Override
+	public final Object[] values() {
+		return new Object[] { first, second, third, first };
 	}
 
 	public F getFirst() {

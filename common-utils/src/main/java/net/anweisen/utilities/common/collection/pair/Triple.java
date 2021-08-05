@@ -14,7 +14,7 @@ import java.util.function.Function;
  * @param <S> The type of the second value
  * @param <T> The type of the third value
  */
-public class Triple<F, S, T> {
+public class Triple<F, S, T> implements Pair {
 
 	protected F first;
 	protected S second;
@@ -27,6 +27,17 @@ public class Triple<F, S, T> {
 		this.first = first;
 		this.second = second;
 		this.third = third;
+	}
+
+	@Override
+	public final int amount() {
+		return 3;
+	}
+
+	@Nonnull
+	@Override
+	public final Object[] values() {
+		return new Object[] { first, second, third };
 	}
 
 	public F getFirst() {
