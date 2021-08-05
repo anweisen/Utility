@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.concurrent.cache;
 
+import net.anweisen.utilities.common.annotations.ReplaceWith;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,13 @@ import java.util.function.BiConsumer;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @deprecated Use {@link com.google.common.cache.Cache} instead
+ *
+ * @see com.google.common.cache.Cache
  */
+@Deprecated
+@ReplaceWith("com.google.common.cache.Cache")
 public interface ICache<K, V> {
 
 	ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(2, new NamedThreadFactory(threadId -> String.format("CacheTask-%s", threadId)));

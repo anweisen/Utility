@@ -1,6 +1,7 @@
 package net.anweisen.utilities.common.concurrent.cache;
 
-import net.anweisen.utilities.common.collection.Tuple;
+import net.anweisen.utilities.common.annotations.ReplaceWith;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.SimpleCollectionUtils;
 
@@ -18,6 +19,8 @@ import java.util.concurrent.TimeUnit;
  * @author anweisen | https://github.com/anweisen
  * @since 1.2.4
  */
+@Deprecated
+@ReplaceWith("com.google.common.cache.Cache")
 public class CleanWriteableCache<K, V> implements WriteableCache<K, V> {
 
 	protected final Map<K, Tuple<Long, V>> cache = new ConcurrentHashMap<>();

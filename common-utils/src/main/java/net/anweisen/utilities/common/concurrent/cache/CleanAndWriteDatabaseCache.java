@@ -1,22 +1,29 @@
 package net.anweisen.utilities.common.concurrent.cache;
 
-import net.anweisen.utilities.common.collection.RunnableTimerTask;
-import net.anweisen.utilities.common.collection.Tuple;
+import net.anweisen.utilities.common.annotations.ReplaceWith;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.SimpleCollectionUtils;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.2.4
  */
+@Deprecated
+@ReplaceWith("com.google.common.cache.LoadingCache")
 public class CleanAndWriteDatabaseCache<K, V> implements DatabaseCache<K, V> {
 
 	protected final Map<K, Tuple<Long, V>> cache = new ConcurrentHashMap<>();
