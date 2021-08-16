@@ -6,10 +6,9 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -24,6 +23,8 @@ import java.util.function.Function;
  * @see Config
  */
 public interface Propertyable {
+
+	<T> T get(@Nonnull String path, @Nonnull Class<T> classOfT);
 
 	@Nullable
 	Object getObject(@Nonnull String path);

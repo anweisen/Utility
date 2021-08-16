@@ -6,7 +6,7 @@ import net.anweisen.utilities.database.action.ExecutedQuery;
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
 import java.util.*;
-import java.util.Map.Entry;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -14,11 +14,11 @@ import java.util.stream.Stream;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public abstract class AbstractExecutedQuery implements ExecutedQuery {
+public class DefaultExecutedQuery implements ExecutedQuery {
 
 	protected final List<Document> results;
 
-	public AbstractExecutedQuery(@Nonnull List<Document> results) {
+	public DefaultExecutedQuery(@Nonnull List<Document> results) {
 		this.results = results;
 	}
 
@@ -44,9 +44,19 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 
 	@Nonnull
 	@Override
-	public <C extends Collection<? super Document>> C into(@Nonnull C collection) {
+	public <C extends Collection<? super Document>> C toCollection(@Nonnull C collection) {
 		collection.addAll(results);
 		return collection;
+	}
+
+	@Nonnull
+	@Override
+	public Document[] toArray(@Nonnull IntFunction<Document[]> arraySupplier) {
+		Document[] array = arraySupplier.apply(size());
+		for (int i = 0; i < size(); i++) {
+			array[i] = results.get(i);
+		}
+		return array;
 	}
 
 	@Override
@@ -57,7 +67,7 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 				return index;
 			index++;
 		}
-		return index;
+		return -1;
 	}
 
 	@Override
@@ -85,9 +95,9 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 		int index = 0;
 		for (Document result : results) {
 			out.print(index + " | ");
-			for (Entry<String, Object> entry : result.values().entrySet()) {
-				out.print(entry.getKey() + " = '" + entry.getValue() + "' ");
-			}
+			result.forEach((key, value) -> {
+				out.print(key + " = '" + value + "' ");
+			});
 			out.println();
 			index++;
 		}
@@ -98,4 +108,21 @@ public abstract class AbstractExecutedQuery implements ExecutedQuery {
 		return Collections.unmodifiableCollection(results).iterator();
 	}
 
+	@Override
+	public String toString() {
+		return "ExecutedQuery[size=" + size() + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DefaultExecutedQuery documents = (DefaultExecutedQuery) o;
+		return Objects.equals(results, documents.results);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(results);
+	}
 }

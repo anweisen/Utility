@@ -52,7 +52,7 @@ public interface ConfigProvider {
 	}
 
 	default int getShards() {
-		return getDocument().getInt("shards");
+		return getDocument().getInt("shards", -1);
 	}
 
 	@Nonnull

@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.logging;
 
+import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.logging.internal.FallbackLogger;
 import net.anweisen.utilities.common.logging.internal.JavaLoggerWrapper;
 import net.anweisen.utilities.common.logging.internal.SimpleLogger;
@@ -15,9 +16,10 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
 
 /**
@@ -185,6 +187,14 @@ public interface ILogger {
 		log(LogLevel.STATUS, message, args);
 	}
 
+	default void extended(@Nullable String message, @Nonnull Object... args) {
+		log(LogLevel.EXTENDED, message, args);
+	}
+
+	default void extended(@Nullable Object message, @Nonnull Object... args) {
+		log(LogLevel.EXTENDED, message, args);
+	}
+
 	default void debug(@Nullable String message, @Nonnull Object... args) {
 		log(LogLevel.DEBUG, message, args);
 	}
@@ -211,6 +221,10 @@ public interface ILogger {
 
 	default boolean isDebugEnabled() {
 		return isLevelEnabled(LogLevel.DEBUG);
+	}
+
+	default boolean isExtendedEnabled() {
+		return isLevelEnabled(LogLevel.EXTENDED);
 	}
 
 	default boolean isInfoEnabled() {
@@ -253,21 +267,24 @@ public interface ILogger {
 	@Nonnull
 	@CheckReturnValue
 	default PrintStream asPrintStream(@Nonnull LogLevel level) {
-		StringBuilder builder = new StringBuilder();
-		return new PrintStream(new OutputStream() {
+		try {
 
-			@Override
-			public void write(int b) throws IOException {
-				char c = (char) b;
-				if (c == '\n') {
-					builder.append(c);
-				} else {
-					log(level, builder);
-					builder.setLength(0);
+			return new PrintStream(new ByteArrayOutputStream() {
+
+				@Override
+				public void flush() throws IOException {
+					String input = this.toString(StandardCharsets.UTF_8.name());
+					this.reset();
+
+					if (input != null && !input.isEmpty() && !input.equals(System.lineSeparator())) {
+						log(level, input);
+					}
 				}
-			}
+			}, true, StandardCharsets.UTF_8.name());
 
-		});
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 }

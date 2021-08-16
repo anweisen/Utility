@@ -1,11 +1,11 @@
 package net.anweisen.utilities.jda.manager.defaults.commands;
 
 import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.jda.manager.hooks.*;
-import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
-import net.anweisen.utilities.jda.manager.hooks.option.CoolDownScope;
+import net.anweisen.utilities.jda.manager.hooks.Command;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandArguments;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
+import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
+import net.anweisen.utilities.jda.manager.hooks.option.CoolDownScope;
 import net.anweisen.utilities.jda.manager.utils.CommandHelper;
 import net.dv8tion.jda.api.Permission;
 

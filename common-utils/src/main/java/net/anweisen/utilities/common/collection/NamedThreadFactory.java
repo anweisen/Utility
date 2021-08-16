@@ -14,22 +14,23 @@ public class NamedThreadFactory implements ThreadFactory {
 	private static final AtomicInteger poolNumber = new AtomicInteger(1);
 
 	protected final int id = poolNumber.getAndIncrement();
-	protected final IntFunction<String> naming;
+	protected final IntFunction<String> nameFunction;
 	protected final ThreadGroup group;
 	protected final AtomicInteger threadNumber = new AtomicInteger(1);
 
-	public NamedThreadFactory(@Nonnull IntFunction<String> naming) {
+	public NamedThreadFactory(@Nonnull IntFunction<String> nameFunction) {
 		SecurityManager securityManager = System.getSecurityManager();
-		group = (securityManager != null) ? securityManager.getThreadGroup() : Thread.currentThread().getThreadGroup();
-		this.naming = naming;
+		this.group = (securityManager != null) ? securityManager.getThreadGroup() : Thread.currentThread().getThreadGroup();
+		this.nameFunction = nameFunction;
 	}
 
 	public NamedThreadFactory(@Nonnull String prefix) {
-		this(id -> String.format("%s-%s", prefix, id));
+		this(id -> prefix + "-" + id);
 	}
 
+	@Override
 	public Thread newThread(@Nonnull Runnable task) {
-		Thread thread = new Thread(group, task, naming.apply(threadNumber.getAndIncrement()));
+		Thread thread = new Thread(group, task, nameFunction.apply(threadNumber.getAndIncrement()));
 		if (thread.isDaemon())
 			thread.setDaemon(false);
 		if (thread.getPriority() != Thread.NORM_PRIORITY)

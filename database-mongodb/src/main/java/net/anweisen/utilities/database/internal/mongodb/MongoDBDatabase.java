@@ -7,8 +7,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import net.anweisen.utilities.database.*;
 import net.anweisen.utilities.database.DatabaseConfig;
+import net.anweisen.utilities.database.SQLColumn;
 import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
@@ -22,6 +22,7 @@ import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
@@ -35,23 +36,7 @@ import java.util.logging.Logger;
 public class MongoDBDatabase extends AbstractDatabase {
 
 	static {
-		String[] loggerNames = {
-			"org.mongodb.driver.management",
-			"org.mongodb.driver.connection",
-			"org.mongodb.driver.cluster",
-			"org.mongodb.driver.protocol.insert",
-			"org.mongodb.driver.protocol.query",
-			"org.mongodb.driver.protocol.update"
-		};
-
-		LogManager manager = LogManager.getLogManager();
-		for (String name : loggerNames) {
-			Logger logger = manager.getLogger(name);
-			if (logger == null) continue;
-			logger.setLevel(Level.OFF);
-			logger.setFilter(record -> false);
-		}
-
+		Logger.getLogger("org.mongodb").setLevel(Level.SEVERE);
 	}
 
 	protected MongoClient client;
@@ -83,13 +68,20 @@ public class MongoDBDatabase extends AbstractDatabase {
 	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		checkConnection();
 
-		boolean collectionExists = database.listCollectionNames()
-				.into(new ArrayList<>())
-				.contains(name);
+		boolean collectionExists = listTables().contains(name);
 		if (collectionExists) return;
 
 		try {
 			database.createCollection(name);
+		} catch (Exception ex) {
+			throw new DatabaseException(ex);
+		}
+	}
+
+	@Nonnull
+	public Collection<String> listTables() throws DatabaseException {
+		try {
+			return database.listCollectionNames().into(new ArrayList<>());
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}

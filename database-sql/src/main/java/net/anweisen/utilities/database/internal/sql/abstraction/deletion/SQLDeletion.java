@@ -88,10 +88,11 @@ public class SQLDeletion implements DatabaseDeletion {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			PreparedStatement statement = prepare();
 			statement.execute();
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}

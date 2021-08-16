@@ -1,16 +1,13 @@
 package net.anweisen.utilities.bukkit.utils.menu;
 
-import net.anweisen.utilities.bukkit.utils.animation.SoundSample;
 import net.anweisen.utilities.bukkit.utils.menu.positions.EmptyMenuPosition;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen

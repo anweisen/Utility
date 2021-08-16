@@ -1,10 +1,9 @@
 package net.anweisen.utilities.jda.manager.hooks.registered;
 
+import net.anweisen.utilities.jda.manager.hooks.InterfacedCommand;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandArguments;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
-import net.anweisen.utilities.jda.manager.hooks.InterfacedCommand;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public interface Task<V> extends Future<V>, Callable<V> {
 
 	@Nonnull
-	static Executor getExecutor() {
+	static ExecutorService getAsyncExecutor() {
 		return CompletableTask.SERVICE;
 	}
 
@@ -31,6 +31,11 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	@Nonnull
 	static <V> Task<V> completed(@Nullable V value) {
 		return new CompletedTask<>(value);
+	}
+
+	@Nonnull
+	static Task<Void> completedVoid() {
+		return empty();
 	}
 
 	@Nonnull
@@ -61,6 +66,26 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	@Nonnull
 	static Task<Void> asyncRunExceptionally(@Nonnull ExceptionallyRunnable runnable) {
 		return asyncRun(runnable);
+	}
+
+	@Nonnull
+	static <V> Task<V> syncCall(@Nonnull Callable<V> callable) {
+		return CompletableTask.callSync(callable);
+	}
+
+	@Nonnull
+	static <V> Task<V> syncSupply(@Nonnull Supplier<V> supplier) {
+		return syncCall(supplier::get);
+	}
+
+	@Nonnull
+	static Task<Void> syncRun(@Nonnull Runnable runnable) {
+		return syncCall(() -> { runnable.run(); return null; });
+	}
+
+	@Nonnull
+	static Task<Void> syncRunExceptionally(@Nonnull ExceptionallyRunnable runnable) {
+		return syncRun(runnable);
 	}
 
 	@Nonnull
@@ -147,6 +172,18 @@ public interface Task<V> extends Future<V>, Callable<V> {
 			return value;
 
 		throw supplier.get();
+	}
+
+	default <X extends Throwable> V getDefOrThrow(@Nonnull Function<? super String, ? extends X> creator, @Nonnull String message) throws X {
+		V value = getDef(null);
+		if (value != null)
+			return value;
+
+		throw creator.apply(message);
+	}
+
+	default V getDefOrThrow() throws IllegalStateException {
+		return getDefOrThrow(IllegalStateException::new, "Operation timed out");
 	}
 
 	V get(long timeout, @Nonnull TimeUnit unit, V def);

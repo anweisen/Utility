@@ -72,7 +72,7 @@ public class MongoDBDeletion implements DatabaseDeletion {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			MongoCollection<Document> collection = database.getCollection(this.collection);
 
@@ -90,6 +90,7 @@ public class MongoDBDeletion implements DatabaseDeletion {
 			}
 
 			collection.deleteMany(filter, options);
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}

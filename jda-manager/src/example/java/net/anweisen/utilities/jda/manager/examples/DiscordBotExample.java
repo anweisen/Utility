@@ -2,10 +2,12 @@ package net.anweisen.utilities.jda.manager.examples;
 
 import net.anweisen.utilities.database.SQLColumn;
 import net.anweisen.utilities.database.SQLColumn.Type;
-import net.anweisen.utilities.jda.manager.defaults.commands.DefaultSetPrefixCommand;
 import net.anweisen.utilities.jda.manager.bot.DiscordBot;
 import net.anweisen.utilities.jda.manager.bot.DiscordBotBuilder;
+import net.anweisen.utilities.jda.manager.defaults.commands.DefaultSetPrefixCommand;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -63,6 +65,7 @@ public class DiscordBotExample extends DiscordBot {
                 .updateActivity(15) // Activity will be updated every 15 seconds, if multiple activities were given it will cycle through them
                 .useEmbedsInCommands(false) // If this is set to true, all replies from commands will be sent as embeds with the color of the bot member in that guild
                 .commands(new CommandExample(), new DefaultSetPrefixCommand(15)) // Register your commands
+                .slashcommands(new CommandData("setprefix", "Changes the prefix").addOption(OptionType.STRING, "prefix", "The new prefix", true)) // Add the slashcommands yourself
                 .listeners(this) // Register your listeners, a CommandListener will automatically be registered
                 .memberCachePolicy(MemberCachePolicy.ALL) // All members will be hold in cache
                                                           // If you dont cache all members, commands which require members as arguments will have to send a request to discord everytime, which takes some time

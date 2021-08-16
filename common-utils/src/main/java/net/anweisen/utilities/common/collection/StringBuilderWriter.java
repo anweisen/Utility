@@ -61,6 +61,7 @@ public class StringBuilderWriter extends Writer {
 		return this.builder;
 	}
 
+	@Override
 	public String toString() {
 		return this.builder.toString();
 	}

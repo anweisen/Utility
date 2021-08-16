@@ -1,15 +1,20 @@
 package net.anweisen.utilities.jda.manager.impl;
 
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
-import net.anweisen.utilities.common.collection.Tuple;
 import net.anweisen.utilities.common.collection.WrappedException;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.jda.manager.*;
 import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.manager.arguments.IllegalArgumentParserValueException;
 import net.anweisen.utilities.jda.manager.arguments.ParserOptions;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandArguments;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
+import net.anweisen.utilities.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
+import net.anweisen.utilities.jda.manager.hooks.registered.CommandResolver;
+import net.anweisen.utilities.jda.manager.hooks.registered.CommandTask;
+import net.anweisen.utilities.jda.manager.hooks.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.manager.hooks.registered.RequiredArgument;
 import net.anweisen.utilities.jda.manager.impl.entities.CommandArgumentsImpl;
 import net.anweisen.utilities.jda.manager.impl.language.ConstantLanguageManager;
 import net.anweisen.utilities.jda.manager.impl.language.FallbackLanguage;
@@ -22,11 +27,6 @@ import net.anweisen.utilities.jda.manager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.manager.process.CommandProcessResult;
 import net.anweisen.utilities.jda.manager.process.CommandResultHandler;
 import net.anweisen.utilities.jda.manager.process.CommandResultInfo;
-import net.anweisen.utilities.jda.manager.hooks.option.CommandOptions;
-import net.anweisen.utilities.jda.manager.hooks.registered.CommandTask;
-import net.anweisen.utilities.jda.manager.hooks.registered.RegisteredCommand;
-import net.anweisen.utilities.jda.manager.hooks.registered.RequiredArgument;
-import net.anweisen.utilities.jda.manager.hooks.registered.CommandResolver;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 

@@ -1,6 +1,7 @@
 package net.anweisen.utilities.database.action;
 
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utilities.database.action.hierarchy.SetAction;
+import net.anweisen.utilities.database.action.hierarchy.WhereAction;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
@@ -11,7 +12,7 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface DatabaseUpdate {
+public interface DatabaseUpdate extends DatabaseAction<Void>, WhereAction, SetAction {
 
 	@Nonnull
 	@CheckReturnValue
@@ -37,12 +38,9 @@ public interface DatabaseUpdate {
 	@CheckReturnValue
 	DatabaseUpdate set(@Nonnull String field, @Nullable Object value);
 
-	void execute() throws DatabaseException;
-
-	@Nonnull
-	default Task<Void> executeAsync() {
-		return Task.asyncRunExceptionally(this::execute);
-	}
+	@Nullable
+	@Override
+	Void execute() throws DatabaseException;
 
 	boolean equals(@Nonnull DatabaseUpdate other);
 

@@ -1,7 +1,8 @@
 package net.anweisen.utilities.database.action;
 
-import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.database.Order;
+import net.anweisen.utilities.database.action.hierarchy.OrderedAction;
+import net.anweisen.utilities.database.action.hierarchy.WhereAction;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
@@ -12,7 +13,7 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface DatabaseQuery {
+public interface DatabaseQuery extends DatabaseAction<ExecutedQuery>, WhereAction, OrderedAction {
 
 	@Nonnull
 	@CheckReturnValue
@@ -43,14 +44,9 @@ public interface DatabaseQuery {
 	DatabaseQuery orderBy(@Nonnull String field, @Nonnull Order order);
 
 	@Nonnull
+	@Override
 	@CheckReturnValue
 	ExecutedQuery execute() throws DatabaseException;
-
-	@Nonnull
-	@CheckReturnValue
-	default Task<ExecutedQuery> executeAsync() {
-		return Task.asyncCall(this::execute);
-	}
 
 	boolean equals(@Nonnull ExecutedQuery other);
 

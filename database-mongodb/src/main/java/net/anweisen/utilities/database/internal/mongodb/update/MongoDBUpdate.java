@@ -92,7 +92,7 @@ public class MongoDBUpdate implements DatabaseUpdate {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			MongoCollection<Document> collection = database.getCollection(this.collection);
 
@@ -118,7 +118,7 @@ public class MongoDBUpdate implements DatabaseUpdate {
 			update.put("$set", newDocument);
 
 			collection.updateMany(filter, update, options);
-
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}

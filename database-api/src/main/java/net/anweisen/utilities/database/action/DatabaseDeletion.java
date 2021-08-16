@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.action;
 
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utilities.database.action.hierarchy.WhereAction;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface DatabaseDeletion {
+public interface DatabaseDeletion extends DatabaseAction<Void>, WhereAction {
 
 	@Nonnull
 	@CheckReturnValue
@@ -33,12 +33,9 @@ public interface DatabaseDeletion {
 	@CheckReturnValue
 	DatabaseDeletion whereNot(@Nonnull String field, @Nullable Object value);
 
-	void execute() throws DatabaseException;
-
-	@Nonnull
-	default Task<Void> executeAsync() {
-		return Task.asyncRunExceptionally(this::execute);
-	}
+	@Nullable
+	@Override
+	Void execute() throws DatabaseException;
 
 	boolean equals(@Nonnull DatabaseDeletion other);
 

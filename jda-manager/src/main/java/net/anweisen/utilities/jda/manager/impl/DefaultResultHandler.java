@@ -1,9 +1,9 @@
 package net.anweisen.utilities.jda.manager.impl;
 
 import net.anweisen.utilities.common.collection.NumberFormatter;
-import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
 import net.anweisen.utilities.jda.manager.CommandManager;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
+import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
 import net.anweisen.utilities.jda.manager.hooks.registered.RegisteredCommand;
 import net.anweisen.utilities.jda.manager.language.Message;
 import net.anweisen.utilities.jda.manager.process.CommandProcessResult;

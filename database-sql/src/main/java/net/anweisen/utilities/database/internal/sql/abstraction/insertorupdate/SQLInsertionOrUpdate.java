@@ -67,9 +67,9 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		if (database.query(table, where).execute().isSet()) {
-			super.execute();
+			return super.execute();
 		} else {
 			Map<String, Object> insert = new HashMap<>(values);
 			for (Entry<String, SQLWhere> entry : where.entrySet()) {
@@ -79,6 +79,7 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 			}
 
 			database.insert(table, insert).execute();
+			return null;
 		}
 	}
 

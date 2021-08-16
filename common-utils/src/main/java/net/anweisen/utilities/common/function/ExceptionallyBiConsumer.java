@@ -16,7 +16,7 @@ public interface ExceptionallyBiConsumer<T, U> extends BiConsumer<T, U> {
 		try {
 			acceptExceptionally(t, u);
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

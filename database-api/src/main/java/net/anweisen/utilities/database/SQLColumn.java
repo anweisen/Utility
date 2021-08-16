@@ -1,5 +1,6 @@
 package net.anweisen.utilities.database;
 
+import net.anweisen.utilities.common.misc.ReflectionUtils;
 import net.anweisen.utilities.common.misc.StringUtils;
 
 import javax.annotation.Nonnegative;
@@ -117,6 +118,11 @@ public final class SQLColumn {
 	@Nonnull
 	public String getType() {
 		return type;
+	}
+
+	@Nullable
+	public Type findType() {
+		return ReflectionUtils.getEnumOrNull(type.toUpperCase(), Type.class);
 	}
 
 	@Nullable

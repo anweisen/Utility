@@ -12,7 +12,7 @@ public class DatabaseException extends Exception {
 		super();
 	}
 
-	protected DatabaseException(String message) {
+	public DatabaseException(@Nonnull String message) {
 		super(message);
 	}
 
@@ -20,4 +20,7 @@ public class DatabaseException extends Exception {
 		super(cause);
 	}
 
+	public DatabaseException(@Nonnull String message, @Nonnull Throwable cause) {
+		super(message, cause);
+	}
 }

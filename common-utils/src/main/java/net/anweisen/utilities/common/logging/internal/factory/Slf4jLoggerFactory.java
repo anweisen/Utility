@@ -17,7 +17,9 @@ public class Slf4jLoggerFactory implements ILoggerFactory {
 	@Nonnull
 	@Override
 	public ILogger forName(@Nullable String name) {
-		return ILogger.forSlf4jLogger(LoggerFactory.getLogger(name == null ? "Logger" : name));
+		return ILogger.forSlf4jLogger(
+			LoggerFactory.getLogger(name == null ? "Logger" : name)
+		);
 	}
 
 	@Override

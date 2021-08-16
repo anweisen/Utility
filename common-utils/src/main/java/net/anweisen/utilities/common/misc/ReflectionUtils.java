@@ -48,6 +48,30 @@ public final class ReflectionUtils {
 		return annotatedMethods;
 	}
 
+	@Nonnull
+	public static Method getInheritedPrivateMethod(@Nonnull Class<?> clazz, @Nonnull String name, @Nonnull Class<?>... parameterTypes) throws NoSuchMethodException {
+		for (Class<?> current : ClassWalker.walk(clazz)) {
+			try {
+				return current.getDeclaredMethod(name, parameterTypes);
+			} catch (Throwable ex) {
+			}
+		}
+
+		throw new NoSuchMethodException(name);
+	}
+
+	@Nonnull
+	public static Field getInheritedPrivateField(@Nonnull Class<?> clazz, @Nonnull String name) throws NoSuchFieldException {
+		for (Class<?> current : ClassWalker.walk(clazz)) {
+			try {
+				return current.getDeclaredField(name);
+			} catch (Throwable ex) {
+			}
+		}
+
+		throw new NoSuchFieldException(name);
+	}
+
 	/**
 	 * @param classOfEnum The class containing the enum constants
 	 * @return The first enum found by the given names

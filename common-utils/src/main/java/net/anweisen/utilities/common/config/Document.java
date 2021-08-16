@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.config;
 
+import com.google.gson.JsonArray;
 import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.config.document.EmptyDocument;
 import net.anweisen.utilities.common.config.document.GsonDocument;
@@ -15,6 +16,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -60,6 +62,15 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	<K, V> Map<K, V> mapDocuments(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper);
+
+	@Nonnull
+	<R> R mapDocument(@Nonnull String path, @Nonnull Function<? super Document, ? extends R> mapper);
+
+	@Nullable
+	<R> R mapDocumentNullable(@Nonnull String path, @Nonnull Function<? super Document, ? extends R> mapper);
+
+	@Nullable
+	<T> T toInstanceOf(@Nonnull Class<T> classOfT);
 
 	/**
 	 * Returns the parent document of this document.
@@ -143,6 +154,14 @@ public interface Document extends Config, Json {
 		writer.close();
 	}
 
+	default void saveToFile(@Nonnull Path file) throws IOException {
+		FileUtils.createFile(file);
+		Writer writer = FileUtils.newBufferedWriter(file);
+		write(writer);
+		writer.flush();
+		writer.close();
+	}
+
 	@Nonnull
 	@CheckReturnValue
 	default FileDocument asFileDocument(@Nonnull File file) {
@@ -153,7 +172,7 @@ public interface Document extends Config, Json {
 	@Nonnull
 	@CheckReturnValue
 	default Document copyJson() {
-		Document document = newJsonDocument();
+		Document document = create();
 		this.forEach(document::set);
 		return document;
 	}
@@ -206,6 +225,18 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	@CheckReturnValue
+	static List<Document> parseJsonArray(@Nonnull String jsonInput) {
+		return GsonDocument.convertArrayToDocuments(GsonDocument.GSON.fromJson(jsonInput, JsonArray.class));
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static List<String> parseStringArray(@Nonnull String jsonInput) {
+		return GsonDocument.convertArrayToStrings(GsonDocument.GSON.fromJson(jsonInput, JsonArray.class));
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	static Document readJsonFile(@Nonnull File file) {
 		return readFile(GsonDocument.class, file);
 	}
@@ -218,8 +249,20 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	@CheckReturnValue
-	static Document newJsonDocument() {
+	static Document create() {
 		return new GsonDocument();
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document of(@Nonnull Object object) {
+		return new GsonDocument(object);
+	}
+
+	@Nullable
+	@CheckReturnValue
+	static Document ofNullable(@Nullable Object object) {
+		return object == null ? null : of(object);
 	}
 
 }

@@ -1,7 +1,7 @@
 package net.anweisen.utilities.common.logging.internal;
 
-import net.anweisen.utilities.common.logging.lib.JavaILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
+import net.anweisen.utilities.common.logging.lib.JavaILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

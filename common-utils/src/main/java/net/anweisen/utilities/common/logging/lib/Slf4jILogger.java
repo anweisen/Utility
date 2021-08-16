@@ -10,36 +10,36 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.3.0
  */
-public abstract class Slf4jILogger implements ILogger, Logger {
+public interface Slf4jILogger extends ILogger, Logger {
 
 	@Override
-	public abstract boolean isTraceEnabled();
+	boolean isTraceEnabled();
 
 	@Override
-	public abstract boolean isDebugEnabled();
+	boolean isDebugEnabled();
 
 	@Override
-	public abstract boolean isInfoEnabled();
+	boolean isInfoEnabled();
 
 	@Override
-	public abstract boolean isWarnEnabled();
+	boolean isWarnEnabled();
 
 	@Override
-	public abstract boolean isErrorEnabled();
+	boolean isErrorEnabled();
 
 	@Override
-	public abstract void trace(@Nullable String message, @Nonnull Object... args);
+	void trace(@Nullable String message, @Nonnull Object... args);
 
 	@Override
-	public abstract void debug(@Nullable String message, @Nonnull Object... args);
+	void debug(@Nullable String message, @Nonnull Object... args);
 
 	@Override
-	public abstract void info(@Nullable String message, @Nonnull Object... args);
+	void info(@Nullable String message, @Nonnull Object... args);
 
 	@Override
-	public abstract void warn(@Nullable String message, @Nonnull Object... args);
+	void warn(@Nullable String message, @Nonnull Object... args);
 
 	@Override
-	public abstract void error(@Nullable String message, @Nonnull Object... args);
+	void error(@Nullable String message, @Nonnull Object... args);
 
 }

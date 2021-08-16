@@ -3,10 +3,11 @@ package net.anweisen.utilities.database.internal.mongodb.query;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import net.anweisen.utilities.common.misc.MongoUtils;
+import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.action.DatabaseQuery;
 import net.anweisen.utilities.database.action.ExecutedQuery;
-import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utilities.database.internal.abstraction.DefaultExecutedQuery;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
 import net.anweisen.utilities.database.internal.mongodb.where.ObjectWhere;
@@ -99,10 +100,20 @@ public class MongoDBQuery implements DatabaseQuery {
 			MongoUtils.applyOrder(iterable, orderBy, order);
 
 			List<Document> documents = iterable.into(new ArrayList<>());
-			return new ExecutedMongoDBQuery(documents);
+			return createExecutedQuery(documents);
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Nonnull
+	private ExecutedQuery createExecutedQuery(@Nonnull List<Document> documents) {
+		List<net.anweisen.utilities.common.config.Document> results = new ArrayList<>(documents.size());
+		for (Document document : documents) {
+			results.add(new MongoDBResult(document));
+		}
+
+		return new DefaultExecutedQuery(results);
 	}
 
 	@Override

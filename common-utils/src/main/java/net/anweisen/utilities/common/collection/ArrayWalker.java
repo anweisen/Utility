@@ -2,7 +2,8 @@ package net.anweisen.utilities.common.collection;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author anweisen | https://github.com/anweisen

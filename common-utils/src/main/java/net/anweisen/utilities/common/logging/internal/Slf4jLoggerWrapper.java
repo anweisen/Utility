@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.2.4
  */
-public class Slf4jLoggerWrapper extends Slf4jILogger {
+public class Slf4jLoggerWrapper implements Slf4jILogger {
 
 	protected final Logger logger;
 
@@ -293,6 +293,7 @@ public class Slf4jLoggerWrapper extends Slf4jILogger {
 				trace(message, args);
 				return;
 			case DEBUG:
+			case EXTENDED:
 				debug(message, args);
 				return;
 			case STATUS:

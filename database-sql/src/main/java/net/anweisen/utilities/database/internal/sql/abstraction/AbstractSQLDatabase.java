@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database.internal.sql.abstraction;
 
-import net.anweisen.utilities.database.*;
 import net.anweisen.utilities.database.DatabaseConfig;
+import net.anweisen.utilities.database.SQLColumn;
 import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
@@ -121,6 +121,7 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 		return new SQLDeletion(this, table);
 	}
 
+	@Nonnull
 	public PreparedStatement prepare(@Nonnull CharSequence command, @Nonnull Object... args) throws SQLException, DatabaseException {
 		checkConnection();
 		PreparedStatement statement = connection.prepareStatement(command.toString());

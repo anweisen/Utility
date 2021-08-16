@@ -3,16 +3,15 @@ package net.anweisen.utilities.common.config.document;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.readonly.ReadOnlyDocumentWrapper;
 import net.anweisen.utilities.common.config.exceptions.ConfigReadOnlyException;
-import net.anweisen.utilities.common.misc.FileUtils;
-import net.anweisen.utilities.common.misc.SerializationUtils;
+import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -45,7 +44,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Override
 	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		if (!contains(path)) return null;
-		return SerializationUtils.deserializeObject(getDocument(path).values(), classOfT);
+		return BukkitReflectionSerializationUtils.deserializeObject(getDocument(path).values(), classOfT);
 	}
 
 	@Nonnull
@@ -53,7 +52,7 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	public <T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		return getDocumentList(path).stream()
 				.map(Document::values)
-				.map(map -> SerializationUtils.deserializeObject(map, classOfT))
+				.map(map -> BukkitReflectionSerializationUtils.deserializeObject(map, classOfT))
 				.collect(Collectors.toList());
 	}
 
@@ -61,6 +60,20 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 	@Override
 	public <K, V> Map<K, V> mapDocuments(@Nonnull Function<? super String, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper) {
 		return map(children(), keyMapper, valueMapper);
+	}
+
+	@Nonnull
+	@Override
+	public <R> R mapDocument(@Nonnull String path, @Nonnull Function<? super Document, ? extends R> mapper) {
+		Document document = getDocument(path);
+		return mapper.apply(document);
+	}
+
+	@Nullable
+	@Override
+	public <R> R mapDocumentNullable(@Nonnull String path, @Nonnull Function<? super Document, ? extends R> mapper) {
+		if (!contains(path)) return null;
+		return mapDocument(path, mapper);
 	}
 
 	@Nonnull

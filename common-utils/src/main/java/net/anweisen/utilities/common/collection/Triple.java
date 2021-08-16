@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.1
+ * @since 1.0
  *
  * @param <F> The type of the first value
  * @param <S> The type of the second value

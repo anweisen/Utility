@@ -12,8 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -43,6 +43,18 @@ public class EmptyDocument implements Document {
 	@Override
 	public Document getDocument(@Nonnull String path) {
 		return new EmptyDocument();
+	}
+
+	@Nonnull
+	@Override
+	public <R> R mapDocument(@Nonnull String path, @Nonnull Function<? super Document, ? extends R> mapper) {
+		return mapper.apply(Document.empty());
+	}
+
+	@Nullable
+	@Override
+	public <R> R mapDocumentNullable(@Nonnull String path, @Nonnull Function<? super Document, ? extends R> mapper) {
+		return null;
 	}
 
 	@Nonnull
@@ -95,6 +107,16 @@ public class EmptyDocument implements Document {
 	@Override
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		return def;
+	}
+
+	@Override
+	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return null;
+	}
+
+	@Override
+	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Nonnull

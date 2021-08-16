@@ -50,6 +50,7 @@ public abstract class AbstractDatabase implements Database {
 	public boolean connectSafely() {
 		try {
 			connect();
+			LOGGER.status("Successfully created connection to database of type " + this.getClass().getSimpleName());
 			return true;
 		} catch (DatabaseException ex) {
 			LOGGER.error("Could not connect to database (" + this.getClass().getSimpleName() + ")", ex);
@@ -62,7 +63,6 @@ public abstract class AbstractDatabase implements Database {
 		if (isConnected()) throw new DatabaseAlreadyConnectedException();
 		try {
 			connect0();
-			LOGGER.status("Successfully created connection to database of type " + this.getClass().getSimpleName());
 		} catch (Exception ex) {
 			if (ex instanceof DatabaseException) throw (DatabaseException) ex;
 			throw new DatabaseException(ex);
@@ -97,4 +97,8 @@ public abstract class AbstractDatabase implements Database {
 			throw new DatabaseConnectionClosedException();
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[connected=" + isConnected() + "]";
+	}
 }

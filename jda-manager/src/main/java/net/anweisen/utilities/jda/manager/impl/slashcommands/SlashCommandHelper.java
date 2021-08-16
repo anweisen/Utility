@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import javax.annotation.Nonnull;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.*;
 

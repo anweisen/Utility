@@ -1,13 +1,13 @@
 package net.anweisen.utilities.jda.manager;
 
 import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.jda.manager.hooks.option.CommandOptions;
+import net.anweisen.utilities.jda.manager.hooks.registered.CommandResolver;
+import net.anweisen.utilities.jda.manager.hooks.registered.CommandTask;
+import net.anweisen.utilities.jda.manager.hooks.registered.RegisteredCommand;
 import net.anweisen.utilities.jda.manager.language.LanguageManager;
 import net.anweisen.utilities.jda.manager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.manager.process.CommandResultHandler;
-import net.anweisen.utilities.jda.manager.hooks.option.CommandOptions;
-import net.anweisen.utilities.jda.manager.hooks.registered.CommandTask;
-import net.anweisen.utilities.jda.manager.hooks.registered.RegisteredCommand;
-import net.anweisen.utilities.jda.manager.hooks.registered.CommandResolver;
 import net.dv8tion.jda.api.JDA;
 
 import javax.annotation.Nonnull;

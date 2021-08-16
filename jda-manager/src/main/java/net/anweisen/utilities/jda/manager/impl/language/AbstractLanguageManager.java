@@ -1,7 +1,6 @@
 package net.anweisen.utilities.jda.manager.impl.language;
 
 import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.config.document.GsonDocument;
 import net.anweisen.utilities.common.misc.FileUtils;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
@@ -95,7 +94,7 @@ public abstract class AbstractLanguageManager implements LanguageManager {
 	@Nonnull
 	@Override
 	public LanguageManager readFile(@Nonnull File file) throws IOException {
-		Document document = new GsonDocument(file);
+		Document document = Document.readJsonFile(file);
 		Language language = languages.computeIfAbsent(FileUtils.getFileName(file), LanguageImpl::new);
 		if (defaultLanguage == null) defaultLanguage = language;
 		language.read(document);
@@ -107,7 +106,7 @@ public abstract class AbstractLanguageManager implements LanguageManager {
 	public LanguageManager readResource(@Nonnull String filename) throws IOException {
 		InputStream input = getClass().getClassLoader().getResourceAsStream(filename);
 		if (input == null) throw new FileNotFoundException("No such resource \"" + filename + '"');
-		Document document = new GsonDocument(new InputStreamReader(input));
+		Document document = Document.parseJson(new InputStreamReader(input));
 		Language language = languages.computeIfAbsent(FileUtils.getFileName(filename), LanguageImpl::new);
 		if (defaultLanguage == null) defaultLanguage = language;
 		language.read(document);

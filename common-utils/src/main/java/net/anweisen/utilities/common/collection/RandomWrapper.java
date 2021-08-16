@@ -145,4 +145,9 @@ public class RandomWrapper implements IRandom {
 	public Random asRandom() {
 		return random;
 	}
+
+	@Override
+	public String toString() {
+		return "Random[wrapped=" + random.getClass().getSimpleName() + "]";
+	}
 }

@@ -9,8 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.BiFunction;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -20,7 +19,7 @@ public final class PropertyHelper {
 
 	private PropertyHelper() {}
 
-	private static final Map<Type, BiConsumer<? extends Propertyable, ? super String>> getters = new HashMap<>();
+	private static final Map<Type, BiFunction<? extends Propertyable, ? super String, ?>> getters = new HashMap<>();
 
 	static {
 		getters.put(Character.class, Propertyable::getChar);
@@ -34,7 +33,7 @@ public final class PropertyHelper {
 		getters.put(String.class, Propertyable::getString);
 		getters.put(CharSequence.class, Propertyable::getString);
 		getters.put(List.class, Propertyable::getStringList);
-		getters.put(Document.class, ((propertyable, key) -> ((Document)propertyable).getDocument(key)));
+		getters.put(Document.class, (BiFunction<Document, String, Document>) Document::getDocument);
 		getters.put(String[].class, Propertyable::getStringArray);
 		getters.put(Date.class, Propertyable::getDate);
 		getters.put(OffsetDateTime.class, Propertyable::getDateTime);

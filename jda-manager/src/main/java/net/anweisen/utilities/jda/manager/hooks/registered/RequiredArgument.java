@@ -1,6 +1,6 @@
 package net.anweisen.utilities.jda.manager.hooks.registered;
 
-import net.anweisen.utilities.common.collection.Tuple;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.jda.manager.ParserContext;
 import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;

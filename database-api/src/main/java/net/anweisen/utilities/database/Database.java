@@ -3,10 +3,13 @@ package net.anweisen.utilities.database;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.database.action.*;
-import net.anweisen.utilities.database.exceptions.*;
+import net.anweisen.utilities.database.exceptions.DatabaseAlreadyConnectedException;
+import net.anweisen.utilities.database.exceptions.DatabaseConnectionClosedException;
+import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -15,6 +18,18 @@ import javax.annotation.Nonnull;
 public interface Database {
 
 	ILogger LOGGER = ILogger.forThisClass();
+
+	@Nonnull
+	@CheckReturnValue
+	static Database empty() {
+		return new EmptyDatabase(true);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Database unsupported() {
+		return new EmptyDatabase(false);
+	}
 
 	boolean isConnected();
 
@@ -60,6 +75,14 @@ public interface Database {
 	@Nonnull
 	default Task<Void> createTableAsync(@Nonnull String name, @Nonnull SQLColumn... columns) {
 		return Task.asyncRunExceptionally(() -> createTable(name, columns));
+	}
+
+	@Nonnull
+	Collection<String> listTables() throws DatabaseException;
+
+	@Nonnull
+	default Task<Collection<String>> listTablesAsync() {
+		return Task.asyncCall(this::listTables);
 	}
 
 	@Nonnull

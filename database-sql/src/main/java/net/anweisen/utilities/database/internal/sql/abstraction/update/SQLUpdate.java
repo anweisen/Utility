@@ -118,10 +118,11 @@ public class SQLUpdate implements DatabaseUpdate {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			PreparedStatement statement = prepare();
 			statement.executeUpdate();
+			return null;
 		} catch (SQLException ex) {
 			throw new DatabaseException(ex);
 		}

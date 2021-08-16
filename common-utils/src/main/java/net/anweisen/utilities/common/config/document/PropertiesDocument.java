@@ -13,8 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
@@ -60,6 +60,16 @@ public class PropertiesDocument extends AbstractDocument {
 	@Override
 	public Object getObject(@Nonnull String path) {
 		return properties.get(path);
+	}
+
+	@Override
+	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return classOfT.cast(getObject(path));
+	}
+
+	@Override
+	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		return copyJson().toInstanceOf(classOfT);
 	}
 
 	@Nullable
@@ -254,17 +264,21 @@ public class PropertiesDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public String toJson() {
-		Map<String, Object> map = new HashMap<>();
-		PropertiesUtils.setProperties(properties, map);
-		return new GsonDocument(map).toJson();
+		return copyJson().toJson();
 	}
 
 	@Nonnull
 	@Override
 	public String toPrettyJson() {
+		return copyJson().toPrettyJson();
+	}
+
+	@Nonnull
+	@Override
+	public Document copyJson() {
 		Map<String, Object> map = new HashMap<>();
 		PropertiesUtils.setProperties(properties, map);
-		return new GsonDocument(map).toPrettyJson();
+		return new GsonDocument(map);
 	}
 
 	@Override

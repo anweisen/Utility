@@ -16,7 +16,7 @@ public interface ExceptionallyRunnable extends Runnable, Callable<Void> {
 		try {
 			runExceptionally();
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

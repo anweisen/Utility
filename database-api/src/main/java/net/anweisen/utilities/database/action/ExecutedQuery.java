@@ -1,5 +1,6 @@
 package net.anweisen.utilities.database.action;
 
+import net.anweisen.utilities.common.annotations.ReplaceWith;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
@@ -7,8 +8,8 @@ import net.anweisen.utilities.common.logging.LogLevel;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -43,7 +44,35 @@ public interface ExecutedQuery extends Iterable<Document> {
 	Stream<Document> all();
 
 	@Nonnull
-	<C extends Collection<? super Document>> C into(@Nonnull C collection);
+	@Deprecated
+	@ReplaceWith("toCollection(Collection<Document>)")
+	default <C extends Collection<? super Document>> C into(@Nonnull C collection) {
+		return toCollection(collection);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default List<Document> toList() {
+		return toCollection((IntFunction<List<Document>>) ArrayList::new);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default Set<Document> toSet() {
+		return toCollection((IntFunction<Set<Document>>) HashSet::new);
+	}
+
+	@Nonnull
+	<C extends Collection<? super Document>> C toCollection(@Nonnull C collection);
+
+	@Nonnull
+	@CheckReturnValue
+	default <C extends Collection<? super Document>> C toCollection(@Nonnull IntFunction<C> collectionSupplier) {
+		return toCollection(collectionSupplier.apply(size()));
+	}
+
+	@Nonnull
+	Document[] toArray(@Nonnull IntFunction<Document[]> arraySupplier);
 
 	int index(@Nonnull Predicate<? super Document> filter);
 

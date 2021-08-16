@@ -3,17 +3,17 @@ package net.anweisen.utilities.common.config.document;
 import com.google.gson.*;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
+import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
 import net.anweisen.utilities.common.misc.FileUtils;
 import net.anweisen.utilities.common.misc.GsonUtils;
-import net.anweisen.utilities.common.misc.SerializationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.*;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -27,8 +27,8 @@ public class GsonDocument extends AbstractDocument {
 	static {
 		GsonBuilder builder = new GsonBuilder()
 				.disableHtmlEscaping()
-				.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(SerializationUtils::isSerializable, new SerializableTypeAdapter()))
-				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(GsonDocument.class, new GsonDocumentTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(BukkitReflectionSerializationUtils::isSerializable, new BukkitReflectionSerializableTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Document.class, new DocumentTypeAdapter()))
 				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
 				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()));
 
@@ -52,6 +52,26 @@ public class GsonDocument extends AbstractDocument {
 
 	public static void setWritePrettyJson(boolean pretty) {
 		writePrettyJson = pretty;
+	}
+
+	@Nonnull
+	public static List<Document> convertArrayToDocuments(@Nonnull JsonArray array) {
+		List<Document> list = new ArrayList<>(array.size());
+		for (JsonElement element : array) {
+			if (!element.isJsonObject()) continue;
+			list.add(new GsonDocument(element.getAsJsonObject()));
+		}
+		return list;
+	}
+
+	@Nonnull
+	public static List<String> convertArrayToStrings(@Nonnull JsonArray array) {
+		List<String> list = new ArrayList<>(array.size());
+		for (JsonElement element : array) {
+			if (!element.isJsonObject()) continue;
+			list.add(element.getAsString());
+		}
+		return list;
 	}
 
 	protected JsonObject jsonObject;
@@ -94,6 +114,10 @@ public class GsonDocument extends AbstractDocument {
 		this(new JsonObject());
 	}
 
+	public GsonDocument(@Nonnull Object object) {
+		this(GSON.toJsonTree(object).getAsJsonObject());
+	}
+
 	@Nullable
 	@Override
 	public String getString(@Nonnull String path) {
@@ -109,9 +133,15 @@ public class GsonDocument extends AbstractDocument {
 	}
 
 	@Nullable
+	@Override
 	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfType) {
 		JsonElement element = getElement(path).orElse(null);
 		return GSON.fromJson(element, classOfType);
+	}
+
+	@Override
+	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		return GSON.fromJson(jsonObject, classOfT);
 	}
 
 	@Nullable

@@ -1,10 +1,10 @@
 package net.anweisen.utilities.jda.manager.examples;
 
-import net.anweisen.utilities.jda.manager.hooks.*;
-import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
-import net.anweisen.utilities.jda.manager.hooks.option.CoolDownScope;
+import net.anweisen.utilities.jda.manager.hooks.Command;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandArguments;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
+import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
+import net.anweisen.utilities.jda.manager.hooks.option.CoolDownScope;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 

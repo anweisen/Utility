@@ -2,7 +2,6 @@ package net.anweisen.utilities.common.function;
 
 import net.anweisen.utilities.common.collection.WrappedException;
 
-import java.util.concurrent.Callable;
 import java.util.function.IntFunction;
 
 /**
@@ -17,7 +16,7 @@ public interface ExceptionallyIntFunction<R> extends IntFunction<R> {
 		try {
 			return applyExceptionally(value);
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

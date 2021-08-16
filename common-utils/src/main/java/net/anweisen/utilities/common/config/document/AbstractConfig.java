@@ -1,7 +1,6 @@
 package net.anweisen.utilities.common.config.document;
 
 import net.anweisen.utilities.common.config.Config;
-import net.anweisen.utilities.common.config.Propertyable;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
 import net.anweisen.utilities.common.version.Version;
@@ -10,10 +9,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 

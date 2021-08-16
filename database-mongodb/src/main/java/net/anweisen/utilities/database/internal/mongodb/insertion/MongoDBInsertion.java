@@ -40,9 +40,10 @@ public class MongoDBInsertion implements DatabaseInsertion {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			database.getCollection(collection).insertOne(values);
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}

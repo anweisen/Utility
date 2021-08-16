@@ -1,6 +1,5 @@
 package net.anweisen.utilities.common.logging;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.util.logging.Level;
 
@@ -10,30 +9,32 @@ import java.util.logging.Level;
  */
 public enum LogLevel {
 
-	TRACE   (1, "TRACE",  "trace",  Level.FINEST),
-	DEBUG   (2, "DEBUG",  "debug",  Level.FINE),
-	STATUS  (3, "STATUS", "status", Level.CONFIG),
-	INFO    (4, "INFO",   "info",   Level.INFO),
-	WARN    (5, "WARN",   "warn",   Level.WARNING),
-	ERROR   (6, "ERROR",  "error",  Level.SEVERE);
+	TRACE   (0,     "TRACE",    "trace",    Level.FINEST,   false),
+	DEBUG   (2,     "DEBUG",    "debug",    Level.FINER,    false),
+	EXTENDED(5,     "EXTENDED", "extended", Level.FINE,     false),
+	STATUS  (7,     "STATUS",   "status",   Level.CONFIG,   false),
+	INFO    (10,    "INFO",     "info",     Level.INFO,     false),
+	WARN    (15,    "WARN",     "warn",     Level.WARNING,  true),
+	ERROR   (25,    "ERROR",    "error",    Level.SEVERE,   true);
 
 	private final String uppercaseName, lowercaseName;
-	private final Level level;
+	private final Level javaLevel;
 	private final int value;
+	private final boolean colorized;
 
-	LogLevel(int value, @Nonnull String uppercaseName, @Nonnull String lowercaseName, @Nonnull Level level) {
+	LogLevel(int value, @Nonnull String uppercaseName, @Nonnull String lowercaseName, @Nonnull Level javaLevel, boolean colorized) {
 		this.uppercaseName = uppercaseName;
 		this.lowercaseName = lowercaseName;
-		this.level = level;
+		this.javaLevel = javaLevel;
 		this.value = value;
+		this.colorized = colorized;
 	}
 
 	@Nonnull
 	public Level getJavaUtilLevel() {
-		return level;
+		return javaLevel;
 	}
 
-	@CheckReturnValue
 	public boolean isShownAtLoggerLevel(@Nonnull LogLevel loggerLevel) {
 		return this.getValue() >= loggerLevel.getValue();
 	}
@@ -50,6 +51,10 @@ public enum LogLevel {
 	@Nonnull
 	public String getUpperCaseName() {
 		return uppercaseName;
+	}
+
+	public boolean isColorized() {
+		return colorized;
 	}
 
 	@Nonnull

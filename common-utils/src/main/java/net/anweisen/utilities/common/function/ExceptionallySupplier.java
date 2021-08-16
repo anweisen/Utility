@@ -17,7 +17,7 @@ public interface ExceptionallySupplier<T> extends Supplier<T>, Callable<T> {
 		try {
 			return getExceptionally();
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

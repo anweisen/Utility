@@ -8,6 +8,10 @@ import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatab
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -46,4 +50,20 @@ public class SQLiteDatabase extends AbstractSQLDatabase {
 		return "jdbc:sqlite:" + file;
 	}
 
+	@Nonnull
+	@Override
+	public Collection<String> listTables() throws DatabaseException {
+		try {
+			PreparedStatement statement = prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
+			ResultSet result = statement.executeQuery();
+
+			Collection<String> tables = new ArrayList<>();
+			while (result.next()) {
+				tables.add(result.getString(1));
+			}
+			return tables;
+		} catch (Exception ex) {
+			throw new DatabaseException(ex);
+		}
+	}
 }

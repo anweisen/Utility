@@ -1,9 +1,9 @@
 package net.anweisen.utilities.jda.manager.impl.parser;
 
-import net.anweisen.utilities.common.collection.Tuple;
-import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.manager.arguments.ParserOptions;
+import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.annotation.Nonnull;

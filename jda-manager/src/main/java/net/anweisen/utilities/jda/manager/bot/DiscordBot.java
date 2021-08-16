@@ -1,5 +1,6 @@
 package net.anweisen.utilities.jda.manager.bot;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
 import net.anweisen.utilities.common.config.FileDocument;
 import net.anweisen.utilities.common.function.ExceptionallyBiConsumer;
@@ -11,6 +12,7 @@ import net.anweisen.utilities.jda.manager.bot.config.BotConfigCreator;
 import net.anweisen.utilities.jda.manager.bot.config.ConfigProvider;
 import net.anweisen.utilities.jda.manager.impl.DatabaseTeamRoleManager;
 import net.anweisen.utilities.jda.manager.impl.DefaultCommandManager;
+import net.anweisen.utilities.jda.manager.impl.language.ConstantLanguageManager;
 import net.anweisen.utilities.jda.manager.impl.language.DatabaseLanguageManager;
 import net.anweisen.utilities.jda.manager.impl.prefix.ConstantPrefixProvider;
 import net.anweisen.utilities.jda.manager.impl.prefix.DatabasePrefixProvider;
@@ -60,15 +62,16 @@ public abstract class DiscordBot implements IDiscordBot {
 
 	// Built in constructor
 	private final ConfigProvider config;
-	private final Database database;
 
 	// Built on first use
 	private ScheduledExecutorService executor;
 
 	// Built on init
+	private Database database;
 	private CommandManager commandManager;
 	private ShardManager shardManager;
 	private ApplicationInfo applicationInfo;
+	private DiscordBotBuilder builder;
 
 	private boolean initialized = false;
 
@@ -77,17 +80,18 @@ public abstract class DiscordBot implements IDiscordBot {
 	}
 
 	public DiscordBot(@Nonnull ConfigProvider configProvider) throws Exception {
+		Preconditions.checkNotNull(configProvider, "ConfigProvider cannot be null");
+
 		instance = this;
 
 		config = configProvider;
-		database = config.createDatabase();
 	}
 
 	protected final void init() throws Exception {
 		if (initialized) throw new IllegalStateException("init() was already called");
 		initialized = true;
 
-		DiscordBotBuilder builder = builder().validate();
+		builder = builder().validate();
 		DiscordBotBuilder.logger.debug("Building bot with following configuration:" +
 				"\n\t" + config +
 				"\n\t" + builder +
@@ -98,8 +102,11 @@ public abstract class DiscordBot implements IDiscordBot {
 			builder.databaseConfig = new BotDatabaseConfig("guilds", "guildId", null, null, null);
 		}
 		if (requireDatabase) {
+			database = config.createDatabase();
 			database.connect();
 			builder.tables.forEach((ExceptionallyBiConsumer<String, SQLColumn[]>) database::createTable);
+		} else {
+			database = Database.unsupported();
 		}
 
 		builder.fileLanguages.addAll(config.getLanguageFiles());
@@ -122,6 +129,13 @@ public abstract class DiscordBot implements IDiscordBot {
 			languageManager.setDefaultLanguage(config.getDefaultLanguage());
 		} else if (!builder.fileLanguages.isEmpty() || !builder.resourceLanguages.isEmpty()) {
 			DiscordBotBuilder.logger.warn("Languages were registered but no database for language management is setup!");
+			LanguageManager languageManager = new ConstantLanguageManager();
+			commandManager.setLanguageManager(languageManager);
+
+			for (String filename : builder.fileLanguages) languageManager.readFile(filename);
+			for (String filename : builder.resourceLanguages) languageManager.readResource(filename);
+
+			languageManager.setDefaultLanguage(config.getDefaultLanguage());
 		}
 
 		builder.parsers.forEach((key, parser) -> commandManager.getParserContext().registerParser(key, parser.getFirst(), parser.getSecond()));
@@ -147,7 +161,7 @@ public abstract class DiscordBot implements IDiscordBot {
 		if (builder.chunkingFilter != null)
 			shardManagerBuilder.setChunkingFilter(builder.chunkingFilter);
 
-		builder.settings.forEach(action -> action.accept(shardManagerBuilder));
+		builder.builderSettings.forEach(action -> action.accept(shardManagerBuilder));
 		builder.listener.forEach(shardManagerBuilder::addEventListeners);
 
 		for (CacheFlag cache : CacheFlag.values()) {
@@ -160,9 +174,11 @@ public abstract class DiscordBot implements IDiscordBot {
 
 		shardManager = shardManagerBuilder.build();
 
+		builder.shardManagerSettings.forEach(action -> action.accept(shardManager));
+
 		if (!builder.customSlashCommands.isEmpty())
 			getJDA().updateCommands().addCommands(builder.customSlashCommands).queue();
-		else if (!builder.disableSlashCommands)
+		else if (!builder.disableAutoSlashCommands)
 			commandManager.setupSlashCommands(getJDA());
 
 		getJDA().retrieveApplicationInfo().queue(applicationInfo -> this.applicationInfo = applicationInfo);
@@ -198,6 +214,8 @@ public abstract class DiscordBot implements IDiscordBot {
 	private void onReady(@Nonnull ReadyEvent event) throws Exception {
 		if (isReady())
 			onReady();
+
+		builder.shardsSettings.forEach(action -> action.accept(event.getJDA()));
 	}
 
 	@Nonnull
@@ -238,6 +256,7 @@ public abstract class DiscordBot implements IDiscordBot {
 	 */
 	@Nonnull
 	public Database getDatabase() {
+		if (!initialized) throw new IllegalStateException("Bot is not built yet! Call init() first");
 		return database;
 	}
 

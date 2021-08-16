@@ -16,7 +16,7 @@ public interface ExceptionallyToDoubleFunction<T> extends ToDoubleFunction<T> {
 		try {
 			return applyExceptionally(t);
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

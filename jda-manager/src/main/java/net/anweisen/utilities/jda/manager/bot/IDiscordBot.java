@@ -26,6 +26,12 @@ public interface IDiscordBot {
 	@Nonnull
 	ConfigProvider getConfig();
 
+	/**
+	 * @return the {@link Database} of this bot
+	 *
+	 * @throws IllegalStateException
+	 *         If the bot has not been initialized yet
+	 */
 	@Nonnull
 	Database getDatabase();
 
@@ -33,7 +39,7 @@ public interface IDiscordBot {
 	 * @return the {@link ApplicationInfo} of this bot
 	 *
 	 * @throws IllegalStateException
-	 *         If no info was not received yet
+	 *         If no info was received yet
 	 */
 	@Nonnull
 	ApplicationInfo getApplicationInfo();
@@ -74,8 +80,14 @@ public interface IDiscordBot {
 	@Nonnull
 	ScheduledExecutorService getExecutor();
 
+	/**
+	 * @return whether the bot has been initialized
+	 */
 	boolean isInitialized();
 
+	/**
+	 * @return whether all shards are ready
+	 */
 	boolean isReady();
 
 	int getReadyShardCount();

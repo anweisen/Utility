@@ -1,6 +1,6 @@
 package net.anweisen.utilities.jda.manager;
 
-import net.anweisen.utilities.common.collection.Tuple;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;
 
 import javax.annotation.Nonnull;

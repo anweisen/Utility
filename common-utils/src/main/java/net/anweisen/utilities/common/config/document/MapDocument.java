@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.config.document;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.PropertyHelper;
@@ -11,8 +12,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -28,17 +29,18 @@ public class MapDocument extends AbstractDocument {
 
 	private final Map<String, Object> values;
 
-	public MapDocument(Map<String, Object> values) {
+	public MapDocument(@Nonnull Map<String, Object> values) {
+		Preconditions.checkNotNull(values, "Map cannot be null");
 		this.values = values;
 	}
 
-	public MapDocument(Map<String, Object> values, @Nonnull Document root, @Nullable Document parent) {
+	public MapDocument(@Nonnull Map<String, Object> values, @Nonnull Document root, @Nullable Document parent) {
 		super(root, parent);
 		this.values = values;
 	}
 
 	public MapDocument() {
-		this(new HashMap<>());
+		this(new LinkedHashMap<>());
 	}
 
 	@Override
@@ -108,6 +110,16 @@ public class MapDocument extends AbstractDocument {
 	@Override
 	public Object getObject(@Nonnull String path) {
 		return values.get(path);
+	}
+
+	@Override
+	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return classOfT.cast(getObject(path));
+	}
+
+	@Override
+	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		return copyJson().toInstanceOf(classOfT);
 	}
 
 	@Nullable

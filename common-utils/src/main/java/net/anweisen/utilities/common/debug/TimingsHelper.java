@@ -1,7 +1,7 @@
 package net.anweisen.utilities.common.debug;
 
-import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.collection.NumberFormatter;
+import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;

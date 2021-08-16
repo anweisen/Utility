@@ -1,9 +1,11 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.query;
 
+import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.action.DatabaseQuery;
 import net.anweisen.utilities.database.action.ExecutedQuery;
-import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utilities.database.internal.abstraction.DefaultExecutedQuery;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.where.ObjectWhere;
 import net.anweisen.utilities.database.internal.sql.abstraction.where.SQLWhere;
@@ -13,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -135,10 +138,27 @@ public class SQLQuery implements DatabaseQuery {
 		try {
 			PreparedStatement statement = prepare();
 			ResultSet result = statement.executeQuery();
-			return new ExecutedSQLQuery(result);
+			return createExecutedQuery(result);
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Nonnull
+	private ExecutedQuery createExecutedQuery(@Nonnull ResultSet result) throws SQLException {
+		List<Document> results = new ArrayList<>();
+		ResultSetMetaData data = result.getMetaData();
+		while (result.next()) {
+			Map<String, Object> map = new HashMap<>();
+			for (int i = 1; i <= data.getColumnCount(); i++) {
+				Object value = result.getObject(i);
+				map.put(data.getColumnLabel(i), value);
+			}
+			Document row = new SQLResult(map);
+			results.add(row);
+		}
+
+		return new DefaultExecutedQuery(results);
 	}
 
 	@Override

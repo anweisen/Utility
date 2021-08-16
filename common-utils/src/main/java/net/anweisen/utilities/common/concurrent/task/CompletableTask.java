@@ -15,7 +15,7 @@ import java.util.function.Function;
  */
 public class CompletableTask<V> implements Task<V> {
 
-	static final ExecutorService SERVICE = Executors.newCachedThreadPool(new NamedThreadFactory(threadId -> String.format("TaskProcessor-%s", threadId)));
+	static final ExecutorService SERVICE = Executors.newCachedThreadPool(new NamedThreadFactory("TaskProcessor"));
 
 	private final Collection<TaskListener<V>> listeners = new ArrayList<>();
 	private final CompletableFuture<V> future;
@@ -34,6 +34,7 @@ public class CompletableTask<V> implements Task<V> {
 		});
 	}
 
+	@Nonnull
 	public static <V> Task<V> callAsync(@Nonnull Callable<V> callable) {
 		CompletableTask<V> task = new CompletableTask<>();
 		SERVICE.execute(() -> {
@@ -43,6 +44,17 @@ public class CompletableTask<V> implements Task<V> {
 				task.fail(ex);
 			}
 		});
+		return task;
+	}
+
+	@Nonnull
+	public static <V> Task<V> callSync(@Nonnull Callable<V> callable) {
+		CompletableTask<V> task = new CompletableTask<>();
+		try {
+			task.complete(callable.call());
+		} catch (Throwable ex) {
+			task.fail(ex);
+		}
 		return task;
 	}
 

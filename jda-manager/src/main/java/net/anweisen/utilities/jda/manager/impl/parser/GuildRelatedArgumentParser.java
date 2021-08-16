@@ -1,9 +1,9 @@
 package net.anweisen.utilities.jda.manager.impl.parser;
 
-import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
-import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
 import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.manager.arguments.ParserOptions;
+import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
+import net.anweisen.utilities.jda.manager.hooks.option.CommandScope;
 import net.anweisen.utilities.jda.manager.impl.parser.GuildRelatedArgumentParser.Options;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

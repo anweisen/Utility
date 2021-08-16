@@ -2,7 +2,6 @@ package net.anweisen.utilities.common.function;
 
 import net.anweisen.utilities.common.collection.WrappedException;
 
-import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 
 /**
@@ -17,7 +16,7 @@ public interface ExceptionallyLongFunction<R> extends LongFunction<R> {
 		try {
 			return applyExceptionally(value);
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

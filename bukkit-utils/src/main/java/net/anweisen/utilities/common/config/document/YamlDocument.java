@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /**
@@ -72,6 +72,16 @@ public class YamlDocument extends AbstractDocument {
 	public Object getObject(@Nonnull String path, @Nonnull Object def) {
 		Object value = config.get(path, def);
 		return value == null ? def : value;
+	}
+
+	@Override
+	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return copyJson().get(path, classOfT);
+	}
+
+	@Override
+	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		return copyJson().toInstanceOf(classOfT);
 	}
 
 	@Nonnull
@@ -325,14 +335,20 @@ public class YamlDocument extends AbstractDocument {
 
 	@Nonnull
 	@Override
+	public Document copyJson() {
+		return new GsonDocument(values());
+	}
+
+	@Nonnull
+	@Override
 	public String toJson() {
-		return new GsonDocument(values()).toJson();
+		return copyJson().toJson();
 	}
 
 	@Nonnull
 	@Override
 	public String toPrettyJson() {
-		return new GsonDocument(values()).toPrettyJson();
+		return copyJson().toPrettyJson();
 	}
 
 	@Override

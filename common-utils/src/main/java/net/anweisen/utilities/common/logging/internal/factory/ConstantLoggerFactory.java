@@ -2,7 +2,6 @@ package net.anweisen.utilities.common.logging.internal.factory;
 
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.ILoggerFactory;
-import net.anweisen.utilities.common.logging.lib.JavaILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;

@@ -68,9 +68,9 @@ public class MongoDBInsertionOrUpdate extends MongoDBUpdate implements DatabaseI
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		if (database.query(collection, where).execute().isSet()) {
-			super.execute();
+			return super.execute();
 		} else {
 			Document document = new Document(values);
 			for (Entry<String, MongoDBWhere> entry : where.entrySet()) {
@@ -79,6 +79,7 @@ public class MongoDBInsertionOrUpdate extends MongoDBUpdate implements DatabaseI
 			}
 
 			database.insert(collection, document).execute();
+			return null;
 		}
 	}
 

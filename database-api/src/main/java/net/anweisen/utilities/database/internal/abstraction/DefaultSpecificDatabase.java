@@ -66,4 +66,9 @@ public class DefaultSpecificDatabase implements SpecificDatabase {
 	public Database getParent() {
 		return parent;
 	}
+
+	@Override
+	public String toString() {
+		return "SpecificDatabase[" + name + "]";
+	}
 }

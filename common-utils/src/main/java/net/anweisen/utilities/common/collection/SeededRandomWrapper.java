@@ -31,4 +31,8 @@ public class SeededRandomWrapper extends Random implements IRandom {
 		return seed;
 	}
 
+	@Override
+	public String toString() {
+		return "Random[seed=" + seed + "]";
+	}
 }

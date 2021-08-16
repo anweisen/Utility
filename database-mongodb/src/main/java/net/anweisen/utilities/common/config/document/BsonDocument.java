@@ -12,8 +12,8 @@ import java.awt.*;
 import java.io.*;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /**
@@ -206,6 +206,16 @@ public class BsonDocument extends AbstractDocument {
 			return Color.decode((String) value);
 
 		throw new IllegalStateException(value.getClass().getName() + " cannot be converted to java.awt.Color");
+	}
+
+	@Override
+	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return copyJson().get(path, classOfT);
+	}
+
+	@Override
+	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		return copyJson().toInstanceOf(classOfT);
 	}
 
 	@Override

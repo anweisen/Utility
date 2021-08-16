@@ -1,6 +1,6 @@
 package net.anweisen.utilities.jda.manager.arguments;
 
-import net.anweisen.utilities.common.collection.Tuple;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 

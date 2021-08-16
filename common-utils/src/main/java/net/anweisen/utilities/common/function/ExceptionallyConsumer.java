@@ -16,7 +16,7 @@ public interface ExceptionallyConsumer<T> extends Consumer<T> {
 		try {
 			acceptExceptionally(t);
 		} catch (Exception ex) {
-			throw new WrappedException(ex);
+			throw WrappedException.rethrow(ex);
 		}
 	}
 

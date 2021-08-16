@@ -1,6 +1,6 @@
 package net.anweisen.utilities.jda.manager.bot;
 
-import net.anweisen.utilities.common.collection.Tuple;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.StringUtils;
 import net.anweisen.utilities.database.SQLColumn;
@@ -8,10 +8,12 @@ import net.anweisen.utilities.database.SQLColumn.Type;
 import net.anweisen.utilities.jda.manager.arguments.ArgumentParser;
 import net.anweisen.utilities.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utilities.jda.manager.hooks.registered.CommandTask;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -35,7 +37,9 @@ public class DiscordBotBuilder {
 	protected static final ILogger logger = ILogger.forThisClass();
 
 	protected final EnumSet<CacheFlag> cacheFlags = EnumSet.allOf(CacheFlag.class);
-	protected final Collection<Consumer<? super DefaultShardManagerBuilder>> settings = new ArrayList<>();
+	protected final Collection<Consumer<? super DefaultShardManagerBuilder>> builderSettings = new ArrayList<>();
+	protected final Collection<Consumer<? super ShardManager>> shardManagerSettings = new ArrayList<>();
+	protected final Collection<Consumer<? super JDA>> shardsSettings = new ArrayList<>();
 	protected final Collection<Tuple<CommandTask, CommandOptions>> taskCommands = new ArrayList<>();
 	protected final Collection<Object> commands = new ArrayList<>();
 	protected final Collection<Object> listener = new ArrayList<>();
@@ -51,14 +55,28 @@ public class DiscordBotBuilder {
 	protected BotDatabaseConfig databaseConfig;
 	protected boolean requireDatabase = false;
 	protected boolean useEmbeds = false;
-	protected boolean disableSlashCommands = false;
+	protected boolean disableAutoSlashCommands = false;
 	protected int activityUpdateRate = -1;
 	protected String activityPrefix = "";
 
 	@Nonnull
 	@CheckReturnValue
-	public DiscordBotBuilder apply(@Nonnull Consumer<? super DefaultShardManagerBuilder> action) {
-		settings.add(action);
+	public DiscordBotBuilder applyToBuilder(@Nonnull Consumer<? super DefaultShardManagerBuilder> action) {
+		builderSettings.add(action);
+		return this;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public DiscordBotBuilder applyToShardManager(@Nonnull Consumer<? super ShardManager> action) {
+		shardManagerSettings.add(action);
+		return this;
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public DiscordBotBuilder applyToEveryShard(@Nonnull Consumer<? super JDA> action) {
+		shardsSettings.add(action);
 		return this;
 	}
 
@@ -194,17 +212,16 @@ public class DiscordBotBuilder {
 		return this;
 	}
 
-	// TODO: better name, disables auto registering
 	@Nonnull
 	@CheckReturnValue
-	public DiscordBotBuilder disableSlashCommands() {
-		this.disableSlashCommands = true;
+	public DiscordBotBuilder disableAutoSlashCommands() {
+		this.disableAutoSlashCommands = true;
 		return this;
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	public DiscordBotBuilder slashcommand(@Nonnull CommandData... commands) {
+	public DiscordBotBuilder slashcommands(@Nonnull CommandData... commands) {
 		customSlashCommands.addAll(Arrays.asList(commands));
 		return this;
 	}
@@ -285,7 +302,7 @@ public class DiscordBotBuilder {
 				if (databaseConfig.getTeamRoleColumn() != null)
 					columns.add(new SQLColumn(databaseConfig.getTeamRoleColumn(), Type.VARCHAR, 18));
 
-				if (columns.size() > 0)
+				if (columns.size() > 1)
 					createTable(databaseConfig.getGuildTable(), columns.toArray(new SQLColumn[0]));
 			}
 		}

@@ -1,8 +1,8 @@
 package net.anweisen.utilities.jda.manager;
 
 import net.anweisen.utilities.jda.manager.hooks.event.CommandEvent;
-import net.anweisen.utilities.jda.manager.process.CommandPreProcessInfo;
 import net.anweisen.utilities.jda.manager.hooks.registered.RegisteredCommand;
+import net.anweisen.utilities.jda.manager.process.CommandPreProcessInfo;
 
 import javax.annotation.Nonnull;
 

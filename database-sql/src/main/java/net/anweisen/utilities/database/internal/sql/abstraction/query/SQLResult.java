@@ -23,7 +23,7 @@ public final class SQLResult extends MapDocument {
 	@Override
 	public Document getDocument0(@Nonnull String path, @Nonnull Document root, @Nullable Document parent) {
 		try {
-			return new GsonDocument(getString(path), this, null).readonly();
+			return new GsonDocument(getString(path), this, this).readonly();
 		} catch (Exception ex) {
 			return new EmptyDocument(this, null);
 		}
