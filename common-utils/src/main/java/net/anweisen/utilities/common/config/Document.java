@@ -243,8 +243,20 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	@CheckReturnValue
+	static Document readJsonFile(@Nonnull Path file) {
+		return readJsonFile(file.toFile());
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	static Document readPropertiesFile(@Nonnull File file) {
 		return readFile(PropertiesDocument.class, file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document readPropertiesFile(@Nonnull Path file) {
+		return readPropertiesFile(file.toFile());
 	}
 
 	@Nonnull
