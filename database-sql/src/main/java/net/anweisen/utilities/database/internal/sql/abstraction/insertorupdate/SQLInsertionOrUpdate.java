@@ -84,21 +84,6 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 	}
 
 	@Override
-	public boolean equals(@Nonnull DatabaseUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertion other) {
-		return equals((Object) other);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		return super.equals(o);
 	}

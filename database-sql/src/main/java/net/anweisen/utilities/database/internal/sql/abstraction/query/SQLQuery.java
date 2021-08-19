@@ -157,13 +157,9 @@ public class SQLQuery implements DatabaseQuery {
 			Document row = new SQLResult(map);
 			results.add(row);
 		}
+		result.close();
 
 		return new DefaultExecutedQuery(results);
-	}
-
-	@Override
-	public boolean equals(@Nonnull ExecutedQuery other) {
-		return equals((Object) other);
 	}
 
 	@Override

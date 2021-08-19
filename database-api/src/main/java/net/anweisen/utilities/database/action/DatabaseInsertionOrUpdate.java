@@ -40,6 +40,4 @@ public interface DatabaseInsertionOrUpdate extends DatabaseUpdate, DatabaseInser
 	@Override
 	Void execute() throws DatabaseException;
 
-	boolean equals(@Nonnull DatabaseInsertionOrUpdate other);
-
 }

@@ -37,6 +37,4 @@ public interface DatabaseDeletion extends DatabaseAction<Void>, WhereAction {
 	@Override
 	Void execute() throws DatabaseException;
 
-	boolean equals(@Nonnull DatabaseDeletion other);
-
 }

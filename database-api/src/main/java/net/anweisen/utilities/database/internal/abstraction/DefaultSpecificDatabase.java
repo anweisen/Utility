@@ -33,6 +33,12 @@ public class DefaultSpecificDatabase implements SpecificDatabase {
 
 	@Nonnull
 	@Override
+	public DatabaseCountEntries countEntries() {
+		return parent.countEntries(name);
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseQuery query() {
 		return parent.query(name);
 	}

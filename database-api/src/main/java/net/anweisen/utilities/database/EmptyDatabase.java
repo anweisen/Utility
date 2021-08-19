@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -70,11 +71,20 @@ public class EmptyDatabase implements Database {
 
 	@Nonnull
 	@Override
-	public Collection<String> listTables() throws DatabaseException {
+	public DatabaseListTables listTables() {
 		if (!silent)
 			exception("Cannot list tables of a NOP Database");
 
-		return Collections.emptyList();
+		return new EmptyListTables();
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseCountEntries countEntries(@Nonnull String table) {
+		if (!silent)
+			exception("Cannot count entries of a NOP Database");
+
+		return new EmptyCountEntries();
 	}
 
 	@Nonnull
@@ -92,7 +102,7 @@ public class EmptyDatabase implements Database {
 		if (!silent)
 			exception("Cannot update in a NOP Database");
 
-		return new EmptyDatabaseAction();
+		return new EmptyVoidAction();
 	}
 
 	@Nonnull
@@ -101,7 +111,7 @@ public class EmptyDatabase implements Database {
 		if (!silent)
 			exception("Cannot insert into a NOP Database");
 
-		return new EmptyDatabaseAction();
+		return new EmptyVoidAction();
 	}
 
 	@Nonnull
@@ -110,7 +120,7 @@ public class EmptyDatabase implements Database {
 		if (!silent)
 			exception("Cannot inset or update into a NOP Database");
 
-		return new EmptyDatabaseAction();
+		return new EmptyVoidAction();
 	}
 
 	@Nonnull
@@ -119,7 +129,7 @@ public class EmptyDatabase implements Database {
 		if (!silent)
 			exception("Cannot delete from a NOP Database");
 
-		return new EmptyDatabaseAction();
+		return new EmptyVoidAction();
 	}
 
 	@Nonnull
@@ -195,48 +205,43 @@ public class EmptyDatabase implements Database {
 			return Task.syncCall(this::execute);
 		}
 
-		@Override
-		public boolean equals(@Nonnull ExecutedQuery other) {
-			return equals((Object) other);
-		}
-
 	}
 
-	public static class EmptyDatabaseAction implements DatabaseDeletion, DatabaseInsertion, DatabaseUpdate, DatabaseInsertionOrUpdate {
+	public static class EmptyVoidAction implements DatabaseDeletion, DatabaseInsertion, DatabaseUpdate, DatabaseInsertionOrUpdate {
 
 		@Nonnull
 		@Override
-		public EmptyDatabaseAction where(@Nonnull String field, @Nullable Object value) {
+		public EmptyVoidAction where(@Nonnull String field, @Nullable Object value) {
 			return this;
 		}
 
 		@Nonnull
 		@Override
-		public EmptyDatabaseAction where(@Nonnull String field, @Nullable Number value) {
+		public EmptyVoidAction where(@Nonnull String field, @Nullable Number value) {
 			return this;
 		}
 
 		@Nonnull
 		@Override
-		public EmptyDatabaseAction where(@Nonnull String field, @Nullable String value, boolean ignoreCase) {
+		public EmptyVoidAction where(@Nonnull String field, @Nullable String value, boolean ignoreCase) {
 			return this;
 		}
 
 		@Nonnull
 		@Override
-		public EmptyDatabaseAction where(@Nonnull String field, @Nullable String value) {
+		public EmptyVoidAction where(@Nonnull String field, @Nullable String value) {
 			return this;
 		}
 
 		@Nonnull
 		@Override
-		public EmptyDatabaseAction whereNot(@Nonnull String field, @Nullable Object value) {
+		public EmptyVoidAction whereNot(@Nonnull String field, @Nullable Object value) {
 			return this;
 		}
 
 		@Nonnull
 		@Override
-		public EmptyDatabaseAction set(@Nonnull String field, @Nullable Object value) {
+		public EmptyVoidAction set(@Nonnull String field, @Nullable Object value) {
 			return this;
 		}
 
@@ -251,25 +256,38 @@ public class EmptyDatabase implements Database {
 			return Task.completedVoid();
 		}
 
+	}
+
+	public static class EmptyCountEntries implements DatabaseCountEntries {
+
+		@Nonnull
 		@Override
-		public boolean equals(@Nonnull DatabaseUpdate other) {
-			return false;
+		public Long execute() throws DatabaseException {
+			return 0L;
 		}
 
+		@Nonnull
 		@Override
-		public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
-			return equals((Object) other);
+		public Task<Long> executeAsync() {
+			return Task.completed(0L);
 		}
 
+	}
+
+	public static class EmptyListTables implements DatabaseListTables {
+
+		@Nonnull
 		@Override
-		public boolean equals(@Nonnull DatabaseInsertion other) {
-			return equals((Object) other);
+		public List<String> execute() throws DatabaseException {
+			return Collections.emptyList();
 		}
 
+		@Nonnull
 		@Override
-		public boolean equals(@Nonnull DatabaseDeletion other) {
-			return equals((Object) other);
+		public Task<List<String>> executeAsync() {
+			return Task.completed(Collections.emptyList());
 		}
+
 	}
 
 }

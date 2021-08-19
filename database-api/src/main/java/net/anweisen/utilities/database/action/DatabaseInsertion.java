@@ -21,6 +21,4 @@ public interface DatabaseInsertion extends DatabaseAction<Void>, SetAction {
 	@Override
 	Void execute() throws DatabaseException;
 
-	boolean equals(@Nonnull DatabaseInsertion other);
-
 }

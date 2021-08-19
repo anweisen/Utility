@@ -48,6 +48,4 @@ public interface DatabaseQuery extends DatabaseAction<ExecutedQuery>, WhereActio
 	@CheckReturnValue
 	ExecutedQuery execute() throws DatabaseException;
 
-	boolean equals(@Nonnull ExecutedQuery other);
-
 }

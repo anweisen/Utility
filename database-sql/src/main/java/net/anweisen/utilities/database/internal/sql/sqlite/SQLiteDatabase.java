@@ -2,8 +2,10 @@ package net.anweisen.utilities.database.internal.sql.sqlite;
 
 import net.anweisen.utilities.common.misc.FileUtils;
 import net.anweisen.utilities.database.DatabaseConfig;
+import net.anweisen.utilities.database.action.DatabaseListTables;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
+import net.anweisen.utilities.database.internal.sql.sqlite.list.SQLiteListTables;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -52,18 +54,8 @@ public class SQLiteDatabase extends AbstractSQLDatabase {
 
 	@Nonnull
 	@Override
-	public Collection<String> listTables() throws DatabaseException {
-		try {
-			PreparedStatement statement = prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
-			ResultSet result = statement.executeQuery();
-
-			Collection<String> tables = new ArrayList<>();
-			while (result.next()) {
-				tables.add(result.getString(1));
-			}
-			return tables;
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public DatabaseListTables listTables() {
+		return new SQLiteListTables(this);
 	}
+
 }

@@ -9,7 +9,6 @@ import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -78,12 +77,12 @@ public interface Database {
 	}
 
 	@Nonnull
-	Collection<String> listTables() throws DatabaseException;
+	@CheckReturnValue
+	DatabaseListTables listTables();
 
 	@Nonnull
-	default Task<Collection<String>> listTablesAsync() {
-		return Task.asyncCall(this::listTables);
-	}
+	@CheckReturnValue
+	DatabaseCountEntries countEntries(@Nonnull String table);
 
 	@Nonnull
 	@CheckReturnValue

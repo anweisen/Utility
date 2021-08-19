@@ -23,6 +23,10 @@ public interface SpecificDatabase {
 
 	@Nonnull
 	@CheckReturnValue
+	DatabaseCountEntries countEntries();
+
+	@Nonnull
+	@CheckReturnValue
 	DatabaseQuery query();
 
 	@Nonnull

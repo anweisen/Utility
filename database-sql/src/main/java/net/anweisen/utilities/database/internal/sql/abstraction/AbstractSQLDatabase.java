@@ -5,6 +5,7 @@ import net.anweisen.utilities.database.SQLColumn;
 import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
+import net.anweisen.utilities.database.internal.sql.abstraction.count.SQLCountEntries;
 import net.anweisen.utilities.database.internal.sql.abstraction.deletion.SQLDeletion;
 import net.anweisen.utilities.database.internal.sql.abstraction.insertion.SQLInsertion;
 import net.anweisen.utilities.database.internal.sql.abstraction.insertorupdate.SQLInsertionOrUpdate;
@@ -13,10 +14,7 @@ import net.anweisen.utilities.database.internal.sql.abstraction.update.SQLUpdate
 import net.anweisen.utilities.database.internal.sql.abstraction.where.SQLWhere;
 
 import javax.annotation.Nonnull;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 
 /**
@@ -75,10 +73,15 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 
 			PreparedStatement statement = prepare(command.toString());
 			statement.execute();
-
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseCountEntries countEntries(@Nonnull String table) {
+		return new SQLCountEntries(this, table);
 	}
 
 	@Nonnull

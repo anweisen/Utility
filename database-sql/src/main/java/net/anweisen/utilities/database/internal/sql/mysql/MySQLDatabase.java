@@ -1,8 +1,10 @@
 package net.anweisen.utilities.database.internal.sql.mysql;
 
 import net.anweisen.utilities.database.DatabaseConfig;
+import net.anweisen.utilities.database.action.DatabaseListTables;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
+import net.anweisen.utilities.database.internal.sql.mysql.list.MySQLListTables;
 
 import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;
@@ -36,18 +38,8 @@ public class MySQLDatabase extends AbstractSQLDatabase {
 
 	@Nonnull
 	@Override
-	public Collection<String> listTables() throws DatabaseException {
-		try {
-			PreparedStatement statement = prepare("SHOW TABLES");
-			ResultSet result = statement.executeQuery();
-
-			Collection<String> tables = new ArrayList<>();
-			while (result.next()) {
-				tables.add(result.getString(1));
-			}
-			return tables;
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public DatabaseListTables listTables() {
+		return new MySQLListTables(this);
 	}
+
 }

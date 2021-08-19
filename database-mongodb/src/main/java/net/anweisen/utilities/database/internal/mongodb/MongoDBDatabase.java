@@ -12,9 +12,11 @@ import net.anweisen.utilities.database.SQLColumn;
 import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
+import net.anweisen.utilities.database.internal.mongodb.count.MongoDBCountEntries;
 import net.anweisen.utilities.database.internal.mongodb.deletion.MongoDBDeletion;
 import net.anweisen.utilities.database.internal.mongodb.insertion.MongoDBInsertion;
 import net.anweisen.utilities.database.internal.mongodb.insertorupdate.MongoDBInsertionOrUpdate;
+import net.anweisen.utilities.database.internal.mongodb.list.MongoDBListTables;
 import net.anweisen.utilities.database.internal.mongodb.query.MongoDBQuery;
 import net.anweisen.utilities.database.internal.mongodb.update.MongoDBUpdate;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
@@ -68,7 +70,7 @@ public class MongoDBDatabase extends AbstractDatabase {
 	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		checkConnection();
 
-		boolean collectionExists = listTables().contains(name);
+		boolean collectionExists = listTables().execute().contains(name);
 		if (collectionExists) return;
 
 		try {
@@ -79,12 +81,15 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Nonnull
-	public Collection<String> listTables() throws DatabaseException {
-		try {
-			return database.listCollectionNames().into(new ArrayList<>());
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	@Override
+	public DatabaseListTables listTables() {
+		return new MongoDBListTables(this);
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseCountEntries countEntries(@Nonnull String table) {
+		return new MongoDBCountEntries(this, table);
 	}
 
 	@Nonnull
@@ -135,6 +140,11 @@ public class MongoDBDatabase extends AbstractDatabase {
 	@Nonnull
 	public MongoCollection<Document> getCollection(@Nonnull String collection) {
 		return database.getCollection(collection);
+	}
+
+	@Nonnull
+	public MongoDatabase getDatabase() {
+		return database;
 	}
 
 	@Override

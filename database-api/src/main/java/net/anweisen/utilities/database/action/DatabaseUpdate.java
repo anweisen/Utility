@@ -42,6 +42,4 @@ public interface DatabaseUpdate extends DatabaseAction<Void>, WhereAction, SetAc
 	@Override
 	Void execute() throws DatabaseException;
 
-	boolean equals(@Nonnull DatabaseUpdate other);
-
 }
