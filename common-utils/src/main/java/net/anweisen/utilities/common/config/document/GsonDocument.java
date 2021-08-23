@@ -141,6 +141,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Override
 	public <T> T toInstanceOf(@Nonnull Class<T> classOfT) {
+		if (isEmpty()) return null;
 		return GSON.fromJson(jsonObject, classOfT);
 	}
 
