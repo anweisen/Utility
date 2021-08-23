@@ -45,4 +45,11 @@ public class ArrayWalker<T> implements Iterable<T> {
 		};
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public void forEach(Consumer<? super T> action) {
+		for (int i = 0; i < length; i++) {
+			action.accept((T) Array.get(array, i));
+		}
+	}
 }
