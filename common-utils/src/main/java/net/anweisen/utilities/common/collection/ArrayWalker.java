@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -21,6 +22,10 @@ public class ArrayWalker<T> implements Iterable<T> {
 	}
 
 	public static <T> ArrayWalker<T> walk(@Nonnull Object array) {
+		return new ArrayWalker<>(array);
+	}
+	
+	public static <T> ArrayWalker<T> walk(@Nonnull T... array) {
 		return new ArrayWalker<>(array);
 	}
 
