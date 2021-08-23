@@ -171,6 +171,12 @@ public interface Document extends Config, Json {
 
 	@Nonnull
 	@CheckReturnValue
+	default FileDocument asFileDocument(@Nonnull Path file) {
+		return asFileDocument(file.toFile());
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	default Document copyJson() {
 		Document document = create();
 		this.forEach(document::set);
@@ -204,6 +210,12 @@ public interface Document extends Config, Json {
 		} catch (InvocationTargetException ex) {
 			throw new WrappedException(ex);
 		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document readFile(@Nonnull Class<? extends Document> classOfDocument, @Nonnull Path file) {
+		return readFile(classOfDocument, file.toFile());
 	}
 
 	/**

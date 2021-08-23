@@ -138,13 +138,31 @@ public interface FileDocument extends Document {
 
 	@Nonnull
 	@CheckReturnValue
+	static FileDocument readFile(@Nonnull Class<? extends Document> classOfDocument, @Nonnull Path file) {
+		return Document.readFile(classOfDocument, file).asFileDocument(file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	static FileDocument readJsonFile(@Nonnull File file) {
 		return readFile(GsonDocument.class, file);
 	}
 
 	@Nonnull
 	@CheckReturnValue
+	static FileDocument readJsonFile(@Nonnull Path file) {
+		return readFile(GsonDocument.class, file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	static FileDocument readPropertiesFile(@Nonnull File file) {
+		return readFile(PropertiesDocument.class, file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static FileDocument readPropertiesFile(@Nonnull Path file) {
 		return readFile(PropertiesDocument.class, file);
 	}
 
