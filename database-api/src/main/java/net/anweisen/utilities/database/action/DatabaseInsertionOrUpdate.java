@@ -1,5 +1,7 @@
 package net.anweisen.utilities.database.action;
 
+import net.anweisen.utilities.database.Database;
+import net.anweisen.utilities.database.SpecificDatabase;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
@@ -9,6 +11,9 @@ import javax.annotation.Nullable;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see Database#insertOrUpdate(String)
+ * @see SpecificDatabase#insertOrUpdate()
  */
 public interface DatabaseInsertionOrUpdate extends DatabaseUpdate, DatabaseInsertion {
 

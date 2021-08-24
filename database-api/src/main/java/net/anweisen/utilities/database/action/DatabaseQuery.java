@@ -1,6 +1,8 @@
 package net.anweisen.utilities.database.action;
 
+import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.Order;
+import net.anweisen.utilities.database.SpecificDatabase;
 import net.anweisen.utilities.database.action.hierarchy.OrderedAction;
 import net.anweisen.utilities.database.action.hierarchy.WhereAction;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
@@ -12,6 +14,9 @@ import javax.annotation.Nullable;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see Database#query(String)
+ * @see SpecificDatabase#query()
  */
 public interface DatabaseQuery extends DatabaseAction<ExecutedQuery>, WhereAction, OrderedAction {
 

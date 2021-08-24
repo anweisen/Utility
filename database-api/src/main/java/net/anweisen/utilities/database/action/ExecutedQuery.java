@@ -1,6 +1,5 @@
 package net.anweisen.utilities.database.action;
 
-import net.anweisen.utilities.common.annotations.ReplaceWith;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
@@ -16,6 +15,8 @@ import java.util.stream.Stream;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see DatabaseQuery#execute()
  */
 public interface ExecutedQuery extends Iterable<Document> {
 
@@ -42,13 +43,6 @@ public interface ExecutedQuery extends Iterable<Document> {
 	@Nonnull
 	@CheckReturnValue
 	Stream<Document> all();
-
-	@Nonnull
-	@Deprecated
-	@ReplaceWith("toCollection(Collection<Document>)")
-	default <C extends Collection<? super Document>> C into(@Nonnull C collection) {
-		return toCollection(collection);
-	}
 
 	@Nonnull
 	@CheckReturnValue

@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  *
+ * @see DatabaseException
+ *
  * @see DatabaseAction#executeUnsigned()
  */
 public class UnsignedDatabaseException extends WrappedException {
@@ -17,4 +19,9 @@ public class UnsignedDatabaseException extends WrappedException {
 		super(cause);
 	}
 
+	@Nonnull
+	@Override
+	public DatabaseException getCause() {
+		return (DatabaseException) super.getCause();
+	}
 }
