@@ -37,6 +37,12 @@ public class WrappedException extends RuntimeException {
 	}
 
 	@Nonnull
+	@Override
+	public Throwable getCause() {
+		return super.getCause();
+	}
+
+	@Nonnull
 	public static RuntimeException rethrow(@Nonnull Throwable ex) {
 		if (ex instanceof Error)
 			throw (Error) ex;
