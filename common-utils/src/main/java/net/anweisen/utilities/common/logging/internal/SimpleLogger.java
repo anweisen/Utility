@@ -1,7 +1,7 @@
 package net.anweisen.utilities.common.logging.internal;
 
 import net.anweisen.utilities.common.logging.LogLevel;
-import org.slf4j.Logger;
+import net.anweisen.utilities.common.logging.lib.Slf4jILogger;
 import org.slf4j.Marker;
 
 import javax.annotation.Nonnull;
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class SimpleLogger extends FallbackLogger implements Logger {
+public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 
 	public SimpleLogger(@Nullable String name) {
 		super(name);
