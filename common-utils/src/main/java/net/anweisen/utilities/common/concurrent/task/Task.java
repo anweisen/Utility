@@ -13,8 +13,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
+ * A task that may complete (done / failed / cancelled) in the future or may already be done.
+ *
+ * For the completion can be listened by calling {@link #onComplete(Consumer)}, for the cancellation by {@link #onCancelled(Runnable)} and for failure by {@link #onFailure(Consumer)}.
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see #asyncCall(Callable)
+ * @see #completed(Object)
  */
 public interface Task<V> extends Future<V>, Callable<V> {
 
