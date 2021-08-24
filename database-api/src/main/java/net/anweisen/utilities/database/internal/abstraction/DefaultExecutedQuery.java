@@ -88,7 +88,7 @@ public class DefaultExecutedQuery implements ExecutedQuery {
 	@Override
 	public void print(@Nonnull PrintStream out) {
 		if (results.isEmpty()) {
-			out.println("<Empty Result>");
+			out.println("<Empty ExecutedQuery Result>");
 			return;
 		}
 
