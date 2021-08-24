@@ -5,6 +5,7 @@ import net.anweisen.utilities.database.SpecificDatabase;
 import net.anweisen.utilities.database.action.*;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -76,5 +77,18 @@ public class DefaultSpecificDatabase implements SpecificDatabase {
 	@Override
 	public String toString() {
 		return "SpecificDatabase[" + name + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DefaultSpecificDatabase that = (DefaultSpecificDatabase) o;
+		return Objects.equals(parent, that.parent) && Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(parent, name);
 	}
 }
