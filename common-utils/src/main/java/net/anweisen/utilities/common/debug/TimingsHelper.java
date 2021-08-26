@@ -34,6 +34,11 @@ public final class TimingsHelper {
 		LOGGER.debug("Finished timings '{}' within {}ms ({}s)", id, time, NumberFormatter.DOUBLE_FLOATING_POINT.format(time / 1000d));
 	}
 
+	public static void restart(@Nonnull String id) {
+		stop(id);
+		start(id);
+	}
+
 	public static void start() {
 		start(ReflectionUtils.getCallerName());
 	}
@@ -42,14 +47,8 @@ public final class TimingsHelper {
 		stop(ReflectionUtils.getCallerName());
 	}
 
-	public static void restart(@Nonnull String id) {
-		stop(id);
-		start(id);
-	}
-
 	public static void restart() {
-		String name = ReflectionUtils.getCallerName();
-		restart(name);
+		restart(ReflectionUtils.getCallerName());
 	}
 
 }
