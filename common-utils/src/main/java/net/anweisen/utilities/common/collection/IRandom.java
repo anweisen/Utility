@@ -46,6 +46,12 @@ public interface IRandom {
 		return wrap(new SecureRandom());
 	}
 
+	@Nonnull
+	@CheckReturnValue
+	static IRandom singleton() {
+		return SingletonRandom.INSTANCE;
+	}
+
 	long getSeed();
 
 	void setSeed(long seed);
