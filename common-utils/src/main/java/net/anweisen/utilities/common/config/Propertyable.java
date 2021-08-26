@@ -45,6 +45,13 @@ public interface Propertyable {
 		return this;
 	}
 
+	@Nonnull
+	default <O extends Propertyable> Propertyable applyIf(boolean expression, @Nonnull Consumer<O> action) {
+		if (expression)
+			apply(action);
+		return this;
+	}
+
 	@Nullable
 	String getString(@Nonnull String path);
 

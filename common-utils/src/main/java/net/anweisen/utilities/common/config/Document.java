@@ -6,6 +6,7 @@ import net.anweisen.utilities.common.config.document.EmptyDocument;
 import net.anweisen.utilities.common.config.document.GsonDocument;
 import net.anweisen.utilities.common.config.document.PropertiesDocument;
 import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utilities.common.misc.GsonUtils;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -17,6 +18,8 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -118,6 +121,12 @@ public interface Document extends Config, Json {
 	@Override
 	default <O extends Propertyable> Document apply(@Nonnull Consumer<O> action) {
 		return (Document) Config.super.apply(action);
+	}
+
+	@Nonnull
+	@Override
+	default <O extends Propertyable> Document applyIf(boolean expression, @Nonnull Consumer<O> action) {
+		return (Document) Config.super.applyIf(expression, action);
 	}
 
 	/**
@@ -247,6 +256,15 @@ public interface Document extends Config, Json {
 		return GsonDocument.convertArrayToStrings(GsonDocument.GSON.fromJson(jsonInput, JsonArray.class));
 	}
 
+	static void saveArray(@Nonnull Iterable<?> objects, @Nonnull Path file) throws IOException {
+		FileUtils.createFile(file);
+		Writer writer = FileUtils.newBufferedWriter(file);
+		JsonArray array = GsonUtils.convertIterableToJsonArray(GsonDocument.GSON, objects);
+		(GsonDocument.isWritePrettyJson() ? GsonDocument.GSON_PRETTY_PRINT : GsonDocument.GSON).toJson(array, writer);
+		writer.flush();
+		writer.close();
+	}
+
 	@Nonnull
 	@CheckReturnValue
 	static Document readJsonFile(@Nonnull File file) {
@@ -257,6 +275,20 @@ public interface Document extends Config, Json {
 	@CheckReturnValue
 	static Document readJsonFile(@Nonnull Path file) {
 		return readJsonFile(file.toFile());
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static List<Document> readJsonArrayFile(@Nonnull Path file) {
+		try {
+			JsonArray array = GsonDocument.GSON.fromJson(FileUtils.newBufferedReader(file), JsonArray.class);
+			if (array == null) return new ArrayList<>();
+			List<Document> documents = new ArrayList<>(array.size());
+			array.forEach(element -> documents.add(new GsonDocument(element.getAsJsonObject())));
+			return documents;
+		} catch (IOException ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 	@Nonnull
@@ -287,6 +319,14 @@ public interface Document extends Config, Json {
 	@CheckReturnValue
 	static Document ofNullable(@Nullable Object object) {
 		return object == null ? null : of(object);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static List<Document> arrayOf(@Nonnull Collection<?> objects) {
+		List<Document> documents = new ArrayList<>(objects.size());
+		objects.forEach(object -> documents.add(Document.of(object)));
+		return documents;
 	}
 
 }

@@ -63,6 +63,12 @@ public interface Config extends Propertyable {
 	}
 
 	@Nonnull
+	@Override
+	default <O extends Propertyable> Config applyIf(boolean expression, @Nonnull Consumer<O> action) {
+		return (Config) Propertyable.super.applyIf(expression, action);
+	}
+
+	@Nonnull
 	default Config increment(@Nonnull String path, double amount) {
 		return set(path, getDouble(path) + amount);
 	}

@@ -54,6 +54,10 @@ public class GsonDocument extends AbstractDocument {
 		writePrettyJson = pretty;
 	}
 
+	public static boolean isWritePrettyJson() {
+		return writePrettyJson;
+	}
+
 	@Nonnull
 	public static List<Document> convertArrayToDocuments(@Nonnull JsonArray array) {
 		List<Document> list = new ArrayList<>(array.size());
