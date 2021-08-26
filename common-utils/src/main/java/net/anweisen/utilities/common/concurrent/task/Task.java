@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.concurrent.task;
 
+import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.function.ExceptionallyFunction;
 import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 
@@ -169,31 +170,41 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	@Nonnull
 	Task<V> clearListeners();
 
-	default V getDef(V def) {
-		return get(5, TimeUnit.SECONDS, def);
+	@Override
+	V get() throws InterruptedException, ExecutionException;
+
+	@Override
+	V get(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException;
+
+	default V getOrDefault(V def) {
+		try {
+			return get();
+		} catch (InterruptedException ex) {
+			throw new WrappedException(ex);
+		} catch (ExecutionException ex) {
+			return def;
+		}
 	}
 
-	default <X extends Throwable> V getDefOrThrow(@Nonnull Supplier<X> supplier) throws X {
-		V value = getDef(null);
-		if (value != null)
-			return value;
-
-		throw supplier.get();
+	default V getOrDefault(long timeout, @Nonnull TimeUnit unit, V def) {
+		try {
+			return this.get(timeout, unit);
+		} catch (InterruptedException ex) {
+			throw new WrappedException(ex);
+		} catch (ExecutionException | TimeoutException ex) {
+			return def;
+		}
 	}
 
-	default <X extends Throwable> V getDefOrThrow(@Nonnull Function<? super String, ? extends X> creator, @Nonnull String message) throws X {
-		V value = getDef(null);
-		if (value != null)
-			return value;
-
-		throw creator.apply(message);
+	default V getBeforeTimeout(long timeout, @Nonnull TimeUnit unit) {
+		try {
+			return get(timeout, unit);
+		} catch (ExecutionException | InterruptedException ex) {
+			throw new WrappedException(ex);
+		} catch (TimeoutException ex) {
+			throw new IllegalStateException("Operation timed out (" + timeout + " " + unit + ")");
+		}
 	}
-
-	default V getDefOrThrow() throws IllegalStateException {
-		return getDefOrThrow(IllegalStateException::new, "Operation timed out");
-	}
-
-	V get(long timeout, @Nonnull TimeUnit unit, V def);
 
 	@Nonnull
 	<R> Task<R> map(@Nullable Function<? super V, ? extends R> mapper);

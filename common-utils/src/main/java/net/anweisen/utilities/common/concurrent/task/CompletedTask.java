@@ -54,11 +54,11 @@ public class CompletedTask<V> implements Task<V> {
 	}
 
 	@Override
-	public V get(long timeout, @Nonnull TimeUnit unit, V def) {
-		if (failure != null)
-			return def;
+	public V getOrDefault(long timeout, @Nonnull TimeUnit unit, V def) {
+		if (value != null)
+			return value;
 
-		return value;
+		return def;
 	}
 
 	@Override

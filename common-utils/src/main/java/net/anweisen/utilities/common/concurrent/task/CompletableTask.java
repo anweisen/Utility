@@ -1,6 +1,7 @@
 package net.anweisen.utilities.common.concurrent.task;
 
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
+import net.anweisen.utilities.common.collection.WrappedException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,15 +84,6 @@ public class CompletableTask<V> implements Task<V> {
 		return this;
 	}
 
-	@Override
-	public V get(long time, @Nonnull TimeUnit timeUnit, V def) {
-		try {
-			return this.get(time, timeUnit);
-		} catch (InterruptedException | ExecutionException | TimeoutException exception) {
-			return def;
-		}
-	}
-
 	public void fail(Throwable throwable) {
 		this.failure = throwable;
 		this.future.completeExceptionally(throwable);
@@ -142,12 +134,12 @@ public class CompletableTask<V> implements Task<V> {
 
 	@Override
 	public V get() throws InterruptedException, ExecutionException {
-		return this.future.get();
+		return future.get();
 	}
 
 	@Override
-	public V get(long l, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.future.get(l, unit);
+	public V get(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+		return future.get(timeout, unit);
 	}
 
 	@Nonnull
