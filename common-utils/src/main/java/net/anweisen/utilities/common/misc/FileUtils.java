@@ -153,21 +153,6 @@ public final class FileUtils {
 		}
 	}
 
-	@Nonnull
-	@CheckReturnValue
-	public static File createTempFile(@Nullable String type) throws IOException {
-		File file;
-
-		if (tempDirectory == null) {
-			file = File.createTempFile(UUID.randomUUID().toString(), type);
-			file.deleteOnExit();
-		} else {
-			file = tempDirectory.resolve(UUID.randomUUID().toString()).toFile();
-		}
-
-		return file;
-	}
-
 	public static byte[] toByteArray(@Nullable InputStream inputStream) {
 		return toByteArray(inputStream, new byte[8192]);
 	}
@@ -322,6 +307,14 @@ public final class FileUtils {
 	public static Path createTempFile(@Nonnull UUID uuid) {
 		Preconditions.checkNotNull(tempDirectory, "The temp directory cannot be null");
 		return tempDirectory.resolve(uuid.toString());
+	}
+
+	public static void setAttribute(@Nonnull Path path, @Nonnull String attribute, @Nullable Object value, @Nonnull LinkOption... options) {
+		try {
+			Files.setAttribute(path, attribute, value, options);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	@Nonnull
