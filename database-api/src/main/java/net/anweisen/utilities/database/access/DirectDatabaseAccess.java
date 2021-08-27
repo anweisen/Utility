@@ -1,56 +1,58 @@
 package net.anweisen.utilities.database.access;
 
-import net.anweisen.utilities.commons.config.Propertyable;
+import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.1
  */
-public class DirectDatabaseAccess implements DatabaseAccess {
+public class DirectDatabaseAccess<V> implements DatabaseAccess<V> {
 
 	protected final Database database;
 	protected final DatabaseAccessConfig config;
+	protected final BiFunction<? super Document, ? super String, ? extends V> mapper;
 
-	public DirectDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+	public DirectDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config, @Nonnull BiFunction<? super Document, ? super String, ? extends V> mapper) {
 		this.database = database;
 		this.config = config;
+		this.mapper = mapper;
 	}
-
 
 	@Nullable
 	@Override
-	public String getValue(@Nonnull String key) throws DatabaseException {
+	public V getValue(@Nonnull String key) throws DatabaseException {
 		return getValue0(key).orElse(null);
 	}
 
 	@Nonnull
 	@Override
-	public String getValue(@Nonnull String key, @Nonnull String def) throws DatabaseException {
+	public V getValue(@Nonnull String key, @Nonnull V def) throws DatabaseException {
 		return getValue0(key).orElse(def);
 	}
 
 	@Nonnull
 	@Override
-	public Optional<String> getValueOptional(@Nonnull String key) throws DatabaseException {
+	public Optional<V> getValueOptional(@Nonnull String key) throws DatabaseException {
 		return getValue0(key);
 	}
 
 	@Nonnull
-	protected Optional<String> getValue0(@Nonnull String key) throws DatabaseException {
+	protected Optional<V> getValue0(@Nonnull String key) throws DatabaseException {
 		return database.query(config.getTable())
 				.where(config.getKeyField(), key)
-				.execute().firstOrEmpty()
-				.getOptional(config.getValueField(), Propertyable::getString);
+				.execute().first()
+				.map(document -> mapper.apply(document, config.getValueField()));
 	}
 
 	@Override
-	public void setValue(@Nonnull String key, @Nonnull String value) throws DatabaseException {
+	public void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException {
 		database.insertOrUpdate(config.getTable())
 				.set(config.getValueField(), value)
 				.where(config.getKeyField(), key)

@@ -11,18 +11,22 @@ import java.util.Optional;
  * @author anweisen | https://github.com/anweisen
  * @since 1.1
  */
-public interface DatabaseAccess {
+public interface DatabaseAccess<V> {
 
 	@Nullable
-	String getValue(@Nonnull String key) throws DatabaseException;
+	V getValue(@Nonnull String key) throws DatabaseException;
 
 	@Nonnull
-	String getValue(@Nonnull String key, @Nonnull String def) throws DatabaseException;
+	V getValue(@Nonnull String key, @Nonnull V def) throws DatabaseException;
 
 	@Nonnull
-	Optional<String> getValueOptional(@Nonnull String key) throws DatabaseException;
+	Optional<V> getValueOptional(@Nonnull String key) throws DatabaseException;
 
-	void setValue(@Nonnull String key, @Nonnull String value) throws DatabaseException;
+	void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException;
+
+	default boolean hasValue(@Nonnull String key) throws DatabaseException {
+		return getValueOptional(key).isPresent();
+	}
 
 	@Nonnull
 	Database getDatabase();

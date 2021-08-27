@@ -1,11 +1,14 @@
 package net.anweisen.utilities.database;
 
-import net.anweisen.utilities.commons.logging.ILogger;
-import net.anweisen.utilities.database.exceptions.*;
+import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.database.action.*;
+import net.anweisen.utilities.database.exceptions.DatabaseAlreadyConnectedException;
+import net.anweisen.utilities.database.exceptions.DatabaseConnectionClosedException;
+import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -14,6 +17,18 @@ import java.util.Map;
 public interface Database {
 
 	ILogger LOGGER = ILogger.forThisClass();
+
+	@Nonnull
+	@CheckReturnValue
+	static Database empty() {
+		return new EmptyDatabase(true);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Database unsupported() {
+		return new EmptyDatabase(false);
+	}
 
 	boolean isConnected();
 
@@ -53,8 +68,21 @@ public interface Database {
 	 */
 	boolean disconnectSafely();
 
-	void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
-	void createTableIfNotExistsSafely(@Nonnull String name, @Nonnull SQLColumn... columns);
+	void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
+	void createTableSafely(@Nonnull String name, @Nonnull SQLColumn... columns);
+
+	@Nonnull
+	default Task<Void> createTableAsync(@Nonnull String name, @Nonnull SQLColumn... columns) {
+		return Task.asyncRunExceptionally(() -> createTable(name, columns));
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	DatabaseListTables listTables();
+
+	@Nonnull
+	@CheckReturnValue
+	DatabaseCountEntries countEntries(@Nonnull String table);
 
 	@Nonnull
 	@CheckReturnValue
@@ -70,15 +98,15 @@ public interface Database {
 
 	@Nonnull
 	@CheckReturnValue
-	DatabaseInsertion insert(@Nonnull String table, @Nonnull Map<String, Object> values);
-
-	@Nonnull
-	@CheckReturnValue
 	DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table);
 
 	@Nonnull
 	@CheckReturnValue
 	DatabaseDeletion delete(@Nonnull String table);
+
+	@Nonnull
+	@CheckReturnValue
+	SpecificDatabase getSpecificDatabase(@Nonnull String name);
 
 	@Nonnull
 	DatabaseConfig getConfig();

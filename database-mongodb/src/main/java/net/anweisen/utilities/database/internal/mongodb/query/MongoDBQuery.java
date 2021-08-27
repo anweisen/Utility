@@ -1,11 +1,13 @@
 package net.anweisen.utilities.database.internal.mongodb.query;
 
 import com.mongodb.client.FindIterable;
-import net.anweisen.utilities.commons.misc.MongoUtils;
-import net.anweisen.utilities.database.DatabaseQuery;
-import net.anweisen.utilities.database.ExecutedQuery;
+import com.mongodb.client.model.Filters;
+import net.anweisen.utilities.common.misc.MongoUtils;
 import net.anweisen.utilities.database.Order;
+import net.anweisen.utilities.database.action.DatabaseQuery;
+import net.anweisen.utilities.database.action.ExecutedQuery;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utilities.database.internal.abstraction.DefaultExecutedQuery;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
 import net.anweisen.utilities.database.internal.mongodb.where.ObjectWhere;
@@ -15,7 +17,6 @@ import org.bson.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -43,29 +44,36 @@ public class MongoDBQuery implements DatabaseQuery {
 
 	@Nonnull
 	@Override
-	public DatabaseQuery where(@Nonnull String column, @Nullable Object object) {
-		where.put(column, new ObjectWhere(column, object));
+	public DatabaseQuery where(@Nonnull String field, @Nullable Object value) {
+		where.put(field, new ObjectWhere(field, value, Filters::eq));
 		return this;
 	}
 
 	@Nonnull
 	@Override
-	public DatabaseQuery where(@Nonnull String column, @Nullable Number value) {
-		return where(column, (Object) value);
+	public DatabaseQuery where(@Nonnull String field, @Nullable Number value) {
+		return where(field, (Object) value);
 	}
 
 	@Nonnull
 	@Override
-	public DatabaseQuery where(@Nonnull String column, @Nullable String value) {
-		return where(column, (Object) value);
+	public DatabaseQuery where(@Nonnull String field, @Nullable String value) {
+		return where(field, (Object) value);
 	}
 
 	@Nonnull
 	@Override
-	public DatabaseQuery where(@Nonnull String column, @Nullable String value, boolean ignoreCase) {
-		if (!ignoreCase) return where(column, value);
+	public DatabaseQuery where(@Nonnull String field, @Nullable String value, boolean ignoreCase) {
+		if (!ignoreCase) return where(field, value);
 		if (value == null) throw new NullPointerException("Cannot use where ignore case with null value");
-		where.put(column, new StringIgnoreCaseWhere(column, value));
+		where.put(field, new StringIgnoreCaseWhere(field, value));
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseQuery whereNot(@Nonnull String field, @Nullable Object value) {
+		where.put(field, new ObjectWhere(field, value, Filters::ne));
 		return this;
 	}
 
@@ -92,15 +100,20 @@ public class MongoDBQuery implements DatabaseQuery {
 			MongoUtils.applyOrder(iterable, orderBy, order);
 
 			List<Document> documents = iterable.into(new ArrayList<>());
-			return new ExecutedMongoDBQuery(documents);
+			return createExecutedQuery(documents);
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
 	}
 
-	@Override
-	public boolean equals(@Nonnull ExecutedQuery other) {
-		return equals((Object) other);
+	@Nonnull
+	private ExecutedQuery createExecutedQuery(@Nonnull List<Document> documents) {
+		List<net.anweisen.utilities.common.config.Document> results = new ArrayList<>(documents.size());
+		for (Document document : documents) {
+			results.add(new MongoDBResult(document));
+		}
+
+		return new DefaultExecutedQuery(results);
 	}
 
 	@Override

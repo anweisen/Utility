@@ -1,7 +1,7 @@
 package net.anweisen.utilities.database.internal.mongodb.insertion;
 
-import net.anweisen.utilities.commons.misc.MongoUtils;
-import net.anweisen.utilities.database.DatabaseInsertion;
+import net.anweisen.utilities.common.misc.MongoUtils;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import org.bson.Document;
@@ -40,17 +40,13 @@ public class MongoDBInsertion implements DatabaseInsertion {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			database.getCollection(collection).insertOne(values);
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertion other) {
-		return equals((Object) other);
 	}
 
 	@Override

@@ -1,13 +1,13 @@
 package net.anweisen.utilities.database.internal.mongodb.where;
 
 import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.Filters;
-import net.anweisen.utilities.commons.misc.MongoUtils;
+import net.anweisen.utilities.common.misc.MongoUtils;
 import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -17,16 +17,18 @@ public class ObjectWhere implements MongoDBWhere {
 
 	protected final String field;
 	protected final Object value;
+	protected final BiFunction<? super String, ? super Object, ? extends Bson> creator;
 
-	public ObjectWhere(@Nonnull String field, @Nullable Object value) {
+	public ObjectWhere(@Nonnull String field, @Nullable Object value, @Nonnull BiFunction<? super String, ? super Object, ? extends Bson> creator) {
 		this.field = field;
 		this.value = MongoUtils.packObject(value);
+		this.creator = creator;
 	}
 
 	@Nonnull
 	@Override
 	public Bson toBson() {
-		return Filters.eq(field, value);
+		return creator.apply(field, value);
 	}
 
 	@Nullable

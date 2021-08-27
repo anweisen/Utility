@@ -1,9 +1,9 @@
 package net.anweisen.utilities.database.internal.mongodb.insertorupdate;
 
-import net.anweisen.utilities.commons.misc.BsonUtils;
-import net.anweisen.utilities.database.DatabaseInsertion;
-import net.anweisen.utilities.database.DatabaseInsertionOrUpdate;
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.common.misc.BsonUtils;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
+import net.anweisen.utilities.database.action.DatabaseInsertionOrUpdate;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.update.MongoDBUpdate;
@@ -14,7 +14,6 @@ import org.bson.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -56,15 +55,22 @@ public class MongoDBInsertionOrUpdate extends MongoDBUpdate implements DatabaseI
 
 	@Nonnull
 	@Override
+	public DatabaseInsertionOrUpdate whereNot(@Nonnull String field, @Nullable Object value) {
+		super.whereNot(field, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseInsertionOrUpdate set(@Nonnull String field, @Nullable Object value) {
 		super.set(field, value);
 		return this;
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		if (database.query(collection, where).execute().isSet()) {
-			super.execute();
+			return super.execute();
 		} else {
 			Document document = new Document(values);
 			for (Entry<String, MongoDBWhere> entry : where.entrySet()) {
@@ -73,22 +79,8 @@ public class MongoDBInsertionOrUpdate extends MongoDBUpdate implements DatabaseI
 			}
 
 			database.insert(collection, document).execute();
+			return null;
 		}
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertion other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
-		return equals((Object) other);
 	}
 
 	@Override

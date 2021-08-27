@@ -12,10 +12,12 @@ public class ObjectWhere implements SQLWhere {
 
 	protected final String column;
 	protected final Object value;
+	protected final String comparator;
 
-	public ObjectWhere(@Nonnull String column, @Nullable Object value) {
+	public ObjectWhere(@Nonnull String column, @Nullable Object value, @Nonnull String comparator) {
 		this.column = column;
 		this.value = value;
+		this.comparator = comparator;
 	}
 
 	@Nonnull
@@ -27,7 +29,7 @@ public class ObjectWhere implements SQLWhere {
 	@Nonnull
 	@Override
 	public String getAsSQLString() {
-		return String.format("%s = ?", column);
+		return String.format("`%s` %s ?", column, comparator);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database;
 
-import net.anweisen.utilities.commons.config.Propertyable;
+import net.anweisen.utilities.common.config.Propertyable;
 
 import javax.annotation.Nonnull;
 
@@ -91,6 +91,19 @@ public final class DatabaseConfig {
 
 	public String getFile() {
 		return file;
+	}
+
+	@Override
+	public String toString() {
+		return "DatabaseConfig{" +
+				"host='" + host + '\'' +
+				", database='" + database + '\'' +
+				", authDatabase='" + authDatabase + '\'' +
+				", user='" + user + '\'' +
+				", file='" + file + '\'' +
+				", port=" + port +
+				", portIsSet=" + portIsSet +
+				'}';
 	}
 
 }

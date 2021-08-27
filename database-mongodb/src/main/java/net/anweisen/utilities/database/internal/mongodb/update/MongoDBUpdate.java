@@ -3,10 +3,11 @@ package net.anweisen.utilities.database.internal.mongodb.update;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
-import net.anweisen.utilities.commons.misc.BsonUtils;
-import net.anweisen.utilities.commons.misc.MongoUtils;
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.common.misc.BsonUtils;
+import net.anweisen.utilities.common.misc.MongoUtils;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
@@ -51,7 +52,7 @@ public class MongoDBUpdate implements DatabaseUpdate {
 	@Nonnull
 	@Override
 	public DatabaseUpdate where(@Nonnull String field, @Nullable Object value) {
-		where.put(field, new ObjectWhere(field, value));
+		where.put(field, new ObjectWhere(field, value, Filters::eq));
 		return this;
 	}
 
@@ -78,13 +79,20 @@ public class MongoDBUpdate implements DatabaseUpdate {
 
 	@Nonnull
 	@Override
+	public DatabaseUpdate whereNot(@Nonnull String field, @Nullable Object value) {
+		where.put(field, new ObjectWhere(field, value, Filters::ne));
+		return this;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseUpdate set(@Nonnull String field, @Nullable Object value) {
 		values.put(field, MongoUtils.packObject(value));
 		return this;
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			MongoCollection<Document> collection = database.getCollection(this.collection);
 
@@ -110,15 +118,10 @@ public class MongoDBUpdate implements DatabaseUpdate {
 			update.put("$set", newDocument);
 
 			collection.updateMany(filter, update, options);
-
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseUpdate other) {
-		return equals((Object) other);
 	}
 
 	@Override

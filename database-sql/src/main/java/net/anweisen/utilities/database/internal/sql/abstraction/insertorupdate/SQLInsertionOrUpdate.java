@@ -1,8 +1,8 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.insertorupdate;
 
-import net.anweisen.utilities.database.DatabaseInsertion;
-import net.anweisen.utilities.database.DatabaseInsertionOrUpdate;
-import net.anweisen.utilities.database.DatabaseUpdate;
+import net.anweisen.utilities.database.action.DatabaseInsertion;
+import net.anweisen.utilities.database.action.DatabaseInsertionOrUpdate;
+import net.anweisen.utilities.database.action.DatabaseUpdate;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.update.SQLUpdate;
@@ -54,15 +54,22 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 
 	@Nonnull
 	@Override
+	public DatabaseInsertionOrUpdate whereNot(@Nonnull String column, @Nullable Object value) {
+		super.whereNot(column, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseInsertionOrUpdate set(@Nonnull String column, @Nullable Object value) {
 		super.set(column, value);
 		return this;
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		if (database.query(table, where).execute().isSet()) {
-			super.execute();
+			return super.execute();
 		} else {
 			Map<String, Object> insert = new HashMap<>(values);
 			for (Entry<String, SQLWhere> entry : where.entrySet()) {
@@ -72,22 +79,8 @@ public class SQLInsertionOrUpdate extends SQLUpdate implements DatabaseInsertion
 			}
 
 			database.insert(table, insert).execute();
+			return null;
 		}
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertion other) {
-		return equals((Object) other);
 	}
 
 	@Override

@@ -3,8 +3,9 @@ package net.anweisen.utilities.database.internal.mongodb.deletion;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DeleteOptions;
-import net.anweisen.utilities.commons.misc.BsonUtils;
-import net.anweisen.utilities.database.DatabaseDeletion;
+import com.mongodb.client.model.Filters;
+import net.anweisen.utilities.common.misc.BsonUtils;
+import net.anweisen.utilities.database.action.DatabaseDeletion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
@@ -38,7 +39,7 @@ public class MongoDBDeletion implements DatabaseDeletion {
 	@Nonnull
 	@Override
 	public DatabaseDeletion where(@Nonnull String column, @Nullable Object object) {
-		where.put(column, new ObjectWhere(column, object));
+		where.put(column, new ObjectWhere(column, object, Filters::eq));
 		return this;
 	}
 
@@ -63,8 +64,15 @@ public class MongoDBDeletion implements DatabaseDeletion {
 		return this;
 	}
 
+	@Nonnull
 	@Override
-	public void execute() throws DatabaseException {
+	public DatabaseDeletion whereNot(@Nonnull String column, @Nullable Object object) {
+		where.put(column, new ObjectWhere(column, object, Filters::ne));
+		return this;
+	}
+
+	@Override
+	public Void execute() throws DatabaseException {
 		try {
 			MongoCollection<Document> collection = database.getCollection(this.collection);
 
@@ -82,14 +90,10 @@ public class MongoDBDeletion implements DatabaseDeletion {
 			}
 
 			collection.deleteMany(filter, options);
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseDeletion other) {
-		return equals((Object) other);
 	}
 
 	@Override

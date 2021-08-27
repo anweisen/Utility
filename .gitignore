@@ -13,9 +13,11 @@
 # Generated files
 .idea/**/contentModel.xml
 .idea/libraries
+.idea/jarRepositories.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
+.idea/**/dataSources.xyml
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
@@ -33,4 +35,6 @@
 **/out
 **/target
 *.class
-*.jar
+
+# Configurations
+config.json

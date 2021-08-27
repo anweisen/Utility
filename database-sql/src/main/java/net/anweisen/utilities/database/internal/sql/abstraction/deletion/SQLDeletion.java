@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.sql.abstraction.deletion;
 
-import net.anweisen.utilities.database.DatabaseDeletion;
+import net.anweisen.utilities.database.action.DatabaseDeletion;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.sql.abstraction.AbstractSQLDatabase;
 import net.anweisen.utilities.database.internal.sql.abstraction.where.ObjectWhere;
@@ -32,7 +32,7 @@ public class SQLDeletion implements DatabaseDeletion {
 	@Nonnull
 	@Override
 	public DatabaseDeletion where(@Nonnull String column, @Nullable Object value) {
-		where.put(column, new ObjectWhere(column, value));
+		where.put(column, new ObjectWhere(column, value, "="));
 		return this;
 	}
 
@@ -54,6 +54,13 @@ public class SQLDeletion implements DatabaseDeletion {
 		if (!ignoreCase) return where(column, value);
 		if (value == null) throw new NullPointerException("Cannot use where ignore case with null value");
 		where.put(column, new StringIgnoreCaseWhere(column, value));
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseDeletion whereNot(@Nonnull String column, @Nullable Object value) {
+		where.put(column, new ObjectWhere(column, value, "!="));
 		return this;
 	}
 
@@ -81,18 +88,14 @@ public class SQLDeletion implements DatabaseDeletion {
 	}
 
 	@Override
-	public void execute() throws DatabaseException {
+	public Void execute() throws DatabaseException {
 		try {
 			PreparedStatement statement = prepare();
 			statement.execute();
+			return null;
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseDeletion other) {
-		return equals((Object) other);
 	}
 
 	@Override

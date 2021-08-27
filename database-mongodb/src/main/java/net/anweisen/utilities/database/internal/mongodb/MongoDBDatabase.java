@@ -7,14 +7,16 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import net.anweisen.utilities.database.*;
 import net.anweisen.utilities.database.DatabaseConfig;
-import net.anweisen.utilities.database.exceptions.DatabaseAlreadyConnectedException;
+import net.anweisen.utilities.database.SQLColumn;
+import net.anweisen.utilities.database.action.*;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
 import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
+import net.anweisen.utilities.database.internal.mongodb.count.MongoDBCountEntries;
 import net.anweisen.utilities.database.internal.mongodb.deletion.MongoDBDeletion;
 import net.anweisen.utilities.database.internal.mongodb.insertion.MongoDBInsertion;
 import net.anweisen.utilities.database.internal.mongodb.insertorupdate.MongoDBInsertionOrUpdate;
+import net.anweisen.utilities.database.internal.mongodb.list.MongoDBListTables;
 import net.anweisen.utilities.database.internal.mongodb.query.MongoDBQuery;
 import net.anweisen.utilities.database.internal.mongodb.update.MongoDBUpdate;
 import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
@@ -22,6 +24,7 @@ import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
@@ -35,23 +38,7 @@ import java.util.logging.Logger;
 public class MongoDBDatabase extends AbstractDatabase {
 
 	static {
-		String[] loggerNames = {
-			"org.mongodb.driver.management",
-			"org.mongodb.driver.connection",
-			"org.mongodb.driver.cluster",
-			"org.mongodb.driver.protocol.insert",
-			"org.mongodb.driver.protocol.query",
-			"org.mongodb.driver.protocol.update"
-		};
-
-		LogManager manager = LogManager.getLogManager();
-		for (String name : loggerNames) {
-			Logger logger = manager.getLogger(name);
-			if (logger == null) continue;
-			logger.setLevel(Level.OFF);
-			logger.setFilter(record -> false);
-		}
-
+		Logger.getLogger("org.mongodb").setLevel(Level.SEVERE);
 	}
 
 	protected MongoClient client;
@@ -62,42 +49,28 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void connect() throws DatabaseException {
-		if (isConnected()) throw new DatabaseAlreadyConnectedException();
-
-		try {
-
-			MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
-			MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
-					.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
-					.build();
-
-			client = MongoClients.create(settings);
-			database = client.getDatabase(config.getDatabase());
-
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public void connect0() throws Exception {
+		MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
+		MongoClientSettings settings = MongoClientSettings.builder()
+				.retryReads(false).retryReads(false)
+				.credential(credential)
+				.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
+				.build();
+		client = MongoClients.create(settings);
+		database = client.getDatabase(config.getDatabase());
 	}
 
 	@Override
-	public void disconnect() throws DatabaseException {
-		verifyConnection();
-		try {
-			client.close();
-			client = null;
-		} catch (Exception ex) {
-			throw new DatabaseException(ex);
-		}
+	public void disconnect0() throws Exception {
+		client.close();
+		client = null;
 	}
 
 	@Override
-	public void createTableIfNotExists(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
-		verifyConnection();
+	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
+		checkConnection();
 
-		boolean collectionExists = database.listCollectionNames()
-				.into(new ArrayList<>())
-				.contains(name);
+		boolean collectionExists = listTables().execute().contains(name);
 		if (collectionExists) return;
 
 		try {
@@ -109,10 +82,21 @@ public class MongoDBDatabase extends AbstractDatabase {
 
 	@Nonnull
 	@Override
+	public DatabaseListTables listTables() {
+		return new MongoDBListTables(this);
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseCountEntries countEntries(@Nonnull String table) {
+		return new MongoDBCountEntries(this, table);
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseQuery query(@Nonnull String table) {
 		return new MongoDBQuery(this, table);
 	}
-
 
 	@Nonnull
 	public DatabaseQuery query(@Nonnull String table, @Nonnull Map<String, MongoDBWhere> where) {
@@ -132,7 +116,6 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Nonnull
-	@Override
 	public DatabaseInsertion insert(@Nonnull String table, @Nonnull Map<String, Object> values) {
 		return new MongoDBInsertion(this, table, new Document(values));
 	}
@@ -157,6 +140,11 @@ public class MongoDBDatabase extends AbstractDatabase {
 	@Nonnull
 	public MongoCollection<Document> getCollection(@Nonnull String collection) {
 		return database.getCollection(collection);
+	}
+
+	@Nonnull
+	public MongoDatabase getDatabase() {
+		return database;
 	}
 
 	@Override

@@ -1,0 +1,24 @@
+{
+  "name": [
+    "German",
+    "Deutsch"
+  ],
+
+  "error-error": "Something went wrong",
+  "error-cooldown": "Bitte warte noch `{0}s`",
+  "error-incorrect-arguments": "Bitte nutze `{0}`",
+  "error-incorrect-arguments-multiple": "Bitte nutze einen der folgenden Commands:",
+  "error-incorrect-arguments-multiple-entry": "• `{0}`",
+  "error-missing-permission": "Dazu hast du keine Rechte",
+  "error-missing-team-role": "Dazu hast du keine Rechte",
+  "error-invalid-scope-private": "Du kannst diesen Command nur in einem Privat Chat nutzen",
+  "error-invalid-scope-guild": "Du kannst diesen Command nur in einem Server nutzen",
+  "error-invalid-member": "Diesen Member gibt es nicht",
+  "error-invalid-member-bot": "Bitte gib einen **Bot** an",
+  "error-invalid-member-user": "Du kannst **keine Bots** angeben",
+  "error-invalid-number-positive": "Bitte gib eine **positive** Zahl an",
+  "error-invalid-number-negative": "Bitte gib eine **negative** Zahl an",
+  "error-invalid-number-greater": "Bitte gib eine Zahl **größer** als **{0}** an",
+  "error-invalid-number-smaller": "Bitte gib eine Zahl **kleiner** als **{0}** an",
+  "error-invalid-number-range": "Bitte gib eine Zahl zwischen **{0}** und **{1}** an",
+}

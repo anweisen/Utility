@@ -1,6 +1,6 @@
 package net.anweisen.utilities.database.internal.mongodb.query;
 
-import net.anweisen.utilities.commons.config.document.BsonDocument;
+import net.anweisen.utilities.common.config.document.BsonDocument;
 
 import javax.annotation.Nonnull;
 

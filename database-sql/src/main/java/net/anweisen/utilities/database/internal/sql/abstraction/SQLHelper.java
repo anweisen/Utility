@@ -1,8 +1,8 @@
 package net.anweisen.utilities.database.internal.sql.abstraction;
 
-import net.anweisen.utilities.commons.config.Json;
-import net.anweisen.utilities.commons.config.document.GsonDocument;
-import net.anweisen.utilities.commons.misc.GsonUtils;
+import net.anweisen.utilities.common.config.Json;
+import net.anweisen.utilities.common.config.document.GsonDocument;
+import net.anweisen.utilities.common.misc.GsonUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,13 +20,13 @@ public final class SQLHelper {
 
 	public static void fillParams(@Nonnull PreparedStatement statement, @Nonnull Object... params) throws SQLException {
 		for (int i = 0; i < params.length; i++) {
-			Object param = packObject(params[i]);
+			Object param = serializeObject(params[i]);
 			statement.setObject(i + 1 /* in sql we count from 1 */, param);
 		}
 	}
 
 	@Nullable
-	private static Object packObject(@Nullable Object object) {
+	public static Object serializeObject(@Nullable Object object) {
 		if (object == null)                 return null;
 		if (object instanceof Number)       return object;
 		if (object instanceof Boolean)      return object;
