@@ -55,6 +55,16 @@ public interface Document extends Config, Json {
 	List<Document> getDocumentList(@Nonnull String path);
 
 	@Nonnull
+	default <T> List<T> getInstanceList(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		List<Document> documents = getDocumentList(path);
+		List<T> result = new ArrayList<>(documents.size());
+		for (Document document : documents) {
+			result.add(document.toInstanceOf(classOfT));
+		}
+		return result;
+	}
+
+	@Nonnull
 	<T> List<T> getSerializableList(@Nonnull String path, @Nonnull Class<T> classOfT);
 
 	@Nullable
