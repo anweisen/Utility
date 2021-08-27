@@ -110,7 +110,7 @@ public interface Task<V> extends Future<V>, Callable<V> {
 	default Task<V> onComplete(@Nonnull BiConsumer<? super Task<V>, ? super V> action) {
 		return addListener(new TaskListener<V>() {
 			@Override
-			public void onComplete(@Nonnull Task<V> task, V value) {
+			public void onComplete(@Nonnull Task<V> task, @Nonnull V value) {
 				action.accept(task, value);
 			}
 		});

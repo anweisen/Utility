@@ -21,7 +21,7 @@ public class CompletedTask<V> implements Task<V> {
 		this.failure = null;
 	}
 
-	public CompletedTask(@Nonnull Throwable failure) {
+	public CompletedTask(@Nullable Throwable failure) {
 		this.value = null;
 		this.failure = failure;
 	}
@@ -31,8 +31,10 @@ public class CompletedTask<V> implements Task<V> {
 	public Task<V> addListener(@Nonnull TaskListener<V> listener) {
 		if (failure != null) {
 			listener.onFailure(this, failure);
-		} else {
+		} else if (value != null) {
 			listener.onComplete(this, value);
+		} else {
+			listener.onCancelled(this);
 		}
 
 		return this;

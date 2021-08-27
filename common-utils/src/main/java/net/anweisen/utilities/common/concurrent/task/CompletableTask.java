@@ -1,7 +1,6 @@
 package net.anweisen.utilities.common.concurrent.task;
 
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
-import net.anweisen.utilities.common.collection.WrappedException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,18 +61,19 @@ public class CompletableTask<V> implements Task<V> {
 	@Nonnull
 	@Override
 	public Task<V> addListener(@Nonnull TaskListener<V> listener) {
-		if (this.future.isDone()) {
-			if (this.future.isCancelled()) {
+		if (future.isDone()) {
+			V value = future.getNow(null);
+			if (future.isCancelled() || value != null) {
 				listener.onCancelled(this);
-			} else if (this.failure != null) {
-				listener.onFailure(this, this.failure);
+			} else if (failure != null) {
+				listener.onFailure(this, failure);
 			} else {
-				listener.onComplete(this, this.future.getNow(null));
+				listener.onComplete(this, value);
 			}
 			return this;
 		}
 
-		this.listeners.add(listener);
+		listeners.add(listener);
 		return this;
 	}
 
@@ -100,11 +100,18 @@ public class CompletableTask<V> implements Task<V> {
 		throw new UnsupportedOperationException("Use #complete in the CompletableTask");
 	}
 
-	public void complete(V value) {
-		this.future.complete(value);
-		for (TaskListener<V> listener : this.listeners) {
-			listener.onComplete(this, value);
+	public void complete(@Nullable V value) {
+		future.complete(value);
+		if (value != null) {
+			for (TaskListener<V> listener : listeners) {
+				listener.onComplete(this, value);
+			}
+		} else {
+			for (TaskListener<V> listener : listeners) {
+				listener.onCancelled(this);
+			}
 		}
+
 	}
 
 	@Override

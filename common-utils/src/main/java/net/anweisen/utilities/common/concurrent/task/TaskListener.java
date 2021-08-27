@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  */
 public interface TaskListener<T> {
 
-	default void onComplete(@Nonnull Task<T> task, T value) {
+	default void onComplete(@Nonnull Task<T> task, @Nonnull T value) {
 	}
 
 	default void onCancelled(@Nonnull Task<T> task) {
