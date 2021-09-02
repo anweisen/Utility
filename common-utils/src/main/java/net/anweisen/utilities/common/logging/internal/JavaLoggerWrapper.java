@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.logging.internal;
 
+import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
 import net.anweisen.utilities.common.logging.lib.JavaILogger;
 
@@ -45,11 +46,6 @@ public class JavaLoggerWrapper extends JavaILogger {
 	@Override
 	public Logger getParent() {
 		return logger.getParent();
-	}
-
-	@Override
-	public String getName() {
-		return logger.getName();
 	}
 
 	@Override
@@ -342,7 +338,7 @@ public class JavaLoggerWrapper extends JavaILogger {
 			if (arg instanceof Throwable)
 				thrown = (Throwable) arg;
 		}
-		log(level.getJavaUtilLevel(), FallbackLogger.formatMessage(message, args), thrown);
+		log(level.getJavaUtilLevel(), ILogger.formatMessage(message, args), thrown);
 	}
 
 	@Override

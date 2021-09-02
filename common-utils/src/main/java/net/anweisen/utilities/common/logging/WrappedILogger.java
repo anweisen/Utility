@@ -143,12 +143,6 @@ public interface WrappedILogger extends ILogger {
 		return getWrappedLogger().setMinLevel(level);
 	}
 
-	@Nullable
-	@Override
-	default String getName() {
-		return getWrappedLogger().getName();
-	}
-
 	@Nonnull
 	@Override
 	default Slf4jILogger slf4j() {

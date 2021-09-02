@@ -40,4 +40,12 @@ public interface LoggingApiUser {
 		getTargetLogger().trace(message, args);
 	}
 
+	default boolean isTraceEnabled() {
+		return getTargetLogger().isTraceEnabled();
+	}
+
+	default boolean isDebugEnabled() {
+		return getTargetLogger().isDebugEnabled();
+	}
+
 }

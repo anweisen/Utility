@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.logging;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.logging.internal.FallbackLogger;
 import net.anweisen.utilities.common.logging.internal.JavaLoggerWrapper;
@@ -16,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
@@ -136,7 +135,7 @@ public interface ILogger {
 	}
 
 	static void setFactory(@Nonnull ILoggerFactory factory) {
-		if (factory == null) throw new NullPointerException();
+		Preconditions.checkNotNull(factory);
 		Holder.factory = factory;
 	}
 
@@ -245,9 +244,6 @@ public interface ILogger {
 	@Nonnull
 	ILogger setMinLevel(@Nonnull LogLevel level);
 
-	@Nullable
-	String getName();
-
 	@Nonnull
 	@CheckReturnValue
 	default Slf4jILogger slf4j() {
@@ -268,23 +264,23 @@ public interface ILogger {
 	@CheckReturnValue
 	default PrintStream asPrintStream(@Nonnull LogLevel level) {
 		try {
-
-			return new PrintStream(new ByteArrayOutputStream() {
-
-				@Override
-				public void flush() throws IOException {
-					String input = this.toString(StandardCharsets.UTF_8.name());
-					this.reset();
-
-					if (input != null && !input.isEmpty() && !input.equals(System.lineSeparator())) {
-						log(level, input);
-					}
-				}
-			}, true, StandardCharsets.UTF_8.name());
-
+			return new PrintStream(new LogOutputStream(this, level), true, StandardCharsets.UTF_8.name());
 		} catch (Exception ex) {
 			throw new WrappedException(ex);
 		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static String formatMessage(@Nullable Object messageObject, @Nonnull Object... args) {
+		StringBuilder message = new StringBuilder(String.valueOf(messageObject));
+		for (Object arg : args) {
+			if (arg instanceof Throwable) continue;
+			int index = message.indexOf("{}");
+			if (index == -1) break;
+			message.replace(index, index+2, String.valueOf(arg));
+		}
+		return message.toString();
 	}
 
 }

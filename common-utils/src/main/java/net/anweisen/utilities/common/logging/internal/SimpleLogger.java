@@ -87,6 +87,11 @@ public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 	}
 
 	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return isLevelEnabled(LogLevel.TRACE);
 	}
