@@ -135,4 +135,13 @@ public final class SimpleCollectionUtils {
 		return valueMax;
 	}
 
+	@SafeVarargs
+	public static <T> Set<T> of(@Nonnull Collection<T>... collections) {
+		Set<T> set = new HashSet<>();
+		for (Collection<T> collection : collections) {
+			set.addAll(collection);
+		}
+		return set;
+	}
+
 }
