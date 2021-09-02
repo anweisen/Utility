@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class ReadOnlyDocumentWrapper implements WrappedDocument {
+public final class ReadOnlyDocumentWrapper implements WrappedDocument<Document> {
 
-	protected final Document document;
+	private final Document document;
 
 	public ReadOnlyDocumentWrapper(@Nonnull Document document) {
 		this.document = document;

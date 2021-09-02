@@ -1,6 +1,7 @@
 package net.anweisen.utilities.common.config.document;
 
 import com.google.gson.*;
+import com.google.gson.internal.Primitives;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
 import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
@@ -296,6 +297,16 @@ public class GsonDocument extends AbstractDocument {
 		setElement(path, value);
 	}
 
+	@Nonnull
+	@Override
+	public Document set(@Nonnull Object object) {
+		JsonObject json = GSON.toJsonTree(object).getAsJsonObject();
+		for (Entry<String, JsonElement> entry : json.entrySet()) {
+			jsonObject.add(entry.getKey(), entry.getValue());
+		}
+		return this;
+	}
+
 	@Override
 	public void clear0() {
 		jsonObject = new JsonObject();
@@ -378,7 +389,7 @@ public class GsonDocument extends AbstractDocument {
 		}
 
 		String lastPath = paths.getLast();
-		JsonElement jsonValue = value instanceof JsonElement ? (JsonElement) value : GSON.toJsonTree(value);
+		JsonElement jsonValue = value instanceof JsonElement ? (JsonElement) value : value == null ? JsonNull.INSTANCE : GSON.toJsonTree(value, Primitives.unwrap(value.getClass()));
 		object.add(lastPath, jsonValue);
 
 	}

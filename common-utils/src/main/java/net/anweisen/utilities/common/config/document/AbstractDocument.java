@@ -1,5 +1,6 @@
 package net.anweisen.utilities.common.config.document;
 
+import com.google.gson.internal.Primitives;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.readonly.ReadOnlyDocumentWrapper;
 import net.anweisen.utilities.common.config.exceptions.ConfigReadOnlyException;
@@ -92,6 +93,15 @@ public abstract class AbstractDocument extends AbstractConfig implements Documen
 			value = Base64.getEncoder().encodeToString((byte[]) value);
 
 		set0(path, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public Document set(@Nonnull Object object) {
+		if (isReadonly()) throw new ConfigReadOnlyException("set");
+
+		Document.of(object).forEach(this::set);
 		return this;
 	}
 
