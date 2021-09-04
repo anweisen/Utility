@@ -2,6 +2,7 @@ package net.anweisen.utilities.common.config.document;
 
 import com.google.gson.*;
 import com.google.gson.internal.Primitives;
+import com.google.gson.internal.bind.TypeAdapters;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
 import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
@@ -389,7 +390,13 @@ public class GsonDocument extends AbstractDocument {
 		}
 
 		String lastPath = paths.getLast();
-		JsonElement jsonValue = value instanceof JsonElement ? (JsonElement) value : value == null ? JsonNull.INSTANCE : GSON.toJsonTree(value, Primitives.unwrap(value.getClass()));
+		JsonElement jsonValue =
+			value instanceof JsonElement ? (JsonElement) value
+		  : value == null ? JsonNull.INSTANCE
+		  : value instanceof Number ? TypeAdapters.NUMBER.toJsonTree((Number) value)
+		  : value instanceof Boolean ? TypeAdapters.BOOLEAN.toJsonTree((boolean) value)
+		  : value instanceof Character ? TypeAdapters.CHARACTER.toJsonTree((char) value)
+		  : GSON.toJsonTree(value);
 		object.add(lastPath, jsonValue);
 
 	}
