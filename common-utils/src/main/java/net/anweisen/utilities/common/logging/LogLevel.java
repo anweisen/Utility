@@ -20,14 +20,14 @@ public enum LogLevel {
 	private final String uppercaseName, lowercaseName;
 	private final Level javaLevel;
 	private final int value;
-	private final boolean colorized;
+	private final boolean highlighted;
 
-	LogLevel(int value, @Nonnull String uppercaseName, @Nonnull String lowercaseName, @Nonnull Level javaLevel, boolean colorized) {
+	LogLevel(int value, @Nonnull String uppercaseName, @Nonnull String lowercaseName, @Nonnull Level javaLevel, boolean highlighted) {
 		this.uppercaseName = uppercaseName;
 		this.lowercaseName = lowercaseName;
 		this.javaLevel = javaLevel;
 		this.value = value;
-		this.colorized = colorized;
+		this.highlighted = highlighted;
 	}
 
 	@Nonnull
@@ -53,8 +53,8 @@ public enum LogLevel {
 		return uppercaseName;
 	}
 
-	public boolean isColorized() {
-		return colorized;
+	public boolean isHighlighted() {
+		return highlighted;
 	}
 
 	@Nonnull
