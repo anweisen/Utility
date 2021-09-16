@@ -260,6 +260,14 @@ public final class FileUtils {
 		FileUtils.deleteFile(file);
 	}
 
+	public static long size(@Nonnull Path path) {
+		try {
+			return Files.size(path);
+		} catch (IOException ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
 	/**
 	 * Converts a bunch of directories to a byte array
 	 *

@@ -101,8 +101,8 @@ public interface WrappedDocument<D extends Document> extends Document {
 	}
 
 	@Override
-	default <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return getWrappedDocument().get(path, classOfT);
+	default <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getWrappedDocument().getInstance(path, classOfT);
 	}
 
 	@Override

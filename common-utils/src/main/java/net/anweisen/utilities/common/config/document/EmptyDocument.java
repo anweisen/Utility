@@ -116,7 +116,7 @@ public class EmptyDocument implements Document {
 	}
 
 	@Override
-	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+	public <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		return null;
 	}
 

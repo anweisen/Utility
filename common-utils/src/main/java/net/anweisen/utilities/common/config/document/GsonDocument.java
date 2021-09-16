@@ -1,7 +1,6 @@
 package net.anweisen.utilities.common.config.document;
 
 import com.google.gson.*;
-import com.google.gson.internal.Primitives;
 import com.google.gson.internal.bind.TypeAdapters;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
@@ -140,7 +139,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Nullable
 	@Override
-	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfType) {
+	public <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfType) {
 		JsonElement element = getElement(path).orElse(null);
 		return GSON.fromJson(element, classOfType);
 	}
@@ -154,7 +153,7 @@ public class GsonDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return get(path, classOfT);
+		return getInstance(path, classOfT);
 	}
 
 	@Nonnull
@@ -237,31 +236,31 @@ public class GsonDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public UUID getUUID(@Nonnull String path) {
-		return get(path, UUID.class);
+		return getInstance(path, UUID.class);
 	}
 
 	@Nullable
 	@Override
 	public Date getDate(@Nonnull String path) {
-		return get(path, Date.class);
+		return getInstance(path, Date.class);
 	}
 
 	@Nullable
 	@Override
 	public OffsetDateTime getDateTime(@Nonnull String path) {
-		return get(path, OffsetDateTime.class);
+		return getInstance(path, OffsetDateTime.class);
 	}
 
 	@Nullable
 	@Override
 	public Color getColor(@Nonnull String path) {
-		return get(path, Color.class);
+		return getInstance(path, Color.class);
 	}
 
 	@Nullable
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		return get(path, classOfEnum);
+		return getInstance(path, classOfEnum);
 	}
 
 	@Override

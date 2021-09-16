@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 public interface Propertyable {
 
-	<T> T get(@Nonnull String path, @Nonnull Class<T> classOfT);
+	<T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT);
 
 	@Nullable
 	Object getObject(@Nonnull String path);
