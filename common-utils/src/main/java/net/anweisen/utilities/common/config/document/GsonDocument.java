@@ -226,7 +226,7 @@ public class GsonDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public List<String> getStringList(@Nonnull String path) {
-		JsonElement element = jsonObject.get(path);
+		JsonElement element = getElement(path).orElse(null);
 		if (element == null || element.isJsonNull()) return new ArrayList<>();
 		if (element.isJsonPrimitive()) return new ArrayList<>(Collections.singletonList(GsonUtils.convertJsonElementToString(element)));
 		if (element.isJsonObject()) throw new IllegalStateException("Cannot extract list out of json object at '" + path + "'");
