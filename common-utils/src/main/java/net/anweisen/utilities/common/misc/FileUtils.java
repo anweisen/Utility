@@ -260,6 +260,14 @@ public final class FileUtils {
 		FileUtils.deleteFile(file);
 	}
 
+	public static long size(@Nonnull Path path) {
+		try {
+			return Files.size(path);
+		} catch (IOException ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
 	/**
 	 * Converts a bunch of directories to a byte array
 	 *
@@ -306,7 +314,9 @@ public final class FileUtils {
 	@Nonnull
 	public static Path createTempFile(@Nonnull UUID uuid) {
 		Preconditions.checkNotNull(tempDirectory, "The temp directory cannot be null");
-		return tempDirectory.resolve(uuid.toString());
+		Path file = tempDirectory.resolve(uuid.toString());
+		createFile(file);
+		return file;
 	}
 
 	public static void setAttribute(@Nonnull Path path, @Nonnull String attribute, @Nullable Object value, @Nonnull LinkOption... options) {
@@ -315,6 +325,10 @@ public final class FileUtils {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	public static void setHiddenAttribute(@Nonnull Path path, boolean hidden) {
+		setAttribute(path, "dos:hidden", hidden, LinkOption.NOFOLLOW_LINKS);
 	}
 
 	@Nonnull

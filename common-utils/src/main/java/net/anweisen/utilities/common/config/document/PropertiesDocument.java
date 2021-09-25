@@ -63,7 +63,7 @@ public class PropertiesDocument extends AbstractDocument {
 	}
 
 	@Override
-	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+	public <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		return classOfT.cast(getObject(path));
 	}
 

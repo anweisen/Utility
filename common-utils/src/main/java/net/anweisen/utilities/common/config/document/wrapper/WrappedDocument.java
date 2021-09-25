@@ -23,7 +23,7 @@ import java.util.function.Function;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface WrappedDocument extends Document {
+public interface WrappedDocument<D extends Document> extends Document {
 
 	Document getWrappedDocument();
 
@@ -52,23 +52,30 @@ public interface WrappedDocument extends Document {
 
 	@Nonnull
 	@Override
-	default Document set(@Nonnull String path, @Nullable Object value) {
+	default D set(@Nonnull String path, @Nullable Object value) {
 		getWrappedDocument().set(path, value);
-		return this;
+		return self();
 	}
 
 	@Nonnull
 	@Override
-	default Document clear() {
+	default D set(@Nonnull Object value) {
+		getWrappedDocument().set(value);
+		return self();
+	}
+
+	@Nonnull
+	@Override
+	default D clear() {
 		getWrappedDocument().clear();
-		return this;
+		return self();
 	}
 
 	@Nonnull
 	@Override
-	default Document remove(@Nonnull String path) {
+	default D remove(@Nonnull String path) {
 		getWrappedDocument().remove(path);
-		return this;
+		return self();
 	}
 
 	@Override
@@ -94,8 +101,8 @@ public interface WrappedDocument extends Document {
 	}
 
 	@Override
-	default <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return getWrappedDocument().get(path, classOfT);
+	default <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getWrappedDocument().getInstance(path, classOfT);
 	}
 
 	@Override
@@ -497,6 +504,11 @@ public interface WrappedDocument extends Document {
 	@Override
 	default Document getRoot() {
 		return getWrappedDocument().getRoot();
+	}
+
+	@SuppressWarnings("unchecked")
+	default D self() {
+		return (D) this;
 	}
 
 }

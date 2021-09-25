@@ -1,6 +1,5 @@
 package net.anweisen.utilities.common.collection;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**

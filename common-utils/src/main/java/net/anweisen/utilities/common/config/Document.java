@@ -11,12 +11,10 @@ import net.anweisen.utilities.common.misc.GsonUtils;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -148,6 +146,9 @@ public interface Document extends Config, Json {
 		return (Document) Config.super.setIfAbsent(path, defaultValue);
 	}
 
+	@Nonnull
+	Document set(@Nonnull Object value);
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -252,6 +253,12 @@ public interface Document extends Config, Json {
 	@CheckReturnValue
 	static Document parseJson(@Nonnull Reader reader) throws IOException {
 		return new GsonDocument(reader);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	static Document parseJson(@Nonnull InputStream input) throws IOException {
+		return new GsonDocument(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
 
 	@Nonnull

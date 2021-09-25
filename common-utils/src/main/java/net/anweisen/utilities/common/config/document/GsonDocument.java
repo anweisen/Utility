@@ -1,6 +1,8 @@
 package net.anweisen.utilities.common.config.document;
 
 import com.google.gson.*;
+import com.google.gson.internal.bind.TypeAdapters;
+import net.anweisen.utilities.common.collection.pair.Pair;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
 import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
@@ -29,8 +31,10 @@ public class GsonDocument extends AbstractDocument {
 				.disableHtmlEscaping()
 				.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(BukkitReflectionSerializationUtils::isSerializable, new BukkitReflectionSerializableTypeAdapter()))
 				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Document.class, new DocumentTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Pair.class, new PairTypeAdapter()))
 				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
-				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()));
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()))
+			;
 
 		GSON = builder.create();
 		GSON_PRETTY_PRINT = builder.setPrettyPrinting().create();
@@ -138,7 +142,7 @@ public class GsonDocument extends AbstractDocument {
 
 	@Nullable
 	@Override
-	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfType) {
+	public <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfType) {
 		JsonElement element = getElement(path).orElse(null);
 		return GSON.fromJson(element, classOfType);
 	}
@@ -152,7 +156,7 @@ public class GsonDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public <T> T getSerializable(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return get(path, classOfT);
+		return getInstance(path, classOfT);
 	}
 
 	@Nonnull
@@ -225,7 +229,7 @@ public class GsonDocument extends AbstractDocument {
 	@Nonnull
 	@Override
 	public List<String> getStringList(@Nonnull String path) {
-		JsonElement element = jsonObject.get(path);
+		JsonElement element = getElement(path).orElse(null);
 		if (element == null || element.isJsonNull()) return new ArrayList<>();
 		if (element.isJsonPrimitive()) return new ArrayList<>(Collections.singletonList(GsonUtils.convertJsonElementToString(element)));
 		if (element.isJsonObject()) throw new IllegalStateException("Cannot extract list out of json object at '" + path + "'");
@@ -235,31 +239,31 @@ public class GsonDocument extends AbstractDocument {
 	@Nullable
 	@Override
 	public UUID getUUID(@Nonnull String path) {
-		return get(path, UUID.class);
+		return getInstance(path, UUID.class);
 	}
 
 	@Nullable
 	@Override
 	public Date getDate(@Nonnull String path) {
-		return get(path, Date.class);
+		return getInstance(path, Date.class);
 	}
 
 	@Nullable
 	@Override
 	public OffsetDateTime getDateTime(@Nonnull String path) {
-		return get(path, OffsetDateTime.class);
+		return getInstance(path, OffsetDateTime.class);
 	}
 
 	@Nullable
 	@Override
 	public Color getColor(@Nonnull String path) {
-		return get(path, Color.class);
+		return getInstance(path, Color.class);
 	}
 
 	@Nullable
 	@Override
 	public <E extends Enum<E>> E getEnum(@Nonnull String path, @Nonnull Class<E> classOfEnum) {
-		return get(path, classOfEnum);
+		return getInstance(path, classOfEnum);
 	}
 
 	@Override
@@ -294,6 +298,16 @@ public class GsonDocument extends AbstractDocument {
 	@Override
 	public void set0(@Nonnull String path, @Nullable Object value) {
 		setElement(path, value);
+	}
+
+	@Nonnull
+	@Override
+	public Document set(@Nonnull Object object) {
+		JsonObject json = GSON.toJsonTree(object).getAsJsonObject();
+		for (Entry<String, JsonElement> entry : json.entrySet()) {
+			jsonObject.add(entry.getKey(), entry.getValue());
+		}
+		return this;
 	}
 
 	@Override
@@ -378,7 +392,13 @@ public class GsonDocument extends AbstractDocument {
 		}
 
 		String lastPath = paths.getLast();
-		JsonElement jsonValue = value instanceof JsonElement ? (JsonElement) value : GSON.toJsonTree(value);
+		JsonElement jsonValue =
+			value instanceof JsonElement ? (JsonElement) value
+		  : value == null ? JsonNull.INSTANCE
+		  : value instanceof Number ? TypeAdapters.NUMBER.toJsonTree((Number) value)
+		  : value instanceof Boolean ? TypeAdapters.BOOLEAN.toJsonTree((boolean) value)
+		  : value instanceof Character ? TypeAdapters.CHARACTER.toJsonTree((char) value)
+		  : GSON.toJsonTree(value);
 		object.add(lastPath, jsonValue);
 
 	}

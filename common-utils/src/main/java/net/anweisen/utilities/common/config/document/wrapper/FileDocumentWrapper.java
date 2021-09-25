@@ -12,7 +12,7 @@ import java.nio.file.Path;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class FileDocumentWrapper implements WrappedDocument, FileDocument {
+public class FileDocumentWrapper implements WrappedDocument<FileDocument>, FileDocument {
 
 	protected final Document document;
 	protected final File file;
@@ -42,19 +42,25 @@ public class FileDocumentWrapper implements WrappedDocument, FileDocument {
 	@Nonnull
 	@Override
 	public FileDocument set(@Nonnull String path, @Nullable Object value) {
-		return (FileDocument) WrappedDocument.super.set(path, value);
+		return WrappedDocument.super.set(path, value);
+	}
+
+	@Nonnull
+	@Override
+	public FileDocument set(@Nonnull Object value) {
+		return WrappedDocument.super.set(value);
 	}
 
 	@Nonnull
 	@Override
 	public FileDocument clear() {
-		return (FileDocument) WrappedDocument.super.clear();
+		return WrappedDocument.super.clear();
 	}
 
 	@Nonnull
 	@Override
 	public FileDocument remove(@Nonnull String path) {
-		return (FileDocument) WrappedDocument.super.remove(path);
+		return WrappedDocument.super.remove(path);
 	}
 
 }

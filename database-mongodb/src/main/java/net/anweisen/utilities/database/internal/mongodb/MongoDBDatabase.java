@@ -23,12 +23,9 @@ import net.anweisen.utilities.database.internal.mongodb.where.MongoDBWhere;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**

@@ -77,6 +77,12 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
+	public Document set(@Nonnull Object value) {
+		throw new ConfigReadOnlyException("set");
+	}
+
+	@Nonnull
+	@Override
 	public Document clear() {
 		return this;
 	}
@@ -110,7 +116,7 @@ public class EmptyDocument implements Document {
 	}
 
 	@Override
-	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+	public <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
 		return null;
 	}
 
@@ -481,6 +487,12 @@ public class EmptyDocument implements Document {
 	@Nonnull
 	@Override
 	public String toPrettyJson() {
+		return "{}";
+	}
+
+	@Nonnull
+	@Override
+	public String toString() {
 		return "{}";
 	}
 

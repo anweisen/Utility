@@ -209,8 +209,8 @@ public class BsonDocument extends AbstractDocument {
 	}
 
 	@Override
-	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return copyJson().get(path, classOfT);
+	public <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return copyJson().getInstance(path, classOfT);
 	}
 
 	@Override

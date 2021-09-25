@@ -103,10 +103,10 @@ public final class SimpleCollectionUtils {
 
 	@Nonnull
 	@CheckReturnValue
-	public static <From, To> List<To> convertList(@Nonnull List<From> list,
-	                                              @Nonnull Function<? super From, ? extends To> mapper) {
-		List<To> result = new ArrayList<>(list.size());
-		list.forEach(value -> {
+	public static <From, To> List<To> convert(@Nonnull Collection<From> collection,
+	                                          @Nonnull Function<? super From, ? extends To> mapper) {
+		List<To> result = new ArrayList<>(collection.size());
+		collection.forEach(value -> {
 			try {
 				result.add(mapper.apply(value));
 			} catch (Exception ex) {
@@ -133,6 +133,15 @@ public final class SimpleCollectionUtils {
 		}
 
 		return valueMax;
+	}
+
+	@SafeVarargs
+	public static <T> Set<T> setOf(@Nonnull Collection<T>... collections) {
+		Set<T> set = new HashSet<>();
+		for (Collection<T> collection : collections) {
+			set.addAll(collection);
+		}
+		return set;
 	}
 
 }

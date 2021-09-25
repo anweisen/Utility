@@ -76,6 +76,13 @@ public interface FileDocument extends Document {
 	 */
 	@Nonnull
 	@Override
+	FileDocument set(@Nonnull Object value);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nonnull
+	@Override
 	FileDocument clear();
 
 	/**

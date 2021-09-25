@@ -32,7 +32,7 @@ public class FallbackLogger implements ILogger {
 	@Override
 	public void log(@Nonnull LogLevel level, @Nullable String message, @Nonnull Object... args) {
 		if (!isLevelEnabled(level)) return;
-		stream.println(getLogMessage(level, formatMessage(message, args), name));
+		stream.println(getLogMessage(level, ILogger.formatMessage(message, args), name));
 		for (Object arg : args) {
 			if (!(arg instanceof Throwable)) continue;
 			((Throwable)arg).printStackTrace(stream);
@@ -52,12 +52,6 @@ public class FallbackLogger implements ILogger {
 		return level;
 	}
 
-	@Nullable
-	@Override
-	public String getName() {
-		return name;
-	}
-
 	@Nonnull
 	@CheckReturnValue
 	public static String getLogMessage(@Nonnull LogLevel level, @Nonnull String message, @Nullable String name) {
@@ -67,19 +61,6 @@ public class FallbackLogger implements ILogger {
 		return name == null ?
 				String.format("[%s: %s/%s]: %s", time, threadName, level.getUpperCaseName(), message) :
 				String.format("[%s: %s/%s] %s: %s", time, threadName, level.getUpperCaseName(), name, message);
-	}
-
-	@Nonnull
-	@CheckReturnValue
-	public static String formatMessage(@Nullable Object messageObject, @Nonnull Object... args) {
-		StringBuilder message = new StringBuilder(String.valueOf(messageObject));
-		for (Object arg : args) {
-			if (arg instanceof Throwable) continue;
-			int index = message.indexOf("{}");
-			if (index == -1) break;
-			message.replace(index, index+2, String.valueOf(arg));
-		}
-		return message.toString();
 	}
 
 }
