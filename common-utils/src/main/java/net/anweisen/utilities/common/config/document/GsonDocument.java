@@ -2,6 +2,7 @@ package net.anweisen.utilities.common.config.document;
 
 import com.google.gson.*;
 import com.google.gson.internal.bind.TypeAdapters;
+import net.anweisen.utilities.common.collection.pair.Pair;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
 import net.anweisen.utilities.common.misc.BukkitReflectionSerializationUtils;
@@ -30,8 +31,10 @@ public class GsonDocument extends AbstractDocument {
 				.disableHtmlEscaping()
 				.registerTypeAdapterFactory(GsonTypeAdapter.newPredictableFactory(BukkitReflectionSerializationUtils::isSerializable, new BukkitReflectionSerializableTypeAdapter()))
 				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Document.class, new DocumentTypeAdapter()))
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Pair.class, new PairTypeAdapter()))
 				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
-				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()));
+				.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()))
+			;
 
 		GSON = builder.create();
 		GSON_PRETTY_PRINT = builder.setPrettyPrinting().create();
