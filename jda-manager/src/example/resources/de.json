@@ -20,5 +20,5 @@
   "error-invalid-number-negative": "Bitte gib eine **negative** Zahl an",
   "error-invalid-number-greater": "Bitte gib eine Zahl **größer** als **{0}** an",
   "error-invalid-number-smaller": "Bitte gib eine Zahl **kleiner** als **{0}** an",
-  "error-invalid-number-range": "Bitte gib eine Zahl zwischen **{0}** und **{1}** an",
+  "error-invalid-number-range": "Bitte gib eine Zahl zwischen **{0}** und **{1}** an"
 }

@@ -1,10 +1,10 @@
-package net.anweisen.utilities.jda.manager.examples;
+package net.anweisen.utility.jda.manager.examples;
 
-import net.anweisen.utilities.database.SQLColumn;
-import net.anweisen.utilities.database.SQLColumn.Type;
-import net.anweisen.utilities.jda.manager.bot.DiscordBot;
-import net.anweisen.utilities.jda.manager.bot.DiscordBotBuilder;
-import net.anweisen.utilities.jda.manager.defaults.commands.DefaultSetPrefixCommand;
+import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.SQLColumn.Type;
+import net.anweisen.utility.jda.manager.bot.DiscordBot;
+import net.anweisen.utility.jda.manager.bot.DiscordBotBuilder;
+import net.anweisen.utility.jda.manager.defaults.commands.DefaultSetPrefixCommand;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;

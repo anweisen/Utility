@@ -5,9 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>net.anweisen.utilities</groupId>
+		<groupId>net.anweisen.utility</groupId>
 		<artifactId>root</artifactId>
-		<version>1.3.6</version>
+		<version>1.4</version>
 	</parent>
 
 	<artifactId>bukkit-utils</artifactId>
@@ -20,10 +20,17 @@
 
 	<dependencies>
 
-		<!-- Common Utilities -->
+		<!-- Common utils -->
 		<dependency>
-			<groupId>net.anweisen.utilities</groupId>
+			<groupId>net.anweisen.utility</groupId>
 			<artifactId>common-utils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Documents -->
+		<dependency>
+			<groupId>net.anweisen.utility</groupId>
+			<artifactId>documents</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -35,7 +42,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Minecraft authlib for gameprofiles -->
+		<!-- Minecraft authlib for game profiles -->
 		<dependency>
 			<groupId>com.mojang</groupId>
 			<artifactId>authlib</artifactId>
@@ -103,7 +110,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/anweisen/Utilities</url>
+			<url>https://maven.pkg.github.com/anweisen/Utility</url>
 		</repository>
 	</distributionManagement>
 
