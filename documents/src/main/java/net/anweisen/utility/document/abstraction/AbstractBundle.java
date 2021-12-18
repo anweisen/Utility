@@ -12,16 +12,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static net.anweisen.utility.document.abstraction.DocumentHelper.throwOutOfBounds;
+import static net.anweisen.utility.document.abstraction.DocumentHelper.throwUneditable;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
 public abstract class AbstractBundle implements Bundle {
-
-	public static void throwUneditable() {
-		throw new IllegalStateException("This Bundle cannot be edited");
-	}
 
 	protected AtomicBoolean editable;
 

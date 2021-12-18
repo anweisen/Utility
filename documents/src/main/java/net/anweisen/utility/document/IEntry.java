@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * A {@link IEntry} represents some property snapshot of a {@link Document} or {@link Bundle}
@@ -199,6 +200,16 @@ public interface IEntry extends JsonConvertable {
 	 *         If this entry cannot be converted to a {@link Bundle}
 	 */
 	Bundle toBundle();
+
+	/**
+	 * @return this entry as {@link UUID}, could be {@code null} if this is {@link #isNull() null}
+	 *
+	 * @throws IllegalStateException
+	 *         If this entry cannot be converted to an {@link UUID}
+	 */
+	default UUID toUniqueId() {
+		return toInstance(UUID.class);
+	}
 
 	/**
 	 * @return this entry as {@link OffsetDateTime}, could be {@code null} if this is {@link #isNull() null}

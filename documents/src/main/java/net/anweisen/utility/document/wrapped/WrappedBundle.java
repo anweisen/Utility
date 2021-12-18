@@ -141,6 +141,12 @@ public interface WrappedBundle extends Bundle {
 
 	@Nonnull
 	@Override
+	default List<Boolean> toBooleans() {
+		return getTargetBundle().toBooleans();
+	}
+
+	@Nonnull
+	@Override
 	default Bundle set(int index, @Nullable Object value) {
 		return getTargetBundle().set(index, value);
 	}

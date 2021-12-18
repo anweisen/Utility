@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -132,6 +133,14 @@ public class MapEntry implements IEntry {
 		if (!isBundle()) DocumentHelper.throwNotBundle();
 		if (value instanceof Collection) value = new MapBundle((Collection<?>) value);
 		return (Bundle) value;
+	}
+
+	@Override
+	public UUID toUniqueId() {
+		if (value == null) return null;
+		if (value instanceof UUID) return (UUID) value;
+		if (value instanceof String) return UUID.fromString((String) value);
+		throw new IllegalStateException("Not a uuid");
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package net.anweisen.utility.document;
 
 import net.anweisen.utility.common.misc.FileUtils;
-import net.anweisen.utility.document.wrapped.WrappedBundle;
-import net.anweisen.utility.document.wrapped.WrappedDocument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,6 +11,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -215,6 +214,21 @@ public interface Bundle extends JsonConvertable {
 	@Nonnull
 	default List<Float> toFloats() {
 		return toInstances(float.class);
+	}
+
+	@Nonnull
+	default List<Boolean> toBooleans() {
+		return toInstances(boolean.class);
+	}
+
+	@Nonnull
+	default List<UUID> toUniqueIds() {
+		return toInstances(UUID.class);
+	}
+
+	@Nonnull
+	default <E extends Enum<?>> List<E> toEnums(@Nonnull Class<E> enumClass) {
+		return toInstances(enumClass);
 	}
 
 	/**

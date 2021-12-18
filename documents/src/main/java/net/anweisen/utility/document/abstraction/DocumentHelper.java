@@ -29,6 +29,10 @@ public final class DocumentHelper {
 		throw new IllegalArgumentException("Index " + index + " out of bounds for size " + size);
 	}
 
+	public static void throwUneditable() {
+		throw new IllegalStateException("Cannot be edited");
+	}
+
 	public static void throwNotNumber() {
 		throw new IllegalStateException("Not a number");
 	}

@@ -123,26 +123,6 @@ public class EmptyEntry implements IEntry {
 	}
 
 	@Override
-	public OffsetDateTime toOffsetDateTime() {
-		return null;
-	}
-
-	@Override
-	public Date toDate() {
-		return null;
-	}
-
-	@Override
-	public Class<?> toClass() {
-		return null;
-	}
-
-	@Override
-	public <E extends Enum<?>> E toEnum(@Nonnull Class<E> enumClass) {
-		return null;
-	}
-
-	@Override
 	public <T> T toInstance(@Nonnull Class<T> classOfT) {
 		return null;
 	}

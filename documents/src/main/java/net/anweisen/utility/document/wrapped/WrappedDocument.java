@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -33,6 +36,11 @@ public interface WrappedDocument extends Document {
 	@Override
 	default Map<String, IEntry> toEntryMap() {
 		return getTargetDocument().toEntryMap();
+	}
+
+	@Override
+	default <T> T toInstance(@Nonnull Class<T> classOfT) {
+		return getTargetDocument().toInstance(classOfT);
 	}
 
 	@Nonnull
@@ -109,6 +117,21 @@ public interface WrappedDocument extends Document {
 	}
 
 	@Override
+	default Object getObject(@Nonnull String path) {
+		return getTargetDocument().getObject(path);
+	}
+
+	@Override
+	default boolean getBoolean(@Nonnull String path) {
+		return getTargetDocument().getBoolean(path);
+	}
+
+	@Override
+	default boolean getBoolean(@Nonnull String path, boolean def) {
+		return getTargetDocument().getBoolean(path, def);
+	}
+
+	@Override
 	default long getLong(@Nonnull String path) {
 		return getTargetDocument().getLong(path);
 	}
@@ -169,6 +192,11 @@ public interface WrappedDocument extends Document {
 	}
 
 	@Override
+	default UUID getUniqueId(@Nonnull String path) {
+		return getTargetDocument().getUniqueId(path);
+	}
+
+	@Override
 	default <E extends Enum<?>> E getEnum(@Nonnull String path, @Nonnull Class<E> enumClass) {
 		return getTargetDocument().getEnum(path, enumClass);
 	}
@@ -176,6 +204,85 @@ public interface WrappedDocument extends Document {
 	@Override
 	default <E extends Enum<?>> E getEnum(@Nonnull String path, @Nonnull E def) {
 		return getTargetDocument().getEnum(path, def);
+	}
+
+	@Override
+	default <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getTargetDocument().getInstance(path, classOfT);
+	}
+
+	@Nonnull
+	@Override
+	default List<Document> getDocuments(@Nonnull String path) {
+		return getTargetDocument().getDocuments(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Bundle> getBundles(@Nonnull String path) {
+		return getTargetDocument().getBundles(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<String> getStrings(@Nonnull String path) {
+		return getTargetDocument().getStrings(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Boolean> getBooleans(@Nonnull String path) {
+		return getTargetDocument().getBooleans(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Long> getLongs(@Nonnull String path) {
+		return getTargetDocument().getLongs(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Integer> getInts(@Nonnull String path) {
+		return getTargetDocument().getInts(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Short> getShorts(@Nonnull String path) {
+		return getTargetDocument().getShorts(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Byte> getBytes(@Nonnull String path) {
+		return getTargetDocument().getBytes(path);
+	}
+
+	@Nonnull
+	@Override
+	default List<Float> getFloats(@Nonnull String path) {
+		return getTargetDocument().getFloats(path);
+	}
+
+	@Override
+	default List<Double> getDoubles(@Nonnull String path) {
+		return getTargetDocument().getDoubles(path);
+	}
+
+	@Override
+	default List<UUID> getUniqueIds(@Nonnull String path) {
+		return getTargetDocument().getUniqueIds(path);
+	}
+
+	@Override
+	default <E extends Enum<?>> List<E> getEnums(@Nonnull String path, @Nonnull Class<E> enumClass) {
+		return getTargetDocument().getEnums(path, enumClass);
+	}
+
+	@Override
+	default <T> List<T> getInstances(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getTargetDocument().getInstances(path, classOfT);
 	}
 
 	@Override
@@ -199,6 +306,12 @@ public interface WrappedDocument extends Document {
 	@Override
 	default Document set(@Nonnull String path, @Nullable Object value) {
 		return getTargetDocument().set(path, value);
+	}
+
+	@Nonnull
+	@Override
+	default Document set(@Nonnull Object values) {
+		return getTargetDocument().set(values);
 	}
 
 	@Nonnull
@@ -236,5 +349,17 @@ public interface WrappedDocument extends Document {
 	@Override
 	default void saveToFile(@Nonnull File file) throws IOException {
 		getTargetDocument().saveToFile(file);
+	}
+
+	@Nonnull
+	@Override
+	default Document apply(@Nonnull Consumer<? super Document> action) {
+		return getTargetDocument().apply(action);
+	}
+
+	@Nonnull
+	@Override
+	default Document applyIf(boolean condition, @Nonnull Consumer<? super Document> action) {
+		return getTargetDocument().applyIf(condition, action);
 	}
 }

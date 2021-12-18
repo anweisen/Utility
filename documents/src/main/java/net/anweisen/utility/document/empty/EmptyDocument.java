@@ -3,6 +3,7 @@ package net.anweisen.utility.document.empty;
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
 import net.anweisen.utility.document.IEntry;
+import net.anweisen.utility.document.abstraction.DocumentHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,6 +51,11 @@ public class EmptyDocument implements Document {
 	@Override
 	public String toPrettyJson() {
 		return JSON;
+	}
+
+	@Override
+	public <T> T toInstance(@Nonnull Class<T> classOfT) {
+		return null;
 	}
 
 	@Override
@@ -106,19 +112,29 @@ public class EmptyDocument implements Document {
 	@Nonnull
 	@Override
 	public Document set(@Nonnull String path, @Nullable Object value) {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public Document set(@Nonnull Object values) {
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Document remove(@Nonnull String path) {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Document clear() {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Override

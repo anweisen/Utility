@@ -70,6 +70,11 @@ public class GsonDocument extends AbstractDocument {
 		return CollectionUtils.convertEntries(object.entrySet(), Function.identity(), GsonEntry::new);
 	}
 
+	@Override
+	public <T> T toInstance(@Nonnull Class<T> classOfT) {
+		return GsonHelper.DEFAULT_GSON.fromJson(object, classOfT);
+	}
+
 	@Nonnull
 	@Override
 	public Collection<String> keys() {

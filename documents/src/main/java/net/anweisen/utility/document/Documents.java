@@ -1,5 +1,6 @@
 package net.anweisen.utility.document;
 
+import net.anweisen.utility.common.collection.WrappedException;
 import net.anweisen.utility.common.misc.FileUtils;
 import net.anweisen.utility.document.empty.EmptyBundle;
 import net.anweisen.utility.document.empty.EmptyDocument;
@@ -103,8 +104,34 @@ public final class Documents {
 
 	@Nonnull
 	@CheckReturnValue
+	public static Document newJsonDocumentUnchecked(@Nonnull Path file) {
+		try {
+			return newJsonDocument(file);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static Document newJsonDocumentUnchecked(@Nonnull File file) {
+		try {
+			return newJsonDocument(file);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	public static Bundle newJsonBundle() {
 		return new GsonBundle();
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static Bundle newJsonBundle(int initialSize) {
+		return new GsonBundle(initialSize);
 	}
 
 	@Nonnull
@@ -145,6 +172,26 @@ public final class Documents {
 
 	@Nonnull
 	@CheckReturnValue
+	public static Bundle newJsonBundleUnchecked(@Nonnull Path file) {
+		try {
+			return newJsonBundle(file);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static Bundle newJsonBundleUnchecked(@Nonnull File file) {
+		try {
+			return newJsonBundle(file);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	public static IEntry newJsonEntry(@Nullable Object value) {
 		return new GsonEntry(value);
 	}
@@ -159,6 +206,26 @@ public final class Documents {
 	@CheckReturnValue
 	public static StorableBundle newStorableJsonBundle(@Nonnull Path file) throws IOException {
 		return newStorableBundle(newJsonBundle(file), file);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static StorableDocument newStorableJsonDocumentUnchecked(@Nonnull Path file) {
+		try {
+			return newStorableJsonDocument(file);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static StorableBundle newStorableJsonBundleUnchecked(@Nonnull Path file) {
+		try {
+			return newStorableJsonBundle(file);
+		} catch (Exception ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 	@Nonnull

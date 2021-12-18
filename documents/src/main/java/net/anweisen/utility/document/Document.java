@@ -1,7 +1,6 @@
 package net.anweisen.utility.document;
 
 import net.anweisen.utility.common.misc.FileUtils;
-import net.anweisen.utility.document.wrapped.WrappedDocument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,8 +10,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -40,6 +42,8 @@ public interface Document extends JsonConvertable {
 	 */
 	@Nonnull
 	Map<String, IEntry> toEntryMap();
+
+	<T> T toInstance(@Nonnull Class<T> classOfT);
 
 	@Nonnull
 	@Override
@@ -108,6 +112,18 @@ public interface Document extends JsonConvertable {
 		return getEntry(path).toString(def);
 	}
 
+	default Object getObject(@Nonnull String path) {
+		return getEntry(path).toObject();
+	}
+
+	default boolean getBoolean(@Nonnull String path) {
+		return getEntry(path).toBoolean();
+	}
+
+	default boolean getBoolean(@Nonnull String path, boolean def) {
+		return getEntry(path).toBoolean(def);
+	}
+
 	default long getLong(@Nonnull String path) {
 		return getEntry(path).toLong();
 	}
@@ -156,12 +172,81 @@ public interface Document extends JsonConvertable {
 		return getEntry(path).toDouble(def);
 	}
 
+	default UUID getUniqueId(@Nonnull String path) {
+		return getEntry(path).toUniqueId();
+	}
+
 	default <E extends Enum<?>> E getEnum(@Nonnull String path, @Nonnull Class<E> enumClass) {
 		return getEntry(path).toEnum(enumClass);
 	}
 
 	default <E extends Enum<?>> E getEnum(@Nonnull String path, @Nonnull E def) {
 		return getEntry(path).toEnum(def);
+	}
+
+	default <T> T getInstance(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getEntry(path).toInstance(classOfT);
+	}
+
+	@Nonnull
+	default List<Document> getDocuments(@Nonnull String path) {
+		return getBundle(path).toDocuments();
+	}
+
+	@Nonnull
+	default List<Bundle> getBundles(@Nonnull String path) {
+		return getBundle(path).toBundles();
+	}
+
+	@Nonnull
+	default List<String> getStrings(@Nonnull String path) {
+		return getBundle(path).toStrings();
+	}
+
+	@Nonnull
+	default List<Boolean> getBooleans(@Nonnull String path) {
+		return getBundle(path).toBooleans();
+	}
+
+	@Nonnull
+	default List<Long> getLongs(@Nonnull String path) {
+		return getBundle(path).toLongs();
+	}
+
+	@Nonnull
+	default List<Integer> getInts(@Nonnull String path) {
+		return getBundle(path).toInts();
+	}
+
+	@Nonnull
+	default List<Short> getShorts(@Nonnull String path) {
+		return getBundle(path).toShorts();
+	}
+
+	@Nonnull
+	default List<Byte> getBytes(@Nonnull String path) {
+		return getBundle(path).toBytes();
+	}
+
+	@Nonnull
+	default List<Float> getFloats(@Nonnull String path) {
+		return getBundle(path).toFloats();
+	}
+
+	default List<Double> getDoubles(@Nonnull String path) {
+		return getBundle(path).toDoubles();
+	}
+
+	default List<UUID> getUniqueIds(@Nonnull String path) {
+		return getBundle(path).toUniqueIds();
+	}
+
+	default <E extends Enum<?>> List<E> getEnums(@Nonnull String path, @Nonnull Class<E> enumClass) {
+		return getBundle(path).toEnums(enumClass);
+	}
+
+	default <T> List<T> getInstances(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getBundle(path).toInstances(classOfT);
 	}
 
 	/**
@@ -189,6 +274,18 @@ public interface Document extends JsonConvertable {
 	 */
 	@Nonnull
 	Document set(@Nonnull String path, @Nullable Object value);
+
+	/**
+	 * Serializes the given object like in {@link #set(String, Object)}
+	 * and applies the properties to this document.
+	 *
+	 * @param values the new values object
+	 *
+	 * @throws IllegalStateException
+	 *         If this document cannot {@link #canEdit() be edited}
+	 */
+	@Nonnull
+	Document set(@Nonnull Object values);
 
 	/**
 	 * Removes the entry at the given path.
@@ -230,4 +327,18 @@ public interface Document extends JsonConvertable {
 		writer.flush();
 		writer.close();
 	}
+
+	@Nonnull
+	default Document apply(@Nonnull Consumer<? super Document> action) {
+		action.accept(this);
+		return this;
+	}
+
+	@Nonnull
+	default Document applyIf(boolean condition, @Nonnull Consumer<? super Document> action) {
+		if (condition)
+			action.accept(this);
+		return this;
+	}
+
 }

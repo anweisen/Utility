@@ -1,7 +1,9 @@
 package net.anweisen.utility.document.abstraction;
 
 import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
+import net.anweisen.utility.document.gson.GsonDocument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,15 +11,13 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
+import static net.anweisen.utility.document.abstraction.DocumentHelper.throwUneditable;
+
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
 public abstract class AbstractDocument implements Document {
-
-	public static void throwUneditable() {
-		throw new IllegalStateException("This Document cannot be edited");
-	}
 
 	protected final AtomicBoolean editable;
 
@@ -27,6 +27,11 @@ public abstract class AbstractDocument implements Document {
 
 	public AbstractDocument(@Nonnull AtomicBoolean editable) {
 		this.editable = editable;
+	}
+
+	@Override
+	public <T> T toInstance(@Nonnull Class<T> classOfT) {
+		return new GsonDocument(toMap()).toInstance(classOfT);
 	}
 
 	@Override
@@ -51,6 +56,14 @@ public abstract class AbstractDocument implements Document {
 	public Document set(@Nonnull String path, @Nullable Object value) {
 		if (!canEdit()) throwUneditable();
 		set0(path, value);
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public Document set(@Nonnull Object values) {
+		if (!canEdit()) throwUneditable();
+		Documents.newJsonDocument(values).forEach(this::set0);
 		return this;
 	}
 

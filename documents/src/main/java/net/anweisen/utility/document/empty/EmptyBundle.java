@@ -2,6 +2,7 @@ package net.anweisen.utility.document.empty;
 
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.IEntry;
+import net.anweisen.utility.document.abstraction.DocumentHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,25 +75,29 @@ public class EmptyBundle implements Bundle {
 	@Nonnull
 	@Override
 	public Bundle set(int index, @Nullable Object value) {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Bundle remove(int index) {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Bundle clear() {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Bundle add(@Nullable Object value) {
-		throw new IllegalStateException("Cannot be edited");
+		DocumentHelper.throwUneditable();
+		return this;
 	}
 
 	@Nonnull
