@@ -2,6 +2,7 @@ package net.anweisen.utility.document.bson;
 
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.DocumentHelper;
 import org.bson.BsonNull;
@@ -9,6 +10,7 @@ import org.bson.BsonValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -69,6 +71,11 @@ public class BsonEntry implements IEntry {
 			bsonValue.isString() ? bsonValue.asString().getValue() :
 			bsonValue.isSymbol() ? bsonValue.asSymbol().getSymbol() :
 			toJson();
+	}
+
+	@Override
+	public String toString() {
+		return toString(null);
 	}
 
 	@Override
@@ -143,12 +150,21 @@ public class BsonEntry implements IEntry {
 	}
 
 	@Override
+	public UUID toUniqueId() {
+		if (isNull()) return null;
+		if (value instanceof UUID) return (UUID) value;
+		if (value instanceof String) return UUID.fromString(String.valueOf(value));
+
+		DocumentHelper.throwNotUniqueId();
+		return null;
+	}
+
+	@Override
 	public <T> T toInstance(@Nonnull Class<T> classOfT) {
-		try {
+		if (classOfT.isInstance(value))
 			return classOfT.cast(value);
-		} catch (ClassCastException ex) {
-			throw new IllegalStateException("Not a " + classOfT.getSimpleName());
-		}
+
+		return Documents.newJsonEntry(value).toInstance(classOfT);
 	}
 
 	@Nonnull

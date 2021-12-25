@@ -15,11 +15,10 @@ import net.anweisen.utility.document.wrapped.WrappedDocument;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -92,14 +91,24 @@ public final class Documents {
 
 	@Nonnull
 	@CheckReturnValue
+	public static Document newJsonDocument(@Nonnull InputStream input) {
+		return newJsonDocument(new InputStreamReader(input, StandardCharsets.UTF_8));
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	public static Document newJsonDocument(@Nonnull Path file) throws IOException {
-		return new GsonDocument(FileUtils.newBufferedReader(file));
+		if (Files.exists(file))
+			return new GsonDocument(FileUtils.newBufferedReader(file));
+		return new GsonDocument();
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Document newJsonDocument(@Nonnull File file) throws IOException {
-		return new GsonDocument(FileUtils.newBufferedReader(file));
+		if (file.exists())
+			return new GsonDocument(FileUtils.newBufferedReader(file));
+		return new GsonDocument();
 	}
 
 	@Nonnull
@@ -160,14 +169,24 @@ public final class Documents {
 
 	@Nonnull
 	@CheckReturnValue
+	public static Bundle newJsonBundle(@Nonnull InputStream input) {
+		return newJsonBundle(new InputStreamReader(input, StandardCharsets.UTF_8));
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	public static Bundle newJsonBundle(@Nonnull Path file) throws IOException {
-		return new GsonBundle(FileUtils.newBufferedReader(file));
+		if (Files.exists(file))
+			return new GsonBundle(FileUtils.newBufferedReader(file));
+		return new GsonBundle();
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Bundle newJsonBundle(@Nonnull File file) throws IOException {
-		return new GsonBundle(FileUtils.newBufferedReader(file));
+		if (file.exists())
+			return new GsonBundle(FileUtils.newBufferedReader(file));
+		return new GsonBundle();
 	}
 
 	@Nonnull

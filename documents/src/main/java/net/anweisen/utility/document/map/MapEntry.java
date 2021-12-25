@@ -2,6 +2,7 @@ package net.anweisen.utility.document.map;
 
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.DocumentHelper;
 import net.anweisen.utility.document.gson.GsonHelper;
@@ -130,9 +131,10 @@ public class MapEntry implements IEntry {
 
 	@Override
 	public Bundle toBundle() {
-		if (!isBundle()) DocumentHelper.throwNotBundle();
+		if (isBundle()) DocumentHelper.throwNotBundle();
 		if (value instanceof Collection) value = new MapBundle((Collection<?>) value);
-		return (Bundle) value;
+		if (value instanceof Bundle) return (Bundle) value;
+		return (Bundle) (value = Documents.newJsonBundle(value));
 	}
 
 	@Override

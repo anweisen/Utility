@@ -49,6 +49,10 @@ public final class DocumentHelper {
 		throw new IllegalStateException("Not a char");
 	}
 
+	public static void throwNotUniqueId() {
+		throw new IllegalStateException("Not a uuid");
+	}
+
 	public static Date toDate(@Nonnull String value) {
 		try {
 			return DateFormat.getDateTimeInstance().parse(value);

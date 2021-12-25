@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -33,10 +34,10 @@ public class GsonBundle extends AbstractBundle {
 	}
 
 	public GsonBundle(@Nonnull JsonArray array) {
-		this(true, array);
+		this(array, new AtomicBoolean(true));
 	}
 
-	public GsonBundle(boolean editable, @Nonnull JsonArray array) {
+	public GsonBundle(@Nonnull JsonArray array, @Nonnull AtomicBoolean editable) {
 		super(editable);
 		this.array = array;
 	}

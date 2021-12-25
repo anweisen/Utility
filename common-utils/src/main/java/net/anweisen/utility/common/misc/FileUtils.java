@@ -58,6 +58,7 @@ public final class FileUtils {
 
 	@Nonnull
 	public static BufferedWriter newBufferedWriter(@Nonnull Path file) throws IOException {
+		if (!Files.exists(file)) createFile(file);
 		return Files.newBufferedWriter(file, StandardCharsets.UTF_8);
 	}
 

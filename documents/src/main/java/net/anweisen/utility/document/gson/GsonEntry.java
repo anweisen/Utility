@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.DocumentHelper;
 
@@ -64,6 +65,11 @@ public class GsonEntry implements IEntry {
 	@Override
 	public String toString(@Nullable String def) {
 		return isNull() ? def : element.isJsonPrimitive() && element.getAsJsonPrimitive().isString() ? element.getAsString() : element.toString();
+	}
+
+	@Override
+	public String toString() {
+		return toString(null);
 	}
 
 	@Override
@@ -136,8 +142,9 @@ public class GsonEntry implements IEntry {
 
 	@Override
 	public Bundle toBundle() {
-		if (!isBundle()) throw new IllegalStateException("Not a bundle");
-		return new GsonBundle(element.getAsJsonArray());
+		if (isNull()) throw new IllegalStateException("Not a bundle");
+		if (element.isJsonArray()) return new GsonBundle(element.getAsJsonArray());
+		return Documents.newJsonBundle(element);
 	}
 
 	@Override

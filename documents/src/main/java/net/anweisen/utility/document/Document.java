@@ -43,6 +43,15 @@ public interface Document extends JsonConvertable {
 	@Nonnull
 	Map<String, IEntry> toEntryMap();
 
+	/**
+	 * @param classOfT the class this entry should be converted to
+	 * @return this document converted to the given class, or {@code null} if this is {@link #isEmpty() empty}
+	 *
+	 * @throws IllegalStateException
+	 *         If the value cannot be converted to the given instance class by the underlying library
+	 *
+	 * @see IEntry#toInstance(Class)
+	 */
 	<T> T toInstance(@Nonnull Class<T> classOfT);
 
 	@Nonnull

@@ -7,6 +7,7 @@ import net.anweisen.utility.common.misc.CollectionUtils;
 import net.anweisen.utility.common.misc.GsonUtils;
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.AbstractDocument;
 
@@ -14,10 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -140,8 +138,12 @@ public class GsonDocument extends AbstractDocument {
 	public Bundle getBundle(@Nonnull String path) {
 		JsonElement element = getElement(path).orElse(null);
 		if (element == null || element.isJsonNull()) setElement(path, element = new JsonArray());
-		if (!element.isJsonArray()) throw new IllegalStateException("Element at " + path + " " + element.getClass().getSimpleName() + " cannot be converted to a JsonArray");
-		return new GsonBundle(element.getAsJsonArray());
+		if (element.isJsonArray()) return new GsonBundle(element.getAsJsonArray(), editable);
+
+		JsonArray array = new JsonArray(1);
+		array.add(element);
+		setElement(path, element);
+		return new GsonBundle(array);
 	}
 
 	@Nonnull
@@ -214,5 +216,23 @@ public class GsonDocument extends AbstractDocument {
 	@Override
 	public void write(@Nonnull Writer writer) {
 		GsonHelper.PRETTY_GSON.toJson(object, writer);
+	}
+
+	@Override
+	public String toString() {
+		return toJson();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		GsonDocument that = (GsonDocument) o;
+		return Objects.equals(object, that.object);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(object);
 	}
 }
