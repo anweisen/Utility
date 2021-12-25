@@ -131,4 +131,9 @@ public class MapDocument extends AbstractDocument {
 	public Map<Object, Object> getProperties() {
 		return properties;
 	}
+
+	@Override
+	public String toString() {
+		return toJson();
+	}
 }

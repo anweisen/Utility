@@ -255,6 +255,7 @@ public final class Documents {
 			@Nonnull public File getFile() { return file.toFile(); }
 			@Nonnull public Document getTargetDocument() { return document; }
 			public void saveExceptionally() throws Exception { saveToFile(file); }
+			@Nonnull public String toString() { return toJson(); }
 		}
 		return new DocumentClass();
 	}
@@ -273,6 +274,7 @@ public final class Documents {
 			@Nonnull public File getFile() { return file.toFile(); }
 			@Nonnull public Bundle getTargetBundle() { return bundle; }
 			public void saveExceptionally() throws Exception { saveToFile(file); }
+			@Nonnull public String toString() { return toJson(); }
 		}
 		return new BundleClass();
 	}
@@ -289,6 +291,7 @@ public final class Documents {
 		return new WrappedDocument() {
 			@Nonnull public Document getTargetDocument() { return document; }
 			public boolean canEdit() { return overwriteEditable != null ? overwriteEditable : WrappedDocument.super.canEdit(); }
+			@Nonnull public String toString() { return toJson(); }
 		};
 	}
 
@@ -298,6 +301,7 @@ public final class Documents {
 		return new WrappedBundle() {
 			@Nonnull public Bundle getTargetBundle() { return bundle; }
 			public boolean canEdit() { return overwriteEditable != null ? overwriteEditable : WrappedBundle.super.canEdit(); }
+			@Nonnull public String toString() { return toJson(); }
 		};
 	}
 

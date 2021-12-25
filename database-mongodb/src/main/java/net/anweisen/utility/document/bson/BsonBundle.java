@@ -89,4 +89,9 @@ public class BsonBundle extends AbstractBundle {
 	protected IEntry getEntry0(int index) {
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return toJson();
+	}
 }

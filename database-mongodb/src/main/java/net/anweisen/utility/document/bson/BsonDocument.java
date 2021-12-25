@@ -126,4 +126,9 @@ public class BsonDocument extends AbstractDocument {
 	protected void clear0() {
 		bsonDocument.clear();
 	}
+
+	@Override
+	public String toString() {
+		return toJson();
+	}
 }

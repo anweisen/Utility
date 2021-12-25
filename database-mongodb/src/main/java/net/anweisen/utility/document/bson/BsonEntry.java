@@ -29,7 +29,7 @@ public class BsonEntry implements IEntry {
 
 	@Override
 	public boolean isNull() {
-		return value != null;
+		return value == null;
 	}
 
 	@Override

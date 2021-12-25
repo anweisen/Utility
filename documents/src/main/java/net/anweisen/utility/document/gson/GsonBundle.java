@@ -121,4 +121,9 @@ public class GsonBundle extends AbstractBundle {
 	public void write(@Nonnull Writer writer) {
 		GsonHelper.PRETTY_GSON.toJson(array, writer);
 	}
+
+	@Override
+	public String toString() {
+		return toJson();
+	}
 }

@@ -128,4 +128,9 @@ public class EmptyBundle implements Bundle {
 	@Override
 	public void write(@Nonnull Writer writer) {
 	}
+
+	@Override
+	public String toString() {
+		return toJson();
+	}
 }
