@@ -5,7 +5,7 @@
   ],
 
   "error-error": "Something went wrong",
-  "error-cooldown": "Bitte warte noch `{0}s`",
+  "error-cooldown": "Bitte warte noch `{0}`",
   "error-incorrect-arguments": "Bitte nutze `{0}`",
   "error-incorrect-arguments-multiple": "Bitte nutze einen der folgenden Commands:",
   "error-incorrect-arguments-multiple-entry": "• `{0}`",
