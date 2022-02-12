@@ -67,7 +67,7 @@ public final class BukkitReflectionUtils {
 
 	public static int getMinHeight(@Nonnull World world) {
 		try {
-			world.getMinHeight();
+			return world.getMinHeight();
 		} catch (Throwable ex) {
 		}
 
