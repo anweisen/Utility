@@ -32,7 +32,8 @@ public enum MinecraftVersion implements Version {
 	V1_16,      // 1.16
 	V1_16_5,    // 1.16.5
 	V1_17,      // 1.17
-	V1_18;		// 1.18
+	V1_18,		// 1.18
+	V_19,		// 1.19
 	;
 
 	private final int major, minor, revision;
