@@ -62,6 +62,7 @@ public final class ItemUtils {
 			case "AMETHYST_CLUSTER":
 			case "BUDDING_AMETHYST":
 			case "POWDER_SNOW":
+			case "BUDDING_AMETHYST":	
 				return false;
 		}
 
