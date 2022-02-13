@@ -1,6 +1,7 @@
 package net.anweisen.utility.bukkit.utils.item;
 
 import net.anweisen.utility.bukkit.utils.misc.BukkitReflectionUtils;
+import net.anweisen.utility.bukkit.utils.misc.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -62,7 +63,12 @@ public final class ItemUtils {
 			case "AMETHYST_CLUSTER":
 			case "BUDDING_AMETHYST":
 			case "POWDER_SNOW":
+			case "LIGHT":
 				return false;
+		}
+
+		if (MinecraftVersion.current().isOlderThan(MinecraftVersion.V_19)) {
+			return !name.equals("BUNDLE");
 		}
 
 		return true;
