@@ -1,7 +1,7 @@
 package net.anweisen.utilities.bukkit.utils.item;
 
-import net.anweisen.utility.bukkit.utils.misc.BukkitReflectionUtils;
-import net.anweisen.utility.bukkit.utils.misc.MinecraftVersion;
+import net.anweisen.utilities.bukkit.utils.misc.BukkitReflectionUtils;
+import net.anweisen.utilities.bukkit.utils.misc.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
