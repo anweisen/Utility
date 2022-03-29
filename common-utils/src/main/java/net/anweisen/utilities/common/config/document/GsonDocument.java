@@ -47,9 +47,10 @@ public class GsonDocument extends AbstractDocument {
 	// Not implemented in some versions of gson
 	TypeAdapter<Number> NUMBER = new TypeAdapter<Number>() {
 		@Override
-		public void write(JsonWriter jsonWriter, Number number) throws IOException {
-			TypeAdapters.STRING.write(jsonWriter, String.valueOf(number));
+		public void write(JsonWriter out, Number value) throws IOException {
+			out.value(value);
 		}
+		@Override
 		public Number read(JsonReader in) throws IOException {
 			JsonToken jsonToken = in.peek();
 			switch (jsonToken) {
