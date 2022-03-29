@@ -1,7 +1,11 @@
 package net.anweisen.utilities.common.config.document;
 
 import com.google.gson.*;
+import com.google.gson.internal.LazilyParsedNumber;
 import com.google.gson.internal.bind.TypeAdapters;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import net.anweisen.utilities.common.collection.pair.Pair;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.gson.*;
@@ -39,6 +43,28 @@ public class GsonDocument extends AbstractDocument {
 		GSON = builder.create();
 		GSON_PRETTY_PRINT = builder.setPrettyPrinting().create();
 	}
+
+	// Not implemented in some versions of gson
+	TypeAdapter<Number> NUMBER = new TypeAdapter<Number>() {
+		@Override
+		public void write(JsonWriter jsonWriter, Number number) throws IOException {
+			TypeAdapters.STRING.write(jsonWriter, String.valueOf(number));
+		}
+		public Number read(JsonReader in) throws IOException {
+			JsonToken jsonToken = in.peek();
+			switch (jsonToken) {
+				case NUMBER:
+				case STRING:
+					return new LazilyParsedNumber(in.nextString());
+				case BOOLEAN:
+				default:
+					throw new JsonSyntaxException("Expecting number, got: " + jsonToken);
+				case NULL:
+					in.nextNull();
+					return null;
+			}
+		}
+	};
 
 	public static final Gson GSON, GSON_PRETTY_PRINT;
 
@@ -395,7 +421,7 @@ public class GsonDocument extends AbstractDocument {
 		JsonElement jsonValue =
 			value instanceof JsonElement ? (JsonElement) value
 		  : value == null ? JsonNull.INSTANCE
-		  : value instanceof Number ? TypeAdapters.NUMBER.toJsonTree((Number) value)
+		  : value instanceof Number ? NUMBER.toJsonTree((Number) value)
 		  : value instanceof Boolean ? TypeAdapters.BOOLEAN.toJsonTree((boolean) value)
 		  : value instanceof Character ? TypeAdapters.CHARACTER.toJsonTree((char) value)
 		  : GSON.toJsonTree(value);
