@@ -16,7 +16,8 @@ import java.awt.*;
  */
 public final class ColorHelper {
 
-	private ColorHelper() {}
+	private ColorHelper() {
+	}
 
 
 	@Nonnull
@@ -37,10 +38,14 @@ public final class ColorHelper {
 	@CheckReturnValue
 	public static Color getColorForStatus(@Nonnull OnlineStatus status) {
 		switch (status) {
-			case ONLINE:            return Colors.ONLINE;
-			case DO_NOT_DISTURB:    return Colors.DO_NOT_DISTURB;
-			case IDLE:              return Colors.IDLE;
-			default:                return Colors.OFFLINE;
+			case ONLINE:
+				return Colors.ONLINE;
+			case DO_NOT_DISTURB:
+				return Colors.DO_NOT_DISTURB;
+			case IDLE:
+				return Colors.IDLE;
+			default:
+				return Colors.OFFLINE;
 		}
 	}
 }

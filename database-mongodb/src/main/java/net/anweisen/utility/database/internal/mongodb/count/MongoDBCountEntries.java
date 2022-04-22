@@ -23,6 +23,12 @@ public class MongoDBCountEntries implements DatabaseCountEntries {
 
 	@Nonnull
 	@Override
+	public String getTable() {
+		return table;
+	}
+
+	@Nonnull
+	@Override
 	public Long execute() throws DatabaseException {
 		try {
 			return database.getCollection(table).countDocuments();

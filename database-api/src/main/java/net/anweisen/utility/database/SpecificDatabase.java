@@ -1,18 +1,17 @@
 package net.anweisen.utility.database;
 
 import net.anweisen.utility.database.action.*;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 /**
- * Represents a table/collection of a database
+ * Represents a table/collection of a database.
+ * Allows use of table actions
  *
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Database
  * @see Database#getSpecificDatabase(String)
+ * @since 1.0
  */
 public interface SpecificDatabase {
 
@@ -62,6 +61,13 @@ public interface SpecificDatabase {
 	@Nonnull
 	@CheckReturnValue
 	DatabaseDeletion delete();
+
+	/**
+	 * @see Database#listColumns(String)
+	 */
+	@Nonnull
+	@CheckReturnValue
+	DatabaseListColumns listColumns();
 
 	@Nonnull
 	Database getParent();

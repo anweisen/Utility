@@ -5,9 +5,8 @@ import java.lang.annotation.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Deprecated
+ * @since 1.0
  */
 @Documented
 @Retention(RetentionPolicy.CLASS)

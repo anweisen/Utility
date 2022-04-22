@@ -6,7 +6,6 @@ import net.anweisen.utility.database.action.*;
 import net.anweisen.utility.database.exception.DatabaseAlreadyConnectedException;
 import net.anweisen.utility.database.exception.DatabaseConnectionClosedException;
 import net.anweisen.utility.database.exception.DatabaseException;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
@@ -35,10 +34,8 @@ public interface Database {
 	/**
 	 * Creates the connection to the database synchronously.
 	 *
-	 * @throws DatabaseException
-	 *         If the connection could not be established
-	 * @throws DatabaseAlreadyConnectedException
-	 *         If this database is already {@link #isConnected() connected}
+	 * @throws DatabaseException                 If the connection could not be established
+	 * @throws DatabaseAlreadyConnectedException If this database is already {@link #isConnected() connected}
 	 */
 	void connect() throws DatabaseException;
 
@@ -53,10 +50,8 @@ public interface Database {
 	/**
 	 * Closes the connection to the database synchronously.
 	 *
-	 * @throws DatabaseException
-	 *         If something went wrong while closing the connection to the database
-	 * @throws DatabaseConnectionClosedException
-	 *         If this database is not {@link #isConnected() connected}
+	 * @throws DatabaseException                 If something went wrong while closing the connection to the database
+	 * @throws DatabaseConnectionClosedException If this database is not {@link #isConnected() connected}
 	 */
 	void disconnect() throws DatabaseException;
 
@@ -68,17 +63,31 @@ public interface Database {
 	 */
 	boolean disconnectSafely();
 
-	void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException;
-	void createTableSafely(@Nonnull String name, @Nonnull SQLColumn... columns);
+	default void createTable(@Nonnull String name, @Nonnull SqlColumn... columns) throws DatabaseException {
+		createTable(name, false, columns);
+	}
+
+	void createTable(@Nonnull String name, boolean update, @Nonnull SqlColumn... columns) throws DatabaseException;
+
+	void editTable(@Nonnull String name, @Nonnull SqlColumn... columns) throws DatabaseException;
 
 	@Nonnull
-	default Task<Void> createTableAsync(@Nonnull String name, @Nonnull SQLColumn... columns) {
+	default Task<Void> createTableAsync(@Nonnull String name, @Nonnull SqlColumn... columns) {
 		return Task.asyncRunExceptionally(() -> createTable(name, columns));
+	}
+
+	@Nonnull
+	default Task<Void> createTableAsync(@Nonnull String name, boolean replace, @Nonnull SqlColumn... columns) {
+		return Task.asyncRunExceptionally(() -> createTable(name, replace, columns));
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	DatabaseListTables listTables();
+
+	@Nonnull
+	@CheckReturnValue
+	DatabaseListColumns listColumns(@Nonnull String table);
 
 	@Nonnull
 	@CheckReturnValue

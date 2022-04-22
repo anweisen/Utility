@@ -16,22 +16,22 @@ import java.util.List;
 public final class SoundSample {
 
 	public static final SoundSample
-			CLICK           = new SoundSample().addSound(Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 0.5f),
-			BASS_OFF        = new SoundSample().addSound(Sound.BLOCK_NOTE_BLOCK_BASS, 0.5F),
-			BASS_ON         = new SoundSample().addSound(Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F),
-			PLING           = new SoundSample().addSound(Sound.BLOCK_NOTE_BLOCK_BELL, 1),
-			KLING           = new SoundSample().addSound(Sound.ENTITY_PLAYER_LEVELUP, 0.6F, 2),
-			LEVEL_UP        = new SoundSample().addSound(Sound.ENTITY_PLAYER_LEVELUP, 0.6F, 1.1f),
-			PLOP            = new SoundSample().addSound(Sound.ENTITY_CHICKEN_EGG, 1, 2),
-			LOW_PLOP        = new SoundSample().addSound(Sound.ENTITY_CHICKEN_EGG, 1, 1.3f),
-			DEATH           = new SoundSample().addSound(Sound.ENTITY_BAT_DEATH, 0.7F),
-			TELEPORT        = new SoundSample().addSound(Sound.ITEM_CHORUS_FRUIT_TELEPORT, 0.9F),
-			OPEN            = new SoundSample().addSound(KLING).addSound(PLOP),
-			EAT             = new SoundSample().addSound(Sound.ENTITY_PLAYER_BURP, 1),
-			BLAST           = new SoundSample().addSound(Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1),
-			BREAK           = new SoundSample().addSound(Sound.ENTITY_WITHER_BREAK_BLOCK, 0.7f),
-			WIN             = new SoundSample().addSound(Sound.UI_TOAST_CHALLENGE_COMPLETE, 1),
-			DRAGON_BREATH   = new SoundSample().addSound(Sound.ENTITY_ENDER_DRAGON_GROWL, 0.5F);
+		CLICK = new SoundSample().addSound(Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 0.5f),
+		BASS_OFF = new SoundSample().addSound(Sound.BLOCK_NOTE_BLOCK_BASS, 0.5F),
+		BASS_ON = new SoundSample().addSound(Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F),
+		PLING = new SoundSample().addSound(Sound.BLOCK_NOTE_BLOCK_BELL, 1),
+		KLING = new SoundSample().addSound(Sound.ENTITY_PLAYER_LEVELUP, 0.6F, 2),
+		LEVEL_UP = new SoundSample().addSound(Sound.ENTITY_PLAYER_LEVELUP, 0.6F, 1.1f),
+		PLOP = new SoundSample().addSound(Sound.ENTITY_CHICKEN_EGG, 1, 2),
+		LOW_PLOP = new SoundSample().addSound(Sound.ENTITY_CHICKEN_EGG, 1, 1.3f),
+		DEATH = new SoundSample().addSound(Sound.ENTITY_BAT_DEATH, 0.7F),
+		TELEPORT = new SoundSample().addSound(Sound.ITEM_CHORUS_FRUIT_TELEPORT, 0.9F),
+		OPEN = new SoundSample().addSound(KLING).addSound(PLOP),
+		EAT = new SoundSample().addSound(Sound.ENTITY_PLAYER_BURP, 1),
+		BLAST = new SoundSample().addSound(Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1),
+		BREAK = new SoundSample().addSound(Sound.ENTITY_WITHER_BREAK_BLOCK, 0.7f),
+		WIN = new SoundSample().addSound(Sound.UI_TOAST_CHALLENGE_COMPLETE, 1),
+		DRAGON_BREATH = new SoundSample().addSound(Sound.ENTITY_ENDER_DRAGON_GROWL, 0.5F);
 
 	public static void playStatusSound(@Nonnull Player player, boolean enabled) {
 		(enabled ? BASS_ON : BASS_OFF).play(player);

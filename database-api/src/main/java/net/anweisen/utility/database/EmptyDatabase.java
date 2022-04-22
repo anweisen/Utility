@@ -2,10 +2,11 @@ package net.anweisen.utility.database;
 
 import net.anweisen.utility.common.concurrent.task.Task;
 import net.anweisen.utility.database.action.*;
+import net.anweisen.utility.database.action.result.ExecutedQuery;
+import net.anweisen.utility.database.action.result.ExistingSqlColumn;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.abstraction.DefaultExecutedQuery;
 import net.anweisen.utility.database.internal.abstraction.DefaultSpecificDatabase;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -23,12 +24,12 @@ public class EmptyDatabase implements Database {
 		this.silent = silent;
 	}
 
-	public boolean isSilent() {
-		return silent;
+	protected static void throwException(@Nonnull String message) {
+		throw new UnsupportedOperationException(message);
 	}
 
-	protected void exception(@Nonnull String message) {
-		throw new UnsupportedOperationException(message);
+	public boolean isSilent() {
+		return silent;
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public void connect() throws DatabaseException {
 		if (!silent)
-			exception("Cannot connect with a NOP Database");
+			throwException("Cannot connect with a NOP Database");
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public void disconnect() throws DatabaseException {
 		if (!silent)
-			exception("Cannot disconnect from a NOP Database");
+			throwException("Cannot disconnect from a NOP Database");
 	}
 
 	@Override
@@ -59,29 +60,40 @@ public class EmptyDatabase implements Database {
 	}
 
 	@Override
-	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
+	public void createTable(@Nonnull String name, boolean update, @Nonnull SqlColumn... columns) throws DatabaseException {
 		if (!silent)
-			exception("Cannot create tables from a NOP Database");
+			throwException("Cannot create tables from a NOP Database");
 	}
 
 	@Override
-	public void createTableSafely(@Nonnull String name, @Nonnull SQLColumn... columns) {
+	public void editTable(@Nonnull String name, @Nonnull SqlColumn... columns) throws DatabaseException {
+		if (!silent)
+			throwException("Cannot edit tables from a NOP Database");
 	}
 
 	@Nonnull
 	@Override
 	public DatabaseListTables listTables() {
 		if (!silent)
-			exception("Cannot list tables of a NOP Database");
+			throwException("Cannot list tables of a NOP Database");
 
 		return new EmptyListTables();
 	}
 
 	@Nonnull
 	@Override
+	public DatabaseListColumns listColumns(@Nonnull String table) {
+		if (!silent)
+			throwException("Cannot list columns of a NOP Database");
+
+		return new EmptyListColumns();
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseCountEntries countEntries(@Nonnull String table) {
 		if (!silent)
-			exception("Cannot count entries of a NOP Database");
+			throwException("Cannot count entries of a NOP Database");
 
 		return new EmptyCountEntries();
 	}
@@ -90,7 +102,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public DatabaseQuery query(@Nonnull String table) {
 		if (!silent)
-			exception("Cannot query in a NOP Database");
+			throwException("Cannot query in a NOP Database");
 
 		return new EmptyDatabaseQuery();
 	}
@@ -99,7 +111,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public DatabaseUpdate update(@Nonnull String table) {
 		if (!silent)
-			exception("Cannot update in a NOP Database");
+			throwException("Cannot update in a NOP Database");
 
 		return new EmptyVoidAction();
 	}
@@ -108,7 +120,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public DatabaseInsertion insert(@Nonnull String table) {
 		if (!silent)
-			exception("Cannot insert into a NOP Database");
+			throwException("Cannot insert into a NOP Database");
 
 		return new EmptyVoidAction();
 	}
@@ -117,7 +129,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table) {
 		if (!silent)
-			exception("Cannot inset or update into a NOP Database");
+			throwException("Cannot inset or update into a NOP Database");
 
 		return new EmptyVoidAction();
 	}
@@ -126,7 +138,7 @@ public class EmptyDatabase implements Database {
 	@Override
 	public DatabaseDeletion delete(@Nonnull String table) {
 		if (!silent)
-			exception("Cannot delete from a NOP Database");
+			throwException("Cannot delete from a NOP Database");
 
 		return new EmptyVoidAction();
 	}
@@ -149,6 +161,12 @@ public class EmptyDatabase implements Database {
 	}
 
 	public static class EmptyDatabaseQuery implements DatabaseQuery {
+
+		@Nonnull
+		@Override
+		public String getTable() {
+			throw new UnsupportedOperationException();
+		}
 
 		@Nonnull
 		@Override
@@ -188,7 +206,13 @@ public class EmptyDatabase implements Database {
 
 		@Nonnull
 		@Override
-		public DatabaseQuery orderBy(@Nonnull String field, @Nonnull Order order) {
+		public DatabaseQuery order(@Nonnull String field, @Nonnull Order order) {
+			return this;
+		}
+
+		@Nonnull
+		@Override
+		public DatabaseQuery limit(int amount) {
 			return this;
 		}
 
@@ -207,6 +231,12 @@ public class EmptyDatabase implements Database {
 	}
 
 	public static class EmptyVoidAction implements DatabaseDeletion, DatabaseInsertion, DatabaseUpdate, DatabaseInsertionOrUpdate {
+
+		@Nonnull
+		@Override
+		public String getTable() {
+			throw new UnsupportedOperationException();
+		}
 
 		@Nonnull
 		@Override
@@ -271,6 +301,11 @@ public class EmptyDatabase implements Database {
 			return Task.completed(0L);
 		}
 
+		@Nonnull
+		@Override
+		public String getTable() {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static class EmptyListTables implements DatabaseListTables {
@@ -285,6 +320,28 @@ public class EmptyDatabase implements Database {
 		@Override
 		public Task<List<String>> executeAsync() {
 			return Task.completed(Collections.emptyList());
+		}
+
+	}
+
+	public static class EmptyListColumns implements DatabaseListColumns {
+
+		@Nonnull
+		@Override
+		public List<ExistingSqlColumn> execute() throws DatabaseException {
+			return Collections.emptyList();
+		}
+
+		@Nonnull
+		@Override
+		public Task<List<ExistingSqlColumn>> executeAsync() {
+			return Task.completed(Collections.emptyList());
+		}
+
+		@Nonnull
+		@Override
+		public String getTable() {
+			throw new UnsupportedOperationException();
 		}
 
 	}

@@ -35,7 +35,8 @@ public final class FileUtils {
 		.of("create", "false", "encoding", "UTF-8");
 	private static Path tempDirectory;
 
-	private FileUtils() {}
+	private FileUtils() {
+	}
 
 	@Nullable
 	public static Path getTempDirectory() {

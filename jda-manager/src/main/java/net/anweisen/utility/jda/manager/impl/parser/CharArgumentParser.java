@@ -24,7 +24,7 @@ public class CharArgumentParser implements ArgumentParser<Character, Object> {
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.disableMultiWords();
+			.disableMultiWords();
 	}
 
 }

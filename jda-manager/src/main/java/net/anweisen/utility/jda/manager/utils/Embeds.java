@@ -17,7 +17,8 @@ import javax.annotation.Nullable;
  */
 public final class Embeds {
 
-	private Embeds() {}
+	private Embeds() {
+	}
 
 	@Nonnull
 	@CheckReturnValue
@@ -59,8 +60,8 @@ public final class Embeds {
 	@CheckReturnValue
 	public static EmbedBuilder construct(@Nonnull Guild guild, @Nullable String authorURL, @Nullable String suffix) {
 		return new EmbedBuilder()
-				.setColor(ColorHelper.getMemberColorNonnull(guild.getSelfMember()))
-				.setAuthor(title(guild, suffix), authorURL, guild.getIconUrl());
+			.setColor(ColorHelper.getMemberColorNonnull(guild.getSelfMember()))
+			.setAuthor(title(guild, suffix), authorURL, guild.getIconUrl());
 	}
 
 	@Nonnull
@@ -79,7 +80,7 @@ public final class Embeds {
 	@CheckReturnValue
 	public static EmbedBuilder construct(@Nonnull Member member, @Nullable String authorUrl, @Nullable String suffix) {
 		return new EmbedBuilder().setColor(ColorHelper.getMemberColorNonnull(member.getGuild().getSelfMember()))
-				.setAuthor(title(member, suffix), authorUrl, member.getUser().getEffectiveAvatarUrl());
+			.setAuthor(title(member, suffix), authorUrl, member.getUser().getEffectiveAvatarUrl());
 	}
 
 	@Nonnull

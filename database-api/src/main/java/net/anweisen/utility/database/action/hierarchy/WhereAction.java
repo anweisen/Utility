@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Database actions which implement this interface are capable of specifying where the action should be performed.
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */

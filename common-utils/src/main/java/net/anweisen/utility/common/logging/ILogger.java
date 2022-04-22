@@ -66,8 +66,8 @@ public interface ILogger {
 				}
 			}
 
-			data          = new Data();
-			data.slf4j    = slf4j;
+			data = new Data();
+			data.slf4j = slf4j;
 			data.slf4jApi = slf4jApi;
 		}
 
@@ -82,11 +82,12 @@ public interface ILogger {
 		@Nonnull
 		private static ILoggerFactory getFallbackFactory() {
 			return isSlf4jImplAvailable() ? new Slf4jLoggerFactory() :
-				   isSlf4jApiAvailable() ? new DefaultLoggerFactory(SimpleLogger::new) :
-						                   new DefaultLoggerFactory(FallbackLogger::new);
+				isSlf4jApiAvailable() ? new DefaultLoggerFactory(SimpleLogger::new) :
+					new DefaultLoggerFactory(FallbackLogger::new);
 		}
 
-		private Holder() {}
+		private Holder() {
+		}
 
 	}
 
@@ -182,7 +183,7 @@ public interface ILogger {
 		log(LogLevel.INFO, message, args);
 	}
 
-	default void info(@Nullable Object message, @Nonnull Object... args)  {
+	default void info(@Nullable Object message, @Nonnull Object... args) {
 		log(LogLevel.INFO, message, args);
 	}
 
@@ -286,7 +287,7 @@ public interface ILogger {
 			if (arg instanceof Throwable) continue;
 			int index = message.indexOf("{}");
 			if (index == -1) break;
-			message.replace(index, index+2, String.valueOf(arg));
+			message.replace(index, index + 2, String.valueOf(arg));
 		}
 		return message.toString();
 	}

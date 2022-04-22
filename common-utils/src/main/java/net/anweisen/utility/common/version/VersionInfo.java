@@ -55,8 +55,7 @@ public class VersionInfo implements Version {
 	}
 
 	/**
-	 * @throws IllegalArgumentException
-	 *         If the version could not be parsed
+	 * @throws IllegalArgumentException If the version could not be parsed
 	 */
 	public static Version parseExceptionally(@Nullable String input) {
 		if (input == null) throw new IllegalArgumentException("Version cannot be null");

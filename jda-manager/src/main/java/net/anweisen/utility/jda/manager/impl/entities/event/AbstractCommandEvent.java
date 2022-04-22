@@ -4,6 +4,7 @@ import net.anweisen.utility.common.collection.Colors;
 import net.anweisen.utility.jda.manager.CommandManager;
 import net.anweisen.utility.jda.manager.hooks.event.CommandEvent;
 import net.anweisen.utility.jda.manager.hooks.event.ReplyMessageAction;
+import net.anweisen.utility.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utility.jda.manager.impl.entities.action.MessageReplyMessageAction;
 import net.anweisen.utility.jda.manager.impl.entities.action.ReplyReplyMessageAction;
 import net.anweisen.utility.jda.manager.language.Language;
@@ -29,12 +30,14 @@ import java.util.EnumSet;
 public abstract class AbstractCommandEvent implements CommandEvent {
 
 	protected final CommandManager manager;
+	protected final CommandOptions commandOptions;
 	protected final MessageChannel channel;
 	protected final Member member;
 	protected final boolean disableMentions, embeds;
 
-	public AbstractCommandEvent(@Nonnull CommandManager manager, @Nonnull MessageChannel channel, @Nullable Member member, boolean disableMentions, boolean embeds) {
+	public AbstractCommandEvent(@Nonnull CommandManager manager, @Nonnull CommandOptions commandOptions, @Nonnull MessageChannel channel, @Nullable Member member, boolean disableMentions, boolean embeds) {
 		this.manager = manager;
+		this.commandOptions = commandOptions;
 		this.channel = channel;
 		this.member = member;
 		this.disableMentions = disableMentions;
@@ -175,6 +178,12 @@ public abstract class AbstractCommandEvent implements CommandEvent {
 	@Override
 	public CommandManager getManager() {
 		return manager;
+	}
+
+	@Nonnull
+	@Override
+	public CommandOptions getCommand() {
+		return commandOptions;
 	}
 
 	@Override

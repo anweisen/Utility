@@ -17,7 +17,8 @@ public final class TimingsHelper {
 	public static final ILogger LOGGER = ILogger.forThisClass();
 	private static final Map<String, Long> timings = new ConcurrentHashMap<>();
 
-	private TimingsHelper() {}
+	private TimingsHelper() {
+	}
 
 	public static void start(@Nonnull String id) {
 		timings.put(id, System.currentTimeMillis());

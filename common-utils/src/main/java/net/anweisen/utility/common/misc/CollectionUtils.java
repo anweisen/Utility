@@ -24,7 +24,8 @@ public final class CollectionUtils {
 	private static final ILogger logger = ILogger.forThisClass();
 	private static boolean logMappingError = true;
 
-	private CollectionUtils() {}
+	private CollectionUtils() {
+	}
 
 	public static void disableErrorLogging() {
 		logMappingError = false;
@@ -123,7 +124,7 @@ public final class CollectionUtils {
 	@Nonnull
 	@CheckReturnValue
 	public static <From, To> List<To> convertIterator(@Nonnull Iterator<From> iterator,
-	                                                    @Nonnull Function<? super From, ? extends To> mapper) {
+	                                                  @Nonnull Function<? super From, ? extends To> mapper) {
 		List<To> result = new ArrayList<>();
 		while (iterator.hasNext()) {
 			From value = iterator.next();

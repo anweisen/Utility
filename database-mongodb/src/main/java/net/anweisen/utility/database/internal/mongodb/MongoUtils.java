@@ -4,10 +4,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.Sorts;
 import net.anweisen.utility.common.misc.BukkitReflectionSerializationUtils;
-import net.anweisen.utility.document.bson.BsonHelper;
 import net.anweisen.utility.database.Order;
 import net.anweisen.utility.database.internal.mongodb.where.MongoDBWhere;
 import net.anweisen.utility.document.JsonConvertable;
+import net.anweisen.utility.document.bson.BsonHelper;
 import org.bson.*;
 
 import javax.annotation.Nonnull;
@@ -36,12 +36,8 @@ public final class MongoUtils {
 	public static void applyOrder(@Nonnull FindIterable<Document> iterable, @Nullable String orderBy, @Nullable Order order) {
 		if (order == null || orderBy == null) return;
 		switch (order) {
-			case HIGHEST:
-				iterable.sort(Sorts.descending(orderBy));
-				break;
-			case LOWEST:
-				iterable.sort(Sorts.ascending(orderBy));
-				break;
+			case HIGHEST -> iterable.sort(Sorts.descending(orderBy));
+			case LOWEST -> iterable.sort(Sorts.ascending(orderBy));
 		}
 	}
 
@@ -57,7 +53,7 @@ public final class MongoUtils {
 			if (values == null) return null;
 			return BsonHelper.toBsonDocument(values);
 		} else if (value instanceof UUID) {
-			return ((UUID) value).toString();
+			return value.toString();
 		} else {
 			return value;
 		}
@@ -108,5 +104,6 @@ public final class MongoUtils {
 		return map;
 	}
 
-	private MongoUtils() {}
+	private MongoUtils() {
+	}
 }

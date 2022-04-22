@@ -24,7 +24,8 @@ import java.util.function.Consumer;
  */
 public final class ReflectionUtils {
 
-	private ReflectionUtils() {}
+	private ReflectionUtils() {
+	}
 
 	@Nonnull
 	public static Collection<Method> getPublicMethodsAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> annotationClass) {
@@ -81,7 +82,8 @@ public final class ReflectionUtils {
 		for (String name : names) {
 			try {
 				return Enum.valueOf(classOfEnum, name);
-			} catch (IllegalArgumentException | NoSuchFieldError ex) { }
+			} catch (IllegalArgumentException | NoSuchFieldError ex) {
+			}
 		}
 		throw new IllegalArgumentException("No enum found in " + classOfEnum.getName() + " for " + Arrays.toString(names));
 	}
@@ -91,11 +93,8 @@ public final class ReflectionUtils {
 	 * Because we can't just cast such an array to {@code Object[]}, we have to use some reflections.
 	 *
 	 * @param array The target array, as {@link Object}; Can't use an array type here.
-	 * @param <T> The type of data we will cast the content to. Use {@link Object} if the it's unknown.
-	 *
-	 * @throws IllegalArgumentException
-	 *         If the {@code array} is not an actual array
-	 *
+	 * @param <T>   The type of data we will cast the content to. Use {@link Object} if the it's unknown.
+	 * @throws IllegalArgumentException If the {@code array} is not an actual array
 	 * @see Array
 	 * @see Array#getLength(Object)
 	 * @see Array#get(Object, int)
@@ -160,7 +159,6 @@ public final class ReflectionUtils {
 
 	/**
 	 * @return Returns {@code null} if no annotation of this class is present
-	 *
 	 * @see Field#getAnnotation(Class)
 	 */
 	public static <E extends Enum<?>, A extends Annotation> A getEnumAnnotation(@Nonnull E enun, Class<A> classOfAnnotation) {
@@ -195,6 +193,28 @@ public final class ReflectionUtils {
 		try {
 			if (name == null) return null;
 			return (Class<T>) Class.forName(name, initialize, classLoader);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	@SuppressWarnings("unchecked")
+	public static <T> T getFieldValueOrNull(@Nonnull Class<?> clazz, @Nullable String name) {
+		try {
+			if (name == null) return null;
+			return (T) clazz.getDeclaredField(name).get(null);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Nullable
+	@SuppressWarnings("unchecked")
+	public static <T> T getFieldValueOrNull(@Nonnull Object instance, @Nullable String name) {
+		try {
+			if (name == null) return null;
+			return (T) getInheritedPrivateField(instance.getClass(), name).get(instance);
 		} catch (Exception ex) {
 			return null;
 		}
@@ -237,7 +257,7 @@ public final class ReflectionUtils {
 	@Nullable
 	public static <E extends Enum<?>> E getEnumByAlternateNames(@Nonnull Class<E> classOfE, @Nonnull String input) {
 		E[] values = invokeStaticMethodOrNull(classOfE, "values");
-		String[] methodNames = { "getName", "getNames", "getAlias", "getAliases", "getKey", "getKeys", "name", "toString", "ordinal", "getId", "id" };
+		String[] methodNames = {"getName", "getNames", "getAlias", "getAliases", "getKey", "getKeys", "name", "toString", "ordinal", "getId", "id"};
 		for (E value : values) {
 			for (String method : methodNames) {
 				if (check(input, invokeMethodOrNull(value, method)))

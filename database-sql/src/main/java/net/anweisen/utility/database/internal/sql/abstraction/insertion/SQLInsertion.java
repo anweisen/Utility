@@ -3,7 +3,6 @@ package net.anweisen.utility.database.internal.sql.abstraction.insertion;
 import net.anweisen.utility.database.action.DatabaseInsertion;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.sql.abstraction.AbstractSQLDatabase;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
@@ -34,6 +33,12 @@ public class SQLInsertion implements DatabaseInsertion {
 
 	@Nonnull
 	@Override
+	public String getTable() {
+		return table;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseInsertion set(@Nonnull String field, @Nullable Object value) {
 		values.put(field, value);
 		return this;
@@ -46,14 +51,14 @@ public class SQLInsertion implements DatabaseInsertion {
 		StringBuilder command = new StringBuilder();
 		List<Object> args = new ArrayList<>(values.size());
 
-		command.append("INSERT INTO ");
+		command.append("INSERT INTO `");
 		command.append(table);
-		command.append(" (");
+		command.append("` (");
 		{
 			int index = 0;
 			for (String column : values.keySet()) {
 				if (index > 0) command.append(", ");
-				command.append(column);
+				command.append("`").append(column).append("`");
 				index++;
 			}
 		}

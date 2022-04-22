@@ -1,10 +1,10 @@
-package net.anweisen.utility.database.action;
+package net.anweisen.utility.database.action.result;
 
 import net.anweisen.utility.common.logging.ILogger;
 import net.anweisen.utility.common.logging.LogLevel;
+import net.anweisen.utility.database.action.DatabaseQuery;
 import net.anweisen.utility.document.Document;
 import net.anweisen.utility.document.Documents;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
@@ -16,16 +16,25 @@ import java.util.stream.Stream;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see DatabaseQuery#execute()
+ * @since 1.0
  */
 public interface ExecutedQuery extends Iterable<Document> {
 
+	/**
+	 * Returns the first document or an empty Optional
+	 *
+	 * @return the first document optionally
+	 */
 	@Nonnull
 	@CheckReturnValue
 	Optional<Document> first();
 
+	/**
+	 * Returns the first document or an {@link Documents#emptyDocument() empty one}
+	 *
+	 * @return the first or an empty document
+	 */
 	@Nonnull
 	@CheckReturnValue
 	default Document firstOrEmpty() {
@@ -42,9 +51,19 @@ public interface ExecutedQuery extends Iterable<Document> {
 		return get(index).orElse(Documents.emptyDocument());
 	}
 
+	/**
+	 * @return a stream containing all result documents
+	 */
 	@Nonnull
 	@CheckReturnValue
-	Stream<Document> all();
+	Stream<Document> stream();
+
+	/**
+	 * @return a unmodifiable list containing all result documents
+	 */
+	@Nonnull
+	@CheckReturnValue
+	List<Document> list();
 
 	@Nonnull
 	@CheckReturnValue

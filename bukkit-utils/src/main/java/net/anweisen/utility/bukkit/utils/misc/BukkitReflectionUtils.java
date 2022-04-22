@@ -21,7 +21,8 @@ public final class BukkitReflectionUtils {
 
 	protected static final ILogger logger = ILogger.forThisClass();
 
-	private BukkitReflectionUtils() {}
+	private BukkitReflectionUtils() {
+	}
 
 	public static double getAbsorptionAmount(@Nonnull Player player) {
 		Class<?> playerClass = player.getClass();
@@ -75,8 +76,8 @@ public final class BukkitReflectionUtils {
 	}
 
 	/**
-	 * @deprecated not implemented in all forks of bukkit
 	 * @return if the entity is in water, {@code false} otherwise or if not implemented
+	 * @deprecated not implemented in all forks of bukkit
 	 */
 	@Deprecated
 	public static boolean isInWater(@Nonnull Entity entity) {

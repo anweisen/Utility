@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class NumberArgumentParser<N extends Number> implements ArgumentParser<N, NumberArgumentParser<N>.Range> {
 
 	public final Range POSITIVE = new Range(0, Double.MAX_VALUE),
-				   	   NEGATIVE = new Range(Double.MIN_VALUE, -1);
+		NEGATIVE = new Range(Double.MIN_VALUE, -1);
 
 	public class Range {
 
@@ -65,27 +65,27 @@ public class NumberArgumentParser<N extends Number> implements ArgumentParser<N,
 
 		String from = input.substring(0, index);
 		String to = input.substring(index + 2);
-		N min = from.isEmpty()  ? null : parser.apply(from);
-		N max = to.isEmpty()    ? null : parser.apply(to);
+		N min = from.isEmpty() ? null : parser.apply(from);
+		N max = to.isEmpty() ? null : parser.apply(to);
 		return new Range(min, max);
 	}
 
 	@Nullable
 	@Override
 	public Tuple<String, Object[]> getErrorMessage(@Nullable Range range, @Nullable N context) {
-		if (range == null)           return null;
+		if (range == null) return null;
 		if (range == POSITIVE) return new Tuple<>("invalid-number-positive", null);
 		if (range == NEGATIVE) return new Tuple<>("invalid-number-negative", null);
-		if (range.max == null) return new Tuple<>("invalid-number-greater", new Object[] { range.min });
-		if (range.min == null) return new Tuple<>("invalid-number-smaller", new Object[] { range.max });
-		return new Tuple<>("invalid-number-range", new Object[] { range.min, range.max });
+		if (range.max == null) return new Tuple<>("invalid-number-greater", new Object[]{range.min});
+		if (range.min == null) return new Tuple<>("invalid-number-smaller", new Object[]{range.max});
+		return new Tuple<>("invalid-number-range", new Object[]{range.min, range.max});
 	}
 
 	@Nonnull
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.disableMultiWords();
+			.disableMultiWords();
 	}
 
 	@Nonnull

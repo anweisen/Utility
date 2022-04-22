@@ -74,7 +74,7 @@ public abstract class CommandAdapter implements InterfacedCommand {
 	}
 
 	protected final void setName(@Nonnull String name) {
-		setName(new String[] { name });
+		setName(new String[]{name});
 	}
 
 	protected final void setName(@Nonnull String... names) {
@@ -88,7 +88,7 @@ public abstract class CommandAdapter implements InterfacedCommand {
 		String[] names = new String[originalNames.length + alias.length];
 
 		System.arraycopy(originalNames, 0, names, 0, originalNames.length);
-		System.arraycopy(alias,         0, names, originalNames.length, alias.length);
+		System.arraycopy(alias, 0, names, originalNames.length, alias.length);
 
 		setName(names);
 	}

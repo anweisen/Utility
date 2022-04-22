@@ -5,7 +5,7 @@ import net.anweisen.utility.common.collection.NamedThreadFactory;
 import net.anweisen.utility.common.function.ExceptionallyBiConsumer;
 import net.anweisen.utility.common.logging.ILogger;
 import net.anweisen.utility.database.Database;
-import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.SqlColumn;
 import net.anweisen.utility.document.wrapped.StorableDocument;
 import net.anweisen.utility.jda.manager.CommandManager;
 import net.anweisen.utility.jda.manager.bot.config.BotConfigCreator;
@@ -93,9 +93,9 @@ public abstract class DiscordBot implements IDiscordBot {
 
 		builder = builder().validate();
 		DiscordBotBuilder.logger.debug("Building bot with following configuration:" +
-				"\n\t" + config +
-				"\n\t" + builder +
-				"\n\t" + (builder.databaseConfig == null ? "BotDatabaseConfig{null}" : builder.databaseConfig));
+			"\n\t" + config +
+			"\n\t" + builder +
+			"\n\t" + (builder.databaseConfig == null ? "BotDatabaseConfig{null}" : builder.databaseConfig));
 
 		boolean requireDatabase = builder.databaseConfig != null || !builder.tables.isEmpty() || builder.requireDatabase;
 		if (builder.databaseConfig == null) {
@@ -104,15 +104,15 @@ public abstract class DiscordBot implements IDiscordBot {
 		if (requireDatabase) {
 			database = config.createDatabase();
 			database.connect();
-			builder.tables.forEach((ExceptionallyBiConsumer<String, SQLColumn[]>) database::createTable);
+			builder.tables.forEach((ExceptionallyBiConsumer<String, SqlColumn[]>) database::createTable);
 		} else {
 			database = Database.unsupported();
 		}
 
 		builder.fileLanguages.addAll(config.getLanguageFiles());
 		commandManager = new DefaultCommandManager(builder.databaseConfig.getPrefixColumn() == null
-				? new ConstantPrefixProvider(config.getDefaultPrefix())
-				: new DatabasePrefixProvider(config.getDefaultPrefix(), database, builder.databaseConfig.getGuildTable(), builder.databaseConfig.getGuildKeyColumn(), builder.databaseConfig.getPrefixColumn())
+			? new ConstantPrefixProvider(config.getDefaultPrefix())
+			: new DatabasePrefixProvider(config.getDefaultPrefix(), database, builder.databaseConfig.getGuildTable(), builder.databaseConfig.getGuildKeyColumn(), builder.databaseConfig.getPrefixColumn())
 		).setUseEmbeds(builder.useEmbeds);
 
 		if (builder.databaseConfig.getTeamRoleColumn() != null) {
@@ -150,13 +150,13 @@ public abstract class DiscordBot implements IDiscordBot {
 			DiscordBotBuilder.logger.warn("Missing GatewayIntent.GUILD_MESSAGES, no commands will be available in guild chats");
 
 		DefaultShardManagerBuilder shardManagerBuilder = DefaultShardManagerBuilder.create(config.getToken(), intents)
-				.setCallbackPoolProvider(newThreadPoolProvider("Callback"))
-				.setEventPoolProvider(newThreadPoolProvider("Events"))
-				.setShardsTotal(config.getShards())
-				.setMemberCachePolicy(builder.memberCachePolicy)
-				.setEventManagerProvider(shardId -> eventManager)
-				.setStatusProvider(shardId -> config.getOnlineStatus())
-				.addEventListeners(new CommandListener(commandManager), this);
+			.setCallbackPoolProvider(newThreadPoolProvider("Callback"))
+			.setEventPoolProvider(newThreadPoolProvider("Events"))
+			.setShardsTotal(config.getShards())
+			.setMemberCachePolicy(builder.memberCachePolicy)
+			.setEventManagerProvider(shardId -> eventManager)
+			.setStatusProvider(shardId -> config.getOnlineStatus())
+			.addEventListeners(new CommandListener(commandManager), this);
 
 		if (builder.chunkingFilter != null)
 			shardManagerBuilder.setChunkingFilter(builder.chunkingFilter);
@@ -207,8 +207,11 @@ public abstract class DiscordBot implements IDiscordBot {
 
 	}
 
-	protected void onStart() throws Exception {}
-	protected void onReady() throws Exception {}
+	protected void onStart() throws Exception {
+	}
+
+	protected void onReady() throws Exception {
+	}
 
 	@SubscribeEvent
 	private void onReady(@Nonnull ReadyEvent event) throws Exception {
@@ -231,6 +234,12 @@ public abstract class DiscordBot implements IDiscordBot {
 	public <E extends GenericEvent> void on(@Nonnull Class<E> classOfE, @Nonnull Consumer<? super E> action) {
 		// Using the event manager directly allows us to register listeners before the shardmanager is event built
 		eventManager.register(new ActionEventListener<>(classOfE, action));
+	}
+
+	public void registerListener(@Nonnull Object... listeners) {
+		for (Object listener : listeners) {
+			eventManager.register(listener);
+		}
 	}
 
 	/**
@@ -307,8 +316,7 @@ public abstract class DiscordBot implements IDiscordBot {
 	@Nonnull
 	@Override
 	public ScheduledExecutorService getExecutor() {
-		return executor != null ? executor :
-			(executor = Executors.newScheduledThreadPool(4, new NamedThreadFactory(threadId -> String.format("AsyncTask-%s", threadId))));
+		return executor != null ? executor : (executor = Executors.newScheduledThreadPool(4, new NamedThreadFactory(threadId -> String.format("AsyncTask-%s", threadId))));
 	}
 
 	@Override
@@ -333,7 +341,7 @@ public abstract class DiscordBot implements IDiscordBot {
 	}
 
 	@Nonnull
-	private static ThreadPoolProvider<?> newThreadPoolProvider(@Nonnull String scope) {
+	protected ThreadPoolProvider<?> newThreadPoolProvider(@Nonnull String scope) {
 		return new ThreadPoolProvider<ExecutorService>() {
 
 			@Nonnull

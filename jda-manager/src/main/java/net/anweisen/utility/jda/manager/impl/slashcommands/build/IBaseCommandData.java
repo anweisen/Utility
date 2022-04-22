@@ -12,9 +12,11 @@ import javax.annotation.Nonnull;
 public interface IBaseCommandData<I extends IBaseCommandData<I, ?>, T extends BaseCommand<?>> {
 
 	boolean hasOptions();
+
 	boolean hasSubCommands();
 
 	void clearOptions();
+
 	void clearSubCommands();
 
 	void addOption(@Nonnull OptionData data);

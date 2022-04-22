@@ -6,7 +6,8 @@ package net.anweisen.utility.common.misc;
  */
 public final class MathHelper {
 
-	private MathHelper() {}
+	private MathHelper() {
+	}
 
 	public static double percentage(double total, double proportion) {
 		if (proportion == 0) return 0;

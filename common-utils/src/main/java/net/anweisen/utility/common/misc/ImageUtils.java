@@ -20,7 +20,8 @@ import java.net.URLConnection;
  */
 public final class ImageUtils {
 
-	private ImageUtils() {}
+	private ImageUtils() {
+	}
 
 	/**
 	 * @param height The y-position of the text
@@ -66,9 +67,7 @@ public final class ImageUtils {
 	 * Reads a image from url using {@link ImageIO#read(InputStream)} and returns it
 	 *
 	 * @param url The URL the image is stored to
-	 *
-	 * @throws IOException
-	 *         When something goes wrong while connecting or reading the image
+	 * @throws IOException When something goes wrong while connecting or reading the image
 	 */
 	public static BufferedImage loadUrl(@Nonnull String url) throws IOException {
 		URLConnection connection = IOUtils.createConnection(url);

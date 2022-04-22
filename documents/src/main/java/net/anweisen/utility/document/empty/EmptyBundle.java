@@ -1,6 +1,7 @@
 package net.anweisen.utility.document.empty;
 
 import net.anweisen.utility.document.Bundle;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.DocumentHelper;
 
@@ -132,5 +133,11 @@ public class EmptyBundle implements Bundle {
 	@Override
 	public String toString() {
 		return toJson();
+	}
+
+	@Nonnull
+	@Override
+	public Bundle clone() {
+		return Documents.newJsonBundle();
 	}
 }

@@ -51,8 +51,10 @@ public class DefaultCommandManager implements CommandManager {
 		private boolean called;
 
 		public Callback(@Nonnull CommandPreProcessInfo info) {
-			CommandEvent event = eventCreator.createEvent(DefaultCommandManager.this, info, new RegisteredCommand(new CommandOptions(), (e, a) -> {}, DefaultCommandManager.this), useEmbeds);
-			this.action = resultHandler == null ? result -> {} : result -> resultHandler.handle(DefaultCommandManager.this, event, result);
+			CommandEvent event = eventCreator.createEvent(DefaultCommandManager.this, info, new RegisteredCommand(new CommandOptions(), (e, a) -> {
+			}, DefaultCommandManager.this), useEmbeds);
+			this.action = resultHandler == null ? result -> {
+			} : result -> resultHandler.handle(DefaultCommandManager.this, event, result);
 		}
 
 		public Object call(@Nonnull CommandResultInfo info) {

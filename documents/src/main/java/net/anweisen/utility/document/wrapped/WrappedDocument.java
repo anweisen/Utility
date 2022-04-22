@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -86,6 +83,12 @@ public interface WrappedDocument extends Document {
 	@Override
 	default Collection<IEntry> entries() {
 		return getTargetDocument().entries();
+	}
+
+	@Nonnull
+	@Override
+	default Optional<IEntry> firstEntry() {
+		return getTargetDocument().firstEntry();
 	}
 
 	@Nonnull

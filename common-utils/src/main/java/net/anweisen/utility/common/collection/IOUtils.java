@@ -16,7 +16,8 @@ import java.nio.charset.StandardCharsets;
  */
 public final class IOUtils {
 
-	private IOUtils() {}
+	private IOUtils() {
+	}
 
 	public static String toString(@Nonnull String url) throws IOException {
 		return toString(new URL(url));

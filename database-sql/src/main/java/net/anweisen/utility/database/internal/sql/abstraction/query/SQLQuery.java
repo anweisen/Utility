@@ -2,7 +2,7 @@ package net.anweisen.utility.database.internal.sql.abstraction.query;
 
 import net.anweisen.utility.database.Order;
 import net.anweisen.utility.database.action.DatabaseQuery;
-import net.anweisen.utility.database.action.ExecutedQuery;
+import net.anweisen.utility.database.action.result.ExecutedQuery;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.abstraction.DefaultExecutedQuery;
 import net.anweisen.utility.database.internal.sql.abstraction.AbstractSQLDatabase;
@@ -10,7 +10,6 @@ import net.anweisen.utility.database.internal.sql.abstraction.where.ObjectWhere;
 import net.anweisen.utility.database.internal.sql.abstraction.where.SQLWhere;
 import net.anweisen.utility.database.internal.sql.abstraction.where.StringIgnoreCaseWhere;
 import net.anweisen.utility.document.Document;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
@@ -29,9 +28,10 @@ public class SQLQuery implements DatabaseQuery {
 	protected final AbstractSQLDatabase database;
 	protected final String table;
 	protected final Map<String, SQLWhere> where;
-	protected String[] selection = { "*" };
+	protected String[] selection = {"*"};
 	protected String orderBy;
 	protected Order order;
+	protected int limit;
 
 	public SQLQuery(@Nonnull AbstractSQLDatabase database, @Nonnull String table) {
 		this.database = database;
@@ -43,6 +43,19 @@ public class SQLQuery implements DatabaseQuery {
 		this.database = database;
 		this.table = table;
 		this.where = where;
+	}
+
+	@Nonnull
+	@Override
+	public String getTable() {
+		return table;
+	}
+	
+	@Nonnull
+	@Override
+	public DatabaseQuery limit(int amount) {
+		this.limit = amount;
+		return this;
 	}
 
 	@Nonnull
@@ -82,7 +95,7 @@ public class SQLQuery implements DatabaseQuery {
 
 	@Nonnull
 	@Override
-	public DatabaseQuery orderBy(@Nonnull String column, @Nonnull Order order) {
+	public DatabaseQuery order(@Nonnull String column, @Nonnull Order order) {
 		this.orderBy = column;
 		this.order = order;
 		return this;
@@ -106,8 +119,9 @@ public class SQLQuery implements DatabaseQuery {
 			if (i > 0) command.append(", ");
 			command.append(selection[i]);
 		}
-		command.append(" FROM ");
+		command.append(" FROM `");
 		command.append(table);
+		command.append("`");
 
 		if (!where.isEmpty()) {
 			command.append(" WHERE ");

@@ -57,7 +57,7 @@ public class MapEntry implements IEntry {
 
 	@Override
 	public boolean isChar() {
-		return value instanceof Character || value instanceof String && ((String)value).length() == 1;
+		return value instanceof Character || value instanceof String && ((String) value).length() == 1;
 	}
 
 	@Override
@@ -150,8 +150,8 @@ public class MapEntry implements IEntry {
 		if (value == null) return null;
 		if (value instanceof OffsetDateTime) return (OffsetDateTime) value;
 		if (value instanceof String) return OffsetDateTime.parse((CharSequence) value);
-		if (value instanceof Date) return ((Date)value).toInstant().atOffset(ZoneOffset.UTC);
-		if (value instanceof Instant) return ((Instant)value).atOffset(ZoneOffset.UTC);
+		if (value instanceof Date) return ((Date) value).toInstant().atOffset(ZoneOffset.UTC);
+		if (value instanceof Instant) return ((Instant) value).atOffset(ZoneOffset.UTC);
 		throw new IllegalStateException("Not a OffsetDateTime");
 	}
 
@@ -160,7 +160,7 @@ public class MapEntry implements IEntry {
 		if (value == null) return null;
 		if (value instanceof Date) return (Date) value;
 		if (value instanceof String) return DocumentHelper.toDate((String) value);
-		if (value instanceof OffsetDateTime) return Date.from(((OffsetDateTime)value).toInstant());
+		if (value instanceof OffsetDateTime) return Date.from(((OffsetDateTime) value).toInstant());
 		if (value instanceof Instant) return Date.from((Instant) value);
 		throw new IllegalStateException("Not a date");
 	}

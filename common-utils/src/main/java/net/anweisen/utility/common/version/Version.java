@@ -47,7 +47,7 @@ public interface Version {
 	default String format() {
 		int revision = getRevision();
 		return revision > 0 ? String.format("%s.%s.%s", getMajor(), getMinor(), revision)
-							: String.format("%s.%s",    getMajor(), getMinor());
+			: String.format("%s.%s", getMajor(), getMinor());
 	}
 
 	default int intValue() {
@@ -55,13 +55,13 @@ public interface Version {
 		int minor = getMinor();
 		int revision = getRevision();
 
-		if (major > 99)     throw new IllegalStateException("Malformed version: major > 99");
-		if (minor > 99)     throw new IllegalStateException("Malformed version: minor > 99");
-		if (revision > 99)  throw new IllegalStateException("Malformed version: revision > 99");
+		if (major > 99) throw new IllegalStateException("Malformed version: major > 99");
+		if (minor > 99) throw new IllegalStateException("Malformed version: minor > 99");
+		if (revision > 99) throw new IllegalStateException("Malformed version: revision > 99");
 
 		return revision
-			 + minor * 100
-			 + major * 10000;
+			+ minor * 100
+			+ major * 10000;
 	}
 
 	@Nonnull

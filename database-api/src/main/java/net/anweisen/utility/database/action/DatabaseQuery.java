@@ -4,21 +4,21 @@ import net.anweisen.utility.database.Database;
 import net.anweisen.utility.database.Order;
 import net.anweisen.utility.database.SpecificDatabase;
 import net.anweisen.utility.database.action.hierarchy.OrderedAction;
+import net.anweisen.utility.database.action.hierarchy.TableAction;
 import net.anweisen.utility.database.action.hierarchy.WhereAction;
+import net.anweisen.utility.database.action.result.ExecutedQuery;
 import net.anweisen.utility.database.exception.DatabaseException;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Database#query(String)
  * @see SpecificDatabase#query()
+ * @since 1.0
  */
-public interface DatabaseQuery extends DatabaseAction<ExecutedQuery>, WhereAction, OrderedAction {
+public interface DatabaseQuery extends DatabaseAction<ExecutedQuery>, WhereAction, OrderedAction, TableAction {
 
 	@Nonnull
 	@CheckReturnValue
@@ -46,7 +46,11 @@ public interface DatabaseQuery extends DatabaseAction<ExecutedQuery>, WhereActio
 
 	@Nonnull
 	@CheckReturnValue
-	DatabaseQuery orderBy(@Nonnull String field, @Nonnull Order order);
+	DatabaseQuery order(@Nonnull String field, @Nonnull Order order);
+
+	@Nonnull
+	@CheckReturnValue
+	DatabaseQuery limit(int amount);
 
 	@Nonnull
 	@Override

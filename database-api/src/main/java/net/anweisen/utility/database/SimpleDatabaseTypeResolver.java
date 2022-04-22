@@ -1,7 +1,6 @@
 package net.anweisen.utility.database;
 
 import net.anweisen.utility.common.misc.ReflectionUtils;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -13,13 +12,15 @@ import java.util.Map;
  */
 public final class SimpleDatabaseTypeResolver {
 
-	private SimpleDatabaseTypeResolver() {}
-
 	private static final Map<String, String> registry = new HashMap<>();
+
 	static {
 		registerType("mongodb", "net.anweisen.utility.database.internal.mongodb.MongoDBDatabase");
-		registerType("mysql",   "net.anweisen.utility.database.internal.sql.mysql.MySQLDatabase");
-		registerType("sqlite",  "net.anweisen.utility.database.internal.sql.sqlite.SQLiteDatabase");
+		registerType("mysql", "net.anweisen.utility.database.internal.sql.mysql.MySQLDatabase");
+		registerType("sqlite", "net.anweisen.utility.database.internal.sql.sqlite.SQLiteDatabase");
+	}
+
+	private SimpleDatabaseTypeResolver() {
 	}
 
 	@Nullable

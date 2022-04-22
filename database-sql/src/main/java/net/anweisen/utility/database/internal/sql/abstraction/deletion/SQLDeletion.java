@@ -31,6 +31,12 @@ public class SQLDeletion implements DatabaseDeletion {
 
 	@Nonnull
 	@Override
+	public String getTable() {
+		return table;
+	}
+
+	@Nonnull
+	@Override
 	public DatabaseDeletion where(@Nonnull String column, @Nullable Object value) {
 		where.put(column, new ObjectWhere(column, value, "="));
 		return this;
@@ -69,8 +75,9 @@ public class SQLDeletion implements DatabaseDeletion {
 		StringBuilder command = new StringBuilder();
 		List<Object> args = new ArrayList<>();
 
-		command.append("DELETE FROM ");
+		command.append("DELETE FROM `");
 		command.append(table);
+		command.append("`");
 
 		if (!where.isEmpty()) {
 			command.append(" WHERE ");
@@ -84,7 +91,7 @@ public class SQLDeletion implements DatabaseDeletion {
 			}
 		}
 
-		return database.prepare(command.toString(),args.toArray());
+		return database.prepare(command.toString(), args.toArray());
 	}
 
 	@Override

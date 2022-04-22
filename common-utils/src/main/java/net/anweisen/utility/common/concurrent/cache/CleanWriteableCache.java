@@ -37,12 +37,12 @@ public class CleanWriteableCache<K, V> implements WriteableCache<K, V> {
 	}
 
 	public void cleanCache() {
-		if (logger != null ) logger.debug("Cleaning cache");
+		if (logger != null) logger.debug("Cleaning cache");
 		long now = System.currentTimeMillis();
 		Collection<K> remove = new ArrayList<>();
 		cache.forEach((key, pair) -> {
 			if (now - pair.getFirst() > unusedTimeBeforeClean) {
-				if (logger != null ) logger.trace("Removing {} from cache, last usage was {}s ago", key, (now - pair.getFirst()) / 1000);
+				if (logger != null) logger.trace("Removing {} from cache, last usage was {}s ago", key, (now - pair.getFirst()) / 1000);
 				remove.add(key);
 			}
 		});

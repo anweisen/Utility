@@ -49,12 +49,12 @@ public final class BotDatabaseConfig {
 	@Override
 	public String toString() {
 		return "BotDatabaseConfig{" +
-				"guildTable='" + guildTable + '\'' +
-				", guildKeyColumn='" + guildKeyColumn + '\'' +
-				", teamRoleColumn='" + teamRoleColumn + '\'' +
-				", languageColumn='" + languageColumn + '\'' +
-				", prefixColumn='" + prefixColumn + '\'' +
-				'}';
+			"guildTable='" + guildTable + '\'' +
+			", guildKeyColumn='" + guildKeyColumn + '\'' +
+			", teamRoleColumn='" + teamRoleColumn + '\'' +
+			", languageColumn='" + languageColumn + '\'' +
+			", prefixColumn='" + prefixColumn + '\'' +
+			'}';
 	}
 
 }

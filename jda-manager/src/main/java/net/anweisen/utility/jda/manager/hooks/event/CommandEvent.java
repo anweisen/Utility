@@ -1,6 +1,7 @@
 package net.anweisen.utility.jda.manager.hooks.event;
 
 import net.anweisen.utility.jda.manager.CommandManager;
+import net.anweisen.utility.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utility.jda.manager.hooks.option.CommandScope;
 import net.anweisen.utility.jda.manager.language.Language;
 import net.dv8tion.jda.api.JDA;
@@ -21,6 +22,9 @@ public interface CommandEvent extends MessagePipeline {
 
 	@Nonnull
 	CommandManager getManager();
+
+	@Nonnull
+	CommandOptions getCommand();
 
 	@Nonnull
 	JDA getJDA();
@@ -62,7 +66,6 @@ public interface CommandEvent extends MessagePipeline {
 	 * Returns the member's nickname if this event is {@link #isGuild() from a guild} or the {@link #getUserName() username} otherwise
 	 *
 	 * @return the effective username
-	 *
 	 * @see Member#getEffectiveName()
 	 */
 	@Nonnull
@@ -80,8 +83,7 @@ public interface CommandEvent extends MessagePipeline {
 	Color getUserColorNonnull();
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered by a message (eg through a slashcommand).
+	 * @throws IllegalStateException If this event was not triggered by a message (eg through a slashcommand).
 	 */
 	@Nonnull
 	Message getMessage();
@@ -96,13 +98,13 @@ public interface CommandEvent extends MessagePipeline {
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered by an interaction (eg through a message)
+	 * @throws IllegalStateException If this event was not triggered by an interaction (eg through a message)
 	 */
 	@Nonnull
 	Interaction getInteraction();
 
 	boolean isGuild();
+
 	boolean isPrivate();
 
 	boolean isInteraction();
@@ -121,17 +123,15 @@ public interface CommandEvent extends MessagePipeline {
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	@Nonnull
 	Guild getGuild();
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	@Nonnull
 	default String getGuildId() {
@@ -139,26 +139,23 @@ public interface CommandEvent extends MessagePipeline {
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	default long getGuildIdLong() {
 		return getGuild().getIdLong();
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	@Nonnull
 	Member getMember();
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	@Nonnull
 	default Member getSelfMember() {
@@ -166,27 +163,24 @@ public interface CommandEvent extends MessagePipeline {
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	default boolean hasPermission(@Nonnull Permission... permission) {
 		return getMember().hasPermission(permission);
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	default boolean hasChannelPermission(@Nonnull Permission... permissions) {
 		return getMember().hasPermission(getTextChannel(), permissions);
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	boolean hasTeamRole();
 
@@ -203,17 +197,15 @@ public interface CommandEvent extends MessagePipeline {
 	}
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a guild.
-	 *         You can check this using {@link #isGuild()}
+	 * @throws IllegalStateException If this event was not triggered in a guild.
+	 *                               You can check this using {@link #isGuild()}
 	 */
 	@Nonnull
 	TextChannel getTextChannel();
 
 	/**
-	 * @throws IllegalStateException
-	 *         If this event was not triggered in a private chat
-	 *         You can check this using {@link #isPrivate()}
+	 * @throws IllegalStateException If this event was not triggered in a private chat
+	 *                               You can check this using {@link #isPrivate()}
 	 */
 	@Nonnull
 	PrivateChannel getPrivateChannel();

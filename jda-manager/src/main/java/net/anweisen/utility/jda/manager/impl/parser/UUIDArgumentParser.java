@@ -24,6 +24,6 @@ public class UUIDArgumentParser implements ArgumentParser<UUID, Object> {
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.disableMultiWords();
+			.disableMultiWords();
 	}
 }

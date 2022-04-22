@@ -11,6 +11,8 @@
     <file url="file://$PROJECT_DIR$/database-mongodb/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/database-sql/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/database-sql/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/documents/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/documents/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jda-manager/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jda-manager/src/main/resources" charset="UTF-8" />
   </component>

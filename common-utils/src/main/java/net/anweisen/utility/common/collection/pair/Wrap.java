@@ -37,7 +37,7 @@ public class Wrap<F> implements Pair {
 	@Nonnull
 	@Override
 	public final Object[] values() {
-		return new Object[] { first };
+		return new Object[]{first};
 	}
 
 	@Override

@@ -101,11 +101,11 @@ public final class ParserOptions {
 	@Override
 	public String toString() {
 		return "ParserOptions{" +
-				"scopes=" + scopes +
-				", multiWordSeparator='" + multiWordSeparator + '\'' +
-				", maxMultiWords=" + maxMultiWords +
-				", requireExtraInfo=" + requireExtraInfo +
-				", nullable=" + nullable +
-				'}';
+			"scopes=" + scopes +
+			", multiWordSeparator='" + multiWordSeparator + '\'' +
+			", maxMultiWords=" + maxMultiWords +
+			", requireExtraInfo=" + requireExtraInfo +
+			", nullable=" + nullable +
+			'}';
 	}
 }

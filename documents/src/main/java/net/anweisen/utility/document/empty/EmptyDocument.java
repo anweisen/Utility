@@ -2,6 +2,7 @@ package net.anweisen.utility.document.empty;
 
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.DocumentHelper;
 
@@ -11,6 +12,7 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
@@ -93,6 +95,12 @@ public class EmptyDocument implements Document {
 
 	@Nonnull
 	@Override
+	public Optional<IEntry> firstEntry() {
+		return Optional.empty();
+	}
+
+	@Nonnull
+	@Override
 	public IEntry getEntry(@Nonnull String path) {
 		return EmptyEntry.INSTANCE;
 	}
@@ -163,5 +171,11 @@ public class EmptyDocument implements Document {
 	@Override
 	public String toString() {
 		return toJson();
+	}
+
+	@Nonnull
+	@Override
+	public Document clone() {
+		return Documents.newJsonDocument();
 	}
 }

@@ -5,18 +5,17 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
-import net.anweisen.utility.document.bson.BsonHelper;
-import net.anweisen.utility.database.internal.mongodb.MongoUtils;
 import net.anweisen.utility.database.action.DatabaseUpdate;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.mongodb.MongoDBDatabase;
+import net.anweisen.utility.database.internal.mongodb.MongoUtils;
 import net.anweisen.utility.database.internal.mongodb.where.MongoDBWhere;
 import net.anweisen.utility.database.internal.mongodb.where.ObjectWhere;
 import net.anweisen.utility.database.internal.mongodb.where.StringIgnoreCaseWhere;
+import net.anweisen.utility.document.bson.BsonHelper;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -47,6 +46,12 @@ public class MongoDBUpdate implements DatabaseUpdate {
 		this.collection = collection;
 		this.where = where;
 		this.values = values;
+	}
+
+	@Nonnull
+	@Override
+	public String getTable() {
+		return collection;
 	}
 
 	@Nonnull
@@ -130,9 +135,9 @@ public class MongoDBUpdate implements DatabaseUpdate {
 		if (o == null || getClass() != o.getClass()) return false;
 		MongoDBUpdate that = (MongoDBUpdate) o;
 		return database.equals(that.database)
-				&& collection.equals(that.collection)
-				&& where.equals(that.where)
-				&& values.equals(that.values);
+			&& collection.equals(that.collection)
+			&& where.equals(that.where)
+			&& values.equals(that.values);
 	}
 
 	@Override

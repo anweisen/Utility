@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,6 +33,11 @@ public class MapDocument extends AbstractDocument {
 
 	public MapDocument() {
 		this(new Properties(), true);
+	}
+
+	public MapDocument(@Nonnull Map<Object, Object> properties) {
+		super(true);
+		this.properties = properties;
 	}
 
 	public MapDocument(@Nonnull Map<Object, Object> properties, @Nonnull AtomicBoolean editable) {
@@ -90,6 +96,7 @@ public class MapDocument extends AbstractDocument {
 	public Bundle getBundle(@Nonnull String path) {
 		Object value = properties.computeIfAbsent(path, key -> new MapBundle());
 		if (value instanceof Bundle) return (Bundle) value;
+		if (value instanceof String) return Documents.newJsonBundle((String) value);
 		if (!(value instanceof Collection)) throw new IllegalStateException("'" + path + "' is not a Collection: " + value.getClass().getName());
 		value = new MapBundle((Collection<?>) value);
 		return (Bundle) value;
@@ -135,5 +142,11 @@ public class MapDocument extends AbstractDocument {
 	@Override
 	public String toString() {
 		return toJson();
+	}
+
+	@Nonnull
+	@Override
+	public Document clone() {
+		return new MapDocument(new LinkedHashMap<>(properties));
 	}
 }

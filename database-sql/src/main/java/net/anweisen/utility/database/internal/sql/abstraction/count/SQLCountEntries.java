@@ -25,6 +25,12 @@ public class SQLCountEntries implements DatabaseCountEntries {
 
 	@Nonnull
 	@Override
+	public String getTable() {
+		return table;
+	}
+
+	@Nonnull
+	@Override
 	public Long execute() throws DatabaseException {
 		try {
 			PreparedStatement statement = database.prepare("SELECT COUNT(*) FROM `" + table + "`");

@@ -21,9 +21,9 @@ public class DefaultEventCreator implements EventCreator {
 	public CommandEvent createEvent(@Nonnull CommandManager manager, @Nonnull CommandPreProcessInfo info, @Nonnull RegisteredCommand command, boolean useEmbeds) {
 		boolean disableMentions = command.getOptions().getDisableMentions();
 		if (info.getMessage() != null) {            // normal execution
-			return new MessageCommandEvent(manager, info.getMessage(), info.getMember(), disableMentions, useEmbeds);
+			return new MessageCommandEvent(manager, command.getOptions(), info.getMessage(), info.getMember(), disableMentions, useEmbeds);
 		} else if (info.getInteraction() != null) { // slash command
-			return new SlashCommandEvent(manager, info.getInteraction(), info.getMember(), disableMentions, useEmbeds);
+			return new SlashCommandEvent(manager, command.getOptions(), info.getInteraction(), info.getMember(), disableMentions, useEmbeds);
 		} else {
 			throw new IllegalArgumentException();
 		}

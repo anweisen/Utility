@@ -8,7 +8,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.anweisen.utility.database.DatabaseConfig;
-import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.SqlColumn;
 import net.anweisen.utility.database.action.*;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.abstraction.AbstractDatabase;
@@ -49,10 +49,10 @@ public class MongoDBDatabase extends AbstractDatabase {
 	public void connect0() throws Exception {
 		MongoCredential credential = MongoCredential.createCredential(config.getUser(), config.getAuthDatabase(), config.getPassword().toCharArray());
 		MongoClientSettings settings = MongoClientSettings.builder()
-				.retryReads(false).retryReads(false)
-				.credential(credential)
-				.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
-				.build();
+			.retryReads(false).retryReads(false)
+			.credential(credential)
+			.applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.isPortSet() ? config.getPort() : ServerAddress.defaultPort()))))
+			.build();
 		client = MongoClients.create(settings);
 		database = client.getDatabase(config.getDatabase());
 	}
@@ -64,7 +64,7 @@ public class MongoDBDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
+	public void createTable(@Nonnull String name, boolean update, @Nonnull SqlColumn... columns) throws DatabaseException {
 		checkConnection();
 
 		boolean collectionExists = listTables().execute().contains(name);
@@ -75,6 +75,16 @@ public class MongoDBDatabase extends AbstractDatabase {
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
+	}
+
+	@Override
+	public void editTable(@Nonnull String name, @Nonnull SqlColumn... columns) throws DatabaseException {
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseListColumns listColumns(@Nonnull String table) {
+		return null;
 	}
 
 	@Nonnull

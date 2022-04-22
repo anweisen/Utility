@@ -36,10 +36,14 @@ public class CommandCoolDown {
 	public double getCoolDown(@Nonnull User user, @Nullable Guild guild) {
 		if (cooldown == 0) return 0;
 		switch (scope) {
-			case USER:      return Math.max(userCoolDowns.getOrDefault(user, 0L) - System.currentTimeMillis(), 0) / 1000d;
-			case GUILD:     return Math.max(guildCoolDowns.getOrDefault(guild, 0L) - System.currentTimeMillis(), 0) / 1000d;
-			case GLOBAL:    return Math.max(globalCoolDown.get() - System.currentTimeMillis(), 0) / 1000d;
-			default:        throw new IllegalStateException("Unsupported cooldown scope " + scope);
+			case USER:
+				return Math.max(userCoolDowns.getOrDefault(user, 0L) - System.currentTimeMillis(), 0) / 1000d;
+			case GUILD:
+				return Math.max(guildCoolDowns.getOrDefault(guild, 0L) - System.currentTimeMillis(), 0) / 1000d;
+			case GLOBAL:
+				return Math.max(globalCoolDown.get() - System.currentTimeMillis(), 0) / 1000d;
+			default:
+				throw new IllegalStateException("Unsupported cooldown scope " + scope);
 		}
 	}
 
@@ -55,7 +59,8 @@ public class CommandCoolDown {
 			case GLOBAL:
 				globalCoolDown.set(System.currentTimeMillis() + (long) cooldown * 1000);
 				return;
-			default: throw new IllegalStateException("Unsupported cooldown scope " + scope);
+			default:
+				throw new IllegalStateException("Unsupported cooldown scope " + scope);
 		}
 	}
 

@@ -9,7 +9,8 @@ import javax.annotation.Nullable;
  */
 public final class CommandHelper {
 
-	private CommandHelper() {}
+	private CommandHelper() {
+	}
 
 	@Nonnull
 	public static String removeMarkdown(@Nullable String input, boolean inBlockMarkdown) {

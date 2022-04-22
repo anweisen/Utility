@@ -46,8 +46,8 @@ public enum MinecraftVersion implements Version {
 		if (version.length != 2 && version.length != 3)
 			throw new IllegalArgumentException("Name '" + name() + "' does not match pattern: V{major}_{minor}_[revision]");
 
-		major    = Integer.parseInt(version[0]);
-		minor    = Integer.parseInt(version[1]);
+		major = Integer.parseInt(version[0]);
+		minor = Integer.parseInt(version[1]);
 		revision = version.length > 2 ? Integer.parseInt(version[2]) : 0;
 
 	}
@@ -92,7 +92,7 @@ public enum MinecraftVersion implements Version {
 	@CheckReturnValue
 	public static Version currentExact() {
 		if (currentExact == null)
-		    currentExact = parseExact(Bukkit.getBukkitVersion());
+			currentExact = parseExact(Bukkit.getBukkitVersion());
 		return currentExact;
 	}
 

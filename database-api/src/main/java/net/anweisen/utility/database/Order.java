@@ -4,9 +4,8 @@ import net.anweisen.utility.database.action.hierarchy.OrderedAction;
 
 /**
  * @author anweisen | https://github.com/anweisen
+ * @see OrderedAction#order(String, Order)
  * @since 1.0
- *
- * @see OrderedAction#orderBy(String, Order)
  */
 public enum Order {
 

@@ -13,15 +13,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * A Bundle represents an array or list of string, numbers, objects or arrays.
  *
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Document
  * @see IEntry
+ * @since 1.0
  */
 public interface Bundle extends JsonConvertable {
 
@@ -53,9 +53,7 @@ public interface Bundle extends JsonConvertable {
 	 * Returns the value at the given {@code index} as an {@link IEntry}
 	 *
 	 * @param index the target index
-	 *
-	 * @throws IllegalArgumentException
-	 *         If the {@code index} is out of bounds for the {@link #size()}
+	 * @throws IllegalArgumentException If the {@code index} is out of bounds for the {@link #size()}
 	 */
 	@Nonnull
 	IEntry getEntry(int index);
@@ -64,11 +62,8 @@ public interface Bundle extends JsonConvertable {
 	 * Returns the value at the given {@code index} as a {@link Document}, cloud be {@code null}
 	 *
 	 * @param index the target index
-	 *
-	 * @throws IllegalArgumentException
-	 *         If the {@code index} is out of bounds for the {@link #size()}
-	 * @throws IllegalStateException
-	 *         If the element at the given {@code index} cannot be converted to a {@link Document}
+	 * @throws IllegalArgumentException If the {@code index} is out of bounds for the {@link #size()}
+	 * @throws IllegalStateException    If the element at the given {@code index} cannot be converted to a {@link Document}
 	 */
 	default Document getDocument(int index) {
 		return getEntry(index).toDocument();
@@ -78,11 +73,8 @@ public interface Bundle extends JsonConvertable {
 	 * Returns the value at the given {@code index} as a {@link Bundle}, cloud be {@code null}
 	 *
 	 * @param index the target index
-	 *
-	 * @throws IllegalArgumentException
-	 *         If the {@code index} is out of bounds for the {@link #size()}
-	 * @throws IllegalStateException
-	 *         If the element at the given {@code index} cannot be converted to a {@link Bundle}
+	 * @throws IllegalArgumentException If the {@code index} is out of bounds for the {@link #size()}
+	 * @throws IllegalStateException    If the element at the given {@code index} cannot be converted to a {@link Bundle}
 	 */
 	default Bundle getBundle(int index) {
 		return getEntry(index).toBundle();
@@ -93,11 +85,8 @@ public interface Bundle extends JsonConvertable {
 	 *
 	 * @param index the index where to set the value
 	 * @param value the new value
-	 *
-	 * @throws IllegalArgumentException
-	 *         If the {@code index} is out of bounds for the {@link #size()}
-	 * @throws IllegalStateException
-	 *         If this bundle cannot {@link #canEdit() be edited}
+	 * @throws IllegalArgumentException If the {@code index} is out of bounds for the {@link #size()}
+	 * @throws IllegalStateException    If this bundle cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Bundle set(int index, @Nullable Object value);
@@ -108,11 +97,8 @@ public interface Bundle extends JsonConvertable {
 	 * The {@link #size()} will then be 1 smaller.
 	 *
 	 * @param index the index to remove
-	 *
-	 * @throws IllegalArgumentException
-	 *         If the {@code index} is out of bounds for the {@link #size()}
-	 * @throws IllegalStateException
-	 *         If this bundle cannot {@link #canEdit() be edited}
+	 * @throws IllegalArgumentException If the {@code index} is out of bounds for the {@link #size()}
+	 * @throws IllegalStateException    If this bundle cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Bundle remove(int index);
@@ -120,8 +106,7 @@ public interface Bundle extends JsonConvertable {
 	/**
 	 * Clears all entries of this bundle.
 	 *
-	 * @throws IllegalStateException
-	 *         If this bundle cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this bundle cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Bundle clear();
@@ -131,9 +116,7 @@ public interface Bundle extends JsonConvertable {
 	 * The {@link #size()} will then be 1 bigger.
 	 *
 	 * @param value the value to add
-	 *
-	 * @throws IllegalStateException
-	 *         If this bundle cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this bundle cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Bundle add(@Nullable Object value);
@@ -142,9 +125,7 @@ public interface Bundle extends JsonConvertable {
 	 * Adds the given values to the bundle.
 	 *
 	 * @param values the values to add
-	 *
-	 * @throws IllegalStateException
-	 *         If this bundle cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this bundle cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	default Bundle addAll(@Nonnull Object... values) {
@@ -157,9 +138,7 @@ public interface Bundle extends JsonConvertable {
 	 * Adds the given values to the bundle.
 	 *
 	 * @param values the values to add
-	 *
-	 * @throws IllegalStateException
-	 *         If this bundle cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this bundle cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	default Bundle addAll(@Nonnull Iterable<?> values) {
@@ -235,6 +214,9 @@ public interface Bundle extends JsonConvertable {
 	 * @return whether this bundle can be edited
 	 */
 	boolean canEdit();
+
+	@Nonnull
+	Bundle clone();
 
 	@Nonnull
 	Bundle markUneditable();

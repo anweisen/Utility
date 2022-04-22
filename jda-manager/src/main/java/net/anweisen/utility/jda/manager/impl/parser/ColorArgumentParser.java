@@ -24,6 +24,6 @@ public class ColorArgumentParser implements ArgumentParser<Color, Object> {
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.disableMultiWords();
+			.disableMultiWords();
 	}
 }

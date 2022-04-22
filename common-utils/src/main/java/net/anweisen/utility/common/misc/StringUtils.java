@@ -2,7 +2,6 @@ package net.anweisen.utility.common.misc;
 
 import net.anweisen.utility.common.collection.WrappedException;
 import net.anweisen.utility.common.logging.ILogger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -18,7 +17,8 @@ public final class StringUtils {
 
 	private static final ILogger logger = ILogger.forThisClass();
 
-	private StringUtils() {}
+	private StringUtils() {
+	}
 
 	@Nonnull
 	public static String getEnumName(@Nonnull Enum<?> enun) {
@@ -53,12 +53,7 @@ public final class StringUtils {
 				inArgument = false;
 				try {
 					int arg = Integer.parseInt(argument.toString());
-					Object current = args[arg];
-					Object replacement =
-							current instanceof Supplier ? ((Supplier<?>)current).get() :
-							current instanceof Callable ? ((Callable<?>)current).call() :
-							current;
-					builder.append(replacement);
+					builder.append(toLazyString(args[arg]));
 				} catch (NumberFormatException | IndexOutOfBoundsException ex) {
 					logger.warn("Invalid argument index '{}'", argument);
 					builder.append(start).append(argument).append(end);
@@ -83,11 +78,35 @@ public final class StringUtils {
 	}
 
 	@Nonnull
+	public static String toLazyString(@Nullable Object object) {
+		try {
+			Object value = object instanceof Supplier ? ((Supplier<?>) object).get()
+				: object instanceof Callable ? ((Callable<?>) object).call()
+				: object;
+			return String.valueOf(value);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ex.getClass().getSimpleName();
+		}
+	}
+
+	public static String replaceAll(String input, @Nonnull Object... values) {
+		if (input == null) return null;
+		if (values.length % 2 != 0) throw new IllegalArgumentException("values.length is not even");
+		String value = input;
+		for (int i = 0; i < values.length; i += 2) {
+			if (!(values[i] instanceof String)) throw new IllegalArgumentException("values[" + i + "] is not a String");
+			value = value.replace(String.valueOf(values[i]), toLazyString(values[i + 1]));
+		}
+		return value;
+	}
+
+	@Nonnull
 	public static String getAfterLastIndex(@Nonnull String input, @Nonnull String separator) {
 		return Optional.of(input)
-				.filter(name -> name.contains(separator))
-				.map(name -> name.substring(name.lastIndexOf(separator) + separator.length()))
-				.orElse("");
+			.filter(name -> name.contains(separator))
+			.map(name -> name.substring(name.lastIndexOf(separator) + separator.length()))
+			.orElse("");
 	}
 
 	@Nonnull
@@ -134,12 +153,18 @@ public final class StringUtils {
 
 	private static int getMultiplier(char c) {
 		switch (Character.toLowerCase(c)) {
-			default:    return 1;
-			case 'm':   return 60;
-			case 'h':   return 60*60;
-			case 'd':   return 24*60*60;
-			case 'w':   return 7*24*60*60;
-			case 'y':   return 365*24*60*60;
+			default:
+				return 1;
+			case 'm':
+				return 60;
+			case 'h':
+				return 60 * 60;
+			case 'd':
+				return 24 * 60 * 60;
+			case 'w':
+				return 7 * 24 * 60 * 60;
+			case 'y':
+				return 365 * 24 * 60 * 60;
 		}
 	}
 
@@ -169,6 +194,37 @@ public final class StringUtils {
 		} catch (Exception ex) {
 			return false;
 		}
+	}
+
+	public static double parseNumber(@Nonnull String sequence) {
+		try {
+			return Double.parseDouble(sequence);
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	public static String findFirstNumberPart(@Nonnull String sequence) {
+		for (String current : sequence.split(" ")) {
+			for (String s : current.split("")) {
+				try {
+					Integer.parseInt(s);
+					return current;
+				} catch (Exception ex) {
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Double findFirstNumber(@Nonnull String sequence) {
+		for (String current : sequence.split(" ")) {
+			try {
+				return Double.parseDouble(current);
+			} catch (Exception ex) {
+			}
+		}
+		return null;
 	}
 
 	private static int indexOf(@Nonnull String string, @Nonnull String pattern, int occurrenceIndex) {

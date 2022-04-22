@@ -7,11 +7,10 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * @author anweisen | https://github.com/anweisen
- * @since 1.1
- *
  * @param <F> The type of the first value
  * @param <S> The type of the second value
+ * @author anweisen | https://github.com/anweisen
+ * @since 1.1
  */
 public class Tuple<F, S> implements Pair {
 
@@ -34,7 +33,7 @@ public class Tuple<F, S> implements Pair {
 	@Nonnull
 	@Override
 	public final Object[] values() {
-		return new Object[] { first, second };
+		return new Object[]{first, second};
 	}
 
 	public F getFirst() {

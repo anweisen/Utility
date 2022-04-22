@@ -102,13 +102,13 @@ public final class CommandResultInfo {
 	@Override
 	public String toString() {
 		return "CommandResultInfo{" +
-				"result=" + result +
-				", command=" + command +
-				", matchingName=" + matchingName +
-				", commandName='" + commandName + '\'' +
-				", prefix='" + prefix + '\'' +
-				", cooldown=" + cooldown +
-				'}';
+			"result=" + result +
+			", command=" + command +
+			", matchingName=" + matchingName +
+			", commandName='" + commandName + '\'' +
+			", prefix='" + prefix + '\'' +
+			", cooldown=" + cooldown +
+			'}';
 	}
 
 }

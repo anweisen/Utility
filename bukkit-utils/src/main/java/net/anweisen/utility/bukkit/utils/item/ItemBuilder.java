@@ -25,10 +25,10 @@ import java.util.List;
  */
 public class ItemBuilder {
 
-	public static final ItemStack FILL_ITEM     = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("§0").build(),
-								  FILL_ITEM_2   = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§0").build(),
-								  BLOCKED_ITEM  = new ItemBuilder(Material.BARRIER, "§cBlocked").build(),
-								  AIR           = new ItemStack(Material.AIR);
+	public static final ItemStack FILL_ITEM = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("§0").build(),
+		FILL_ITEM_2 = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§0").build(),
+		BLOCKED_ITEM = new ItemBuilder(Material.BARRIER, "§cBlocked").build(),
+		AIR = new ItemStack(Material.AIR);
 
 	protected ItemStack item;
 	protected ItemMeta meta;
@@ -125,7 +125,7 @@ public class ItemBuilder {
 	@Nonnull
 	public ItemBuilder appendName(@Nullable Object sequence) {
 		String name = getMeta().getDisplayName();
-		return setName(name  + sequence);
+		return setName(name + sequence);
 	}
 
 	@Nonnull

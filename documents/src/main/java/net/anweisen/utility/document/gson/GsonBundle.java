@@ -2,6 +2,7 @@ package net.anweisen.utility.document.gson;
 
 import com.google.gson.JsonArray;
 import net.anweisen.utility.common.misc.CollectionUtils;
+import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.AbstractBundle;
 
@@ -125,5 +126,11 @@ public class GsonBundle extends AbstractBundle {
 	@Override
 	public String toString() {
 		return toJson();
+	}
+
+	@Nonnull
+	@Override
+	public Bundle clone() {
+		return new GsonBundle(array.deepCopy());
 	}
 }

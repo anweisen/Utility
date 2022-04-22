@@ -11,11 +11,9 @@ import java.util.function.BiConsumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
- * @deprecated Use {@link com.google.common.cache.Cache} instead
- *
  * @see com.google.common.cache.Cache
+ * @since 1.0
+ * @deprecated Use {@link com.google.common.cache.Cache} instead
  */
 @Deprecated
 @ReplaceWith("com.google.common.cache.Cache")

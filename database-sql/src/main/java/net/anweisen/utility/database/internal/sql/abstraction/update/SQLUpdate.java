@@ -6,7 +6,6 @@ import net.anweisen.utility.database.internal.sql.abstraction.AbstractSQLDatabas
 import net.anweisen.utility.database.internal.sql.abstraction.where.ObjectWhere;
 import net.anweisen.utility.database.internal.sql.abstraction.where.SQLWhere;
 import net.anweisen.utility.database.internal.sql.abstraction.where.StringIgnoreCaseWhere;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
@@ -37,6 +36,12 @@ public class SQLUpdate implements DatabaseUpdate {
 		this.table = table;
 		this.where = where;
 		this.values = values;
+	}
+
+	@Nonnull
+	@Override
+	public String getTable() {
+		return table;
 	}
 
 	@Nonnull
@@ -88,9 +93,9 @@ public class SQLUpdate implements DatabaseUpdate {
 		StringBuilder command = new StringBuilder();
 		List<Object> args = new ArrayList<>();
 
-		command.append("UPDATE ");
+		command.append("UPDATE `");
 		command.append(table);
-		command.append(" SET ");
+		command.append("` SET ");
 
 		{
 			int index = 0;

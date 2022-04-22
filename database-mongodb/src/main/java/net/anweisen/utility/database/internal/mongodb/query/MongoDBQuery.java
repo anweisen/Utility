@@ -2,21 +2,21 @@ package net.anweisen.utility.database.internal.mongodb.query;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
-import net.anweisen.utility.database.internal.mongodb.MongoUtils;
 import net.anweisen.utility.database.Order;
 import net.anweisen.utility.database.action.DatabaseQuery;
-import net.anweisen.utility.database.action.ExecutedQuery;
+import net.anweisen.utility.database.action.result.ExecutedQuery;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.abstraction.DefaultExecutedQuery;
 import net.anweisen.utility.database.internal.mongodb.MongoDBDatabase;
+import net.anweisen.utility.database.internal.mongodb.MongoUtils;
 import net.anweisen.utility.database.internal.mongodb.where.MongoDBWhere;
 import net.anweisen.utility.database.internal.mongodb.where.ObjectWhere;
 import net.anweisen.utility.database.internal.mongodb.where.StringIgnoreCaseWhere;
 import org.bson.Document;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -29,6 +29,7 @@ public class MongoDBQuery implements DatabaseQuery {
 	protected final Map<String, MongoDBWhere> where;
 	protected Order order;
 	protected String orderBy;
+	protected int limit;
 
 	public MongoDBQuery(@Nonnull MongoDBDatabase database, @Nonnull String collection) {
 		this.database = database;
@@ -40,6 +41,19 @@ public class MongoDBQuery implements DatabaseQuery {
 		this.database = database;
 		this.collection = collection;
 		this.where = where;
+	}
+
+	@Nonnull
+	@Override
+	public String getTable() {
+		return collection;
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseQuery limit(int amount) {
+		this.limit = amount;
+		return this;
 	}
 
 	@Nonnull
@@ -79,7 +93,7 @@ public class MongoDBQuery implements DatabaseQuery {
 
 	@Nonnull
 	@Override
-	public DatabaseQuery orderBy(@Nonnull String column, @Nonnull Order order) {
+	public DatabaseQuery order(@Nonnull String column, @Nonnull Order order) {
 		this.orderBy = column;
 		this.order = order;
 		return this;
@@ -95,12 +109,11 @@ public class MongoDBQuery implements DatabaseQuery {
 	@Override
 	public ExecutedQuery execute() throws DatabaseException {
 		try {
-			FindIterable<Document> iterable = database.getCollection(collection).find();
+			FindIterable<Document> iterable = database.getCollection(collection).find().limit(limit);
 			MongoUtils.applyWhere(iterable, where);
 			MongoUtils.applyOrder(iterable, orderBy, order);
 
-			List<Document> documents = iterable.into(new ArrayList<>());
-			return createExecutedQuery(documents);
+			return createExecutedQuery(iterable.into(new ArrayList<>()));
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
 		}
@@ -108,12 +121,7 @@ public class MongoDBQuery implements DatabaseQuery {
 
 	@Nonnull
 	private ExecutedQuery createExecutedQuery(@Nonnull List<Document> documents) {
-		List<net.anweisen.utility.document.Document> results = new ArrayList<>(documents.size());
-		for (Document document : documents) {
-			results.add(new MongoDBResult(document));
-		}
-
-		return new DefaultExecutedQuery(results);
+		return new DefaultExecutedQuery(documents.stream().map(MongoDBResult::new).collect(Collectors.toList()));
 	}
 
 	@Override

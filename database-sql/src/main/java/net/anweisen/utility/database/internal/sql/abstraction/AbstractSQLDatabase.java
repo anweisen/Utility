@@ -1,7 +1,7 @@
 package net.anweisen.utility.database.internal.sql.abstraction;
 
 import net.anweisen.utility.database.DatabaseConfig;
-import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.SqlColumn;
 import net.anweisen.utility.database.action.*;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.abstraction.AbstractDatabase;
@@ -12,7 +12,6 @@ import net.anweisen.utility.database.internal.sql.abstraction.insertorupdate.SQL
 import net.anweisen.utility.database.internal.sql.abstraction.query.SQLQuery;
 import net.anweisen.utility.database.internal.sql.abstraction.update.SQLUpdate;
 import net.anweisen.utility.database.internal.sql.abstraction.where.SQLWhere;
-
 import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,20 +57,20 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
+	public void createTable(@Nonnull String name, boolean update, @Nonnull SqlColumn... columns) throws DatabaseException {
 		try {
 			StringBuilder command = new StringBuilder();
 			command.append("CREATE TABLE IF NOT EXISTS `");
 			command.append(name);
 			command.append("` (");
-			{
-				int index = 0;
-				for (SQLColumn column : columns) {
-					if (index > 0) command.append(", ");
-					command.append(column);
-					index++;
-				}
+
+			int index = 0;
+			for (SqlColumn column : columns) {
+				if (index > 0) command.append(", ");
+				command.append(column.toFullSql());
+				index++;
 			}
+
 			command.append(")");
 
 			PreparedStatement statement = prepare(command.toString());
@@ -81,10 +80,25 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 		}
 	}
 
+	@Override
+	public void editTable(@Nonnull String name, @Nonnull SqlColumn... columns) throws DatabaseException {
+		try {
+			
+		} catch (Exception ex) {
+			throw new DatabaseException(ex);
+		}
+	}
+
 	@Nonnull
 	@Override
 	public DatabaseCountEntries countEntries(@Nonnull String table) {
 		return new SQLCountEntries(this, table);
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseListColumns listColumns(@Nonnull String table) {
+		return null;
 	}
 
 	@Nonnull

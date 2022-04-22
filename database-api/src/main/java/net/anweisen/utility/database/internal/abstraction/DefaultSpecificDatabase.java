@@ -3,7 +3,6 @@ package net.anweisen.utility.database.internal.abstraction;
 import net.anweisen.utility.database.Database;
 import net.anweisen.utility.database.SpecificDatabase;
 import net.anweisen.utility.database.action.*;
-
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
@@ -66,6 +65,12 @@ public class DefaultSpecificDatabase implements SpecificDatabase {
 	@Override
 	public DatabaseDeletion delete() {
 		return parent.delete(name);
+	}
+
+	@Nonnull
+	@Override
+	public DatabaseListColumns listColumns() {
+		return parent.listColumns(name);
 	}
 
 	@Nonnull

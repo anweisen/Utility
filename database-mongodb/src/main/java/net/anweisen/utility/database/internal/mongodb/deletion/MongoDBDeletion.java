@@ -4,13 +4,13 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.DeleteOptions;
 import com.mongodb.client.model.Filters;
-import net.anweisen.utility.document.bson.BsonHelper;
 import net.anweisen.utility.database.action.DatabaseDeletion;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utility.database.internal.mongodb.where.MongoDBWhere;
 import net.anweisen.utility.database.internal.mongodb.where.ObjectWhere;
 import net.anweisen.utility.database.internal.mongodb.where.StringIgnoreCaseWhere;
+import net.anweisen.utility.document.bson.BsonHelper;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -34,6 +34,12 @@ public class MongoDBDeletion implements DatabaseDeletion {
 	public MongoDBDeletion(@Nonnull MongoDBDatabase database, @Nonnull String collection) {
 		this.database = database;
 		this.collection = collection;
+	}
+
+	@Nonnull
+	@Override
+	public String getTable() {
+		return collection;
 	}
 
 	@Nonnull

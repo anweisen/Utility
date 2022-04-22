@@ -3,8 +3,8 @@ package net.anweisen.utility.jda.manager.bot;
 import net.anweisen.utility.common.collection.pair.Tuple;
 import net.anweisen.utility.common.logging.ILogger;
 import net.anweisen.utility.common.misc.StringUtils;
-import net.anweisen.utility.database.SQLColumn;
-import net.anweisen.utility.database.SQLColumn.Type;
+import net.anweisen.utility.database.SqlColumn;
+import net.anweisen.utility.database.SqlColumn.Type;
 import net.anweisen.utility.jda.manager.arguments.ArgumentParser;
 import net.anweisen.utility.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utility.jda.manager.hooks.registered.CommandTask;
@@ -48,7 +48,7 @@ public class DiscordBotBuilder {
 	protected final Collection<CommandData> customSlashCommands = new ArrayList<>();
 	protected final List<Supplier<? extends Activity>> activities = new ArrayList<>();
 	protected final Map<String, Tuple<Class<?>, ArgumentParser<?, ?>>> parsers = new HashMap<>();
-	protected final Map<String, SQLColumn[]> tables = new HashMap<>();
+	protected final Map<String, SqlColumn[]> tables = new HashMap<>();
 	protected MemberCachePolicy memberCachePolicy = MemberCachePolicy.DEFAULT;
 	protected ChunkingFilter chunkingFilter = null;
 	protected GatewayIntent[] intents;
@@ -158,6 +158,14 @@ public class DiscordBotBuilder {
 
 	@Nonnull
 	@CheckReturnValue
+	public DiscordBotBuilder commandsAndListeners(@Nonnull Object... commandsAndListeners) {
+		commands(commandsAndListeners);
+		listeners(commandsAndListeners);
+		return this;
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	public DiscordBotBuilder resourceLanguages(@Nonnull String... filenames) {
 		resourceLanguages.addAll(Arrays.asList(filenames));
 		return this;
@@ -193,7 +201,7 @@ public class DiscordBotBuilder {
 
 	@Nonnull
 	@CheckReturnValue
-	public DiscordBotBuilder createTable(@Nonnull String name, @Nonnull SQLColumn... columns) {
+	public DiscordBotBuilder createTable(@Nonnull String name, @Nonnull SqlColumn... columns) {
 		tables.put(name, columns);
 		return this;
 	}
@@ -292,18 +300,18 @@ public class DiscordBotBuilder {
 		}
 		if (databaseConfig != null) {
 			if (!tables.containsKey(databaseConfig.getGuildTable())) {
-				List<SQLColumn> columns = new ArrayList<>(1);
-				columns.add(new SQLColumn(databaseConfig.getGuildKeyColumn(), Type.VARCHAR, 18));
+				List<SqlColumn> columns = new ArrayList<>(1);
+				columns.add(SqlColumn.of(databaseConfig.getGuildKeyColumn(), Type.VARCHAR, 18).build());
 
 				if (databaseConfig.getPrefixColumn() != null)
-					columns.add(new SQLColumn(databaseConfig.getPrefixColumn(), Type.VARCHAR, 100));
+					columns.add(SqlColumn.of(databaseConfig.getPrefixColumn(), Type.VARCHAR, 100).build());
 				if (databaseConfig.getLanguageColumn() != null)
-					columns.add(new SQLColumn(databaseConfig.getLanguageColumn(), Type.VARCHAR, 32));
+					columns.add(SqlColumn.of(databaseConfig.getLanguageColumn(), Type.VARCHAR, 32).build());
 				if (databaseConfig.getTeamRoleColumn() != null)
-					columns.add(new SQLColumn(databaseConfig.getTeamRoleColumn(), Type.VARCHAR, 18));
+					columns.add(SqlColumn.of(databaseConfig.getTeamRoleColumn(), Type.VARCHAR, 18).build());
 
 				if (columns.size() > 1)
-					createTable(databaseConfig.getGuildTable(), columns.toArray(new SQLColumn[0]));
+					createTable(databaseConfig.getGuildTable(), columns.toArray(new SqlColumn[0]));
 			}
 		}
 
@@ -314,10 +322,10 @@ public class DiscordBotBuilder {
 	@CheckReturnValue
 	public String toString() {
 		return "BotBuilder{" +
-				"cacheFlags=" + cacheFlags +
-				", resourceLanguages=" + resourceLanguages +
-				", fileLanguages=" + fileLanguages +
-				", intents=" + Arrays.toString(intents) +
-				'}';
+			"cacheFlags=" + cacheFlags +
+			", resourceLanguages=" + resourceLanguages +
+			", fileLanguages=" + fileLanguages +
+			", intents=" + Arrays.toString(intents) +
+			'}';
 	}
 }

@@ -1,9 +1,9 @@
 package net.anweisen.utility.database.internal.mongodb.insertion;
 
-import net.anweisen.utility.database.internal.mongodb.MongoUtils;
 import net.anweisen.utility.database.action.DatabaseInsertion;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.mongodb.MongoDBDatabase;
+import net.anweisen.utility.database.internal.mongodb.MongoUtils;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;
@@ -30,6 +30,12 @@ public class MongoDBInsertion implements DatabaseInsertion {
 		this.database = database;
 		this.collection = collection;
 		this.values = values;
+	}
+
+	@Nonnull
+	@Override
+	public String getTable() {
+		return collection;
 	}
 
 	@Nonnull

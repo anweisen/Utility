@@ -35,7 +35,7 @@ public class FallbackLogger implements ILogger {
 		stream.println(getLogMessage(level, ILogger.formatMessage(message, args), name));
 		for (Object arg : args) {
 			if (!(arg instanceof Throwable)) continue;
-			((Throwable)arg).printStackTrace(stream);
+			((Throwable) arg).printStackTrace(stream);
 		}
 	}
 
@@ -59,8 +59,8 @@ public class FallbackLogger implements ILogger {
 		String threadName = thread.getName();
 		String time = OffsetDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
 		return name == null ?
-				String.format("[%s: %s/%s]: %s", time, threadName, level.getUpperCaseName(), message) :
-				String.format("[%s: %s/%s] %s: %s", time, threadName, level.getUpperCaseName(), name, message);
+			String.format("[%s: %s/%s]: %s", time, threadName, level.getUpperCaseName(), message) :
+			String.format("[%s: %s/%s] %s: %s", time, threadName, level.getUpperCaseName(), name, message);
 	}
 
 }

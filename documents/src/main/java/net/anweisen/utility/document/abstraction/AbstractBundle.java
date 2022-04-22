@@ -119,4 +119,9 @@ public abstract class AbstractBundle implements Bundle {
 	public void forEachEntry(@Nonnull Consumer<? super IEntry> action) {
 		entries().forEach(action);
 	}
+
+	@Nonnull
+	@Override
+	public abstract Bundle clone();
+
 }

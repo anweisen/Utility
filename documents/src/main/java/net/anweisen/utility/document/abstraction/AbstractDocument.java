@@ -8,6 +8,8 @@ import net.anweisen.utility.document.gson.GsonDocument;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
@@ -101,6 +103,15 @@ public abstract class AbstractDocument implements Document {
 		return toEntryMap().values();
 	}
 
+	@Nonnull
+	@Override
+	public Optional<IEntry> firstEntry() {
+		Iterator<IEntry> iterator = entries().iterator();
+		if (iterator.hasNext())
+			return Optional.of(iterator.next());
+		return Optional.empty();
+	}
+
 	@Override
 	public void forEach(@Nonnull BiConsumer<? super String, ? super Object> action) {
 		toMap().forEach(action);
@@ -110,4 +121,9 @@ public abstract class AbstractDocument implements Document {
 	public void forEachEntry(@Nonnull BiConsumer<? super String, ? super IEntry> action) {
 		toEntryMap().forEach(action);
 	}
+
+	@Nonnull
+	@Override
+	public abstract Document clone();
+
 }

@@ -17,12 +17,12 @@ import javax.annotation.Nonnull;
 public class DefaultSetTeamRoleCommand {
 
 	@Command(
-			name = { "setteamrole", "setteamrank", "setteam" },
-			usage = "[guild:role]",
-			scope = CommandScope.GUILD,
-			permission = Permission.ADMINISTRATOR,
-			cooldownScope = CoolDownScope.GUILD,
-			cooldownSeconds = 5
+		name = {"setteamrole", "setteamrank", "setteam"},
+		usage = "[guild:role]",
+		scope = CommandScope.GUILD,
+		permission = Permission.ADMINISTRATOR,
+		cooldownScope = CoolDownScope.GUILD,
+		cooldownSeconds = 5
 	)
 	public void onSetCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) throws Exception {
 		Role role = args.get(0);
@@ -31,9 +31,9 @@ public class DefaultSetTeamRoleCommand {
 	}
 
 	@Command(
-			name = { "removeteamrole", "removeteam", "removeteamrank", "resetteam", "resetteamrole", "resetteamrank" },
-			scope = CommandScope.GUILD,
-			permission = Permission.ADMINISTRATOR
+		name = {"removeteamrole", "removeteam", "removeteamrank", "resetteam", "resetteamrole", "resetteamrank"},
+		scope = CommandScope.GUILD,
+		permission = Permission.ADMINISTRATOR
 	)
 	public void onRemoveCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) throws Exception {
 		event.getManager().getTeamRoleManager().setTeamRole(event.getGuild(), null);

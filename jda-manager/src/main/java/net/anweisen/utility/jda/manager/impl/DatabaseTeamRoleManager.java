@@ -26,7 +26,7 @@ public class DatabaseTeamRoleManager implements TeamRoleManager {
 	}
 
 	public DatabaseTeamRoleManager(@Nonnull Database database, @Nonnull String table, @Nonnull String keyField, @Nonnull String valueField) {
-		this(CachedDatabaseAccess.newStringAccess(database, new DatabaseAccessConfig(table, keyField, valueField)));
+		this(CachedDatabaseAccess.forString(database, new DatabaseAccessConfig(table, keyField, valueField)));
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class CommandExample {
 
 	@Command(
-			name = { "help", "h" }
+		name = {"help", "h"}
 	)
 	public void onHelpCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) {
 		// Reply hardcoded message
@@ -25,13 +25,13 @@ public class CommandExample {
 	}
 
 	@Command(
-			name = "ban",
-			usage = "[guild:member]",
-			scope = CommandScope.GUILD,
-			permission = Permission.BAN_MEMBERS,
-			team = true,
-			cooldownScope = CoolDownScope.GUILD,
-			cooldownSeconds = 5
+		name = "ban",
+		usage = "[guild:member]",
+		scope = CommandScope.GUILD,
+		permission = Permission.BAN_MEMBERS,
+		team = true,
+		cooldownScope = CoolDownScope.GUILD,
+		cooldownSeconds = 5
 	)
 	public void onBanCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) {
 		Member member = args.get(0);

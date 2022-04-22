@@ -34,6 +34,7 @@ public interface Message {
 	String asRandomString(@Nonnull Object... args);
 
 	void setValue(@Nullable String value);
+
 	void setValue(@Nullable String[] value);
 
 	boolean isEmpty();

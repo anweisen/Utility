@@ -24,9 +24,9 @@ public class MessageImpl implements Message {
 	@Nonnull
 	@Override
 	public String asString(@Nonnull Object... args) {
-		if (value == null)                      return Message.unknown(name);
-		if (value instanceof String)            return StringUtils.format((String) value, args);
-		if (value instanceof String[])          return StringUtils.getArrayAsString(StringUtils.format((String[]) value, args), "\n");
+		if (value == null) return Message.unknown(name);
+		if (value instanceof String) return StringUtils.format((String) value, args);
+		if (value instanceof String[]) return StringUtils.getArrayAsString(StringUtils.format((String[]) value, args), "\n");
 		LOGGER.error("Message '{}' has an illegal value {}", name, value.getClass().getName());
 		return Message.unknown(name);
 	}
@@ -34,11 +34,11 @@ public class MessageImpl implements Message {
 	@Nonnull
 	@Override
 	public String[] asArray(@Nonnull Object... args) {
-		if (value == null)                      return new String[] { Message.unknown(name)};
-		if (value instanceof String[])          return StringUtils.format((String[]) value, args);
-		if (value instanceof String)            return StringUtils.getStringAsArray(StringUtils.format((String) value, args));
+		if (value == null) return new String[]{Message.unknown(name)};
+		if (value instanceof String[]) return StringUtils.format((String[]) value, args);
+		if (value instanceof String) return StringUtils.getStringAsArray(StringUtils.format((String) value, args));
 		LOGGER.error("Message '{}' has an illegal value {}", name, value.getClass().getName());
-		return new String[] { Message.unknown(name)};
+		return new String[]{Message.unknown(name)};
 	}
 
 	@Nonnull

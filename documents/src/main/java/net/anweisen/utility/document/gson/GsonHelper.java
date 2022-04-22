@@ -36,8 +36,7 @@ public final class GsonHelper {
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Pair.class, new PairTypeAdapter()))
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Class.class, new ClassTypeAdapter()))
 			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(Color.class, new ColorTypeAdapter()))
-			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(OffsetDateTime.class, new OffsetDateTimeTypeAdapter()))
-		;
+			.registerTypeAdapterFactory(GsonTypeAdapter.newTypeHierarchyFactory(OffsetDateTime.class, new OffsetDateTimeTypeAdapter()));
 
 		DEFAULT_GSON = builder.create();
 		PRETTY_GSON = builder.setPrettyPrinting().create();
@@ -74,5 +73,6 @@ public final class GsonHelper {
 			: DEFAULT_GSON.toJsonTree(value);
 	}
 
-	private GsonHelper() {}
+	private GsonHelper() {
+	}
 }

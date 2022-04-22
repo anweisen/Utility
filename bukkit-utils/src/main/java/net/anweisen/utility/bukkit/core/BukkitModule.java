@@ -1,6 +1,5 @@
 package net.anweisen.utility.bukkit.core;
 
-import com.google.common.base.Charsets;
 import net.anweisen.utility.bukkit.utils.menu.MenuPosition;
 import net.anweisen.utility.bukkit.utils.menu.MenuPositionListener;
 import net.anweisen.utility.bukkit.utils.misc.MinecraftVersion;
@@ -10,13 +9,13 @@ import net.anweisen.utility.common.annotations.DeprecatedSince;
 import net.anweisen.utility.common.annotations.ReplaceWith;
 import net.anweisen.utility.common.collection.NamedThreadFactory;
 import net.anweisen.utility.common.collection.WrappedException;
-import net.anweisen.utility.common.config.Document;
-import net.anweisen.utility.common.config.Storable;
 import net.anweisen.utility.common.config.document.YamlDocument;
 import net.anweisen.utility.common.logging.ILogger;
 import net.anweisen.utility.common.logging.internal.BukkitLoggerWrapper;
 import net.anweisen.utility.common.logging.lib.JavaILogger;
 import net.anweisen.utility.common.version.Version;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.wrapped.Storable;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -142,9 +141,14 @@ public abstract class BukkitModule extends JavaPlugin {
 			throw new WrappedException(error);
 	}
 
-	protected void handleLoad() throws Exception {}
-	protected void handleEnable() throws Exception {}
-	protected void handleDisable() throws Exception {}
+	protected void handleLoad() throws Exception {
+	}
+
+	protected void handleEnable() throws Exception {
+	}
+
+	protected void handleDisable() throws Exception {
+	}
 
 	public boolean isDevMode() {
 		return devMode;
@@ -190,7 +194,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	@Nonnull
 	public Document getPluginDocument() {
 		return pluginConfig != null ? pluginConfig :
-			  (pluginConfig = new YamlDocument(YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("plugin.yml"), Charsets.UTF_8))));
+			(pluginConfig = new YamlDocument(YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("plugin.yml"), Charsets.UTF_8))));
 	}
 
 	@Nonnull
@@ -275,8 +279,8 @@ public abstract class BukkitModule extends JavaPlugin {
 		if (listener instanceof ActionListener) {
 			ActionListener<?> actionListener = (ActionListener<?>) listener;
 			getServer().getPluginManager().registerEvent(
-					actionListener.getClassOfEvent(), actionListener, actionListener.getPriority(),
-					new SimpleEventExecutor(actionListener.getClassOfEvent(), actionListener.getListener()), this, actionListener.isIgnoreCancelled()
+				actionListener.getClassOfEvent(), actionListener, actionListener.getPriority(),
+				new SimpleEventExecutor(actionListener.getClassOfEvent(), actionListener.getListener()), this, actionListener.isIgnoreCancelled()
 			);
 		} else {
 			getServer().getPluginManager().registerEvents(listener, this);

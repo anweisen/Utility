@@ -8,14 +8,12 @@ import java.util.function.Supplier;
  * Objects with this interface can be serialized to a json string.
  *
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Document
  * @see Bundle
  * @see IEntry
- *
  * @see #toJson()
  * @see #toPrettyJson()
+ * @since 1.0
  */
 public interface JsonConvertable {
 
@@ -41,8 +39,15 @@ public interface JsonConvertable {
 	@CheckReturnValue
 	static JsonConvertable of(@Nonnull Supplier<String> normal, @Nonnull Supplier<String> pretty) {
 		return new JsonConvertable() {
-			@Nonnull public String toJson() { return normal.get(); }
-			@Nonnull public String toPrettyJson() { return pretty.get(); }
+			@Nonnull
+			public String toJson() {
+				return normal.get();
+			}
+
+			@Nonnull
+			public String toPrettyJson() {
+				return pretty.get();
+			}
 		};
 	}
 

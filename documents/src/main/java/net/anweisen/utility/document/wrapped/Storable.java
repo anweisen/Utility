@@ -8,10 +8,9 @@ import java.nio.file.Path;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see StorableDocument
  * @see StorableBundle
+ * @since 1.0
  */
 public interface Storable {
 

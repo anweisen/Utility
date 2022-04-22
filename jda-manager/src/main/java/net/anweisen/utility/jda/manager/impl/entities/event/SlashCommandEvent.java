@@ -3,6 +3,7 @@ package net.anweisen.utility.jda.manager.impl.entities.event;
 import net.anweisen.utility.common.misc.StringUtils;
 import net.anweisen.utility.jda.manager.CommandManager;
 import net.anweisen.utility.jda.manager.hooks.event.ReplyMessageAction;
+import net.anweisen.utility.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utility.jda.manager.utils.Embeds;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -25,8 +26,8 @@ public class SlashCommandEvent extends AbstractCommandEvent {
 
 	private final CommandInteraction interaction;
 
-	public SlashCommandEvent(@Nonnull CommandManager manager, @Nonnull CommandInteraction interaction, @Nullable Member member, boolean disableMentions, boolean embeds) {
-		super(manager, interaction.getMessageChannel(), member, disableMentions, embeds);
+	public SlashCommandEvent(@Nonnull CommandManager manager, @Nonnull CommandOptions commandOptions, @Nonnull CommandInteraction interaction, @Nullable Member member, boolean disableMentions, boolean embeds) {
+		super(manager, commandOptions, interaction.getMessageChannel(), member, disableMentions, embeds);
 		this.interaction = interaction;
 	}
 

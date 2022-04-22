@@ -26,7 +26,7 @@ public class CompletableTask<V> implements Task<V> {
 		this(new CompletableFuture<>());
 	}
 
-	private CompletableTask(@Nonnull CompletableFuture<V> future) {
+	public CompletableTask(@Nonnull CompletableFuture<V> future) {
 		this.future = future;
 		this.future.exceptionally(ex -> {
 			this.failure = ex;

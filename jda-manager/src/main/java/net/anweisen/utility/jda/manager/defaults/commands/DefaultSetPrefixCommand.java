@@ -25,12 +25,12 @@ public class DefaultSetPrefixCommand {
 	}
 
 	@Command(
-			name = "setprefix",
-			usage = "[string prefix]",
-			scope = CommandScope.GUILD,
-			permission = Permission.ADMINISTRATOR,
-			cooldownScope = CoolDownScope.GUILD,
-			cooldownSeconds = 5
+		name = "setprefix",
+		usage = "[string prefix]",
+		scope = CommandScope.GUILD,
+		permission = Permission.ADMINISTRATOR,
+		cooldownScope = CoolDownScope.GUILD,
+		cooldownSeconds = 5
 	)
 	public void onCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) throws DatabaseException {
 		String prefix = args.<String>get(0).replace("`", "");

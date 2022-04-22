@@ -29,7 +29,7 @@ public class MySQLDatabase extends AbstractSQLDatabase {
 	@Nonnull
 	@Override
 	protected String createUrl() {
-		return "jdbc:mysql://" + config.getHost() + (config.isPortSet() ? ":" + config.getPort() : "") + "/" + config.getDatabase();
+		return "jdbc:mysql://" + config.getHost() + (config.isPortSet() ? ":" + config.getPort() : "") + "/" + config.getDatabase() + "";
 	}
 
 	@Nonnull

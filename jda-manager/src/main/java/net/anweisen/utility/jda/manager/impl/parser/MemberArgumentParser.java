@@ -67,7 +67,7 @@ public class MemberArgumentParser implements ArgumentParser<Member, Info> {
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.withScopes(CommandScope.GUILD);
+			.withScopes(CommandScope.GUILD);
 	}
 
 }

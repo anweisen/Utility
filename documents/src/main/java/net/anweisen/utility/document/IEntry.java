@@ -10,17 +10,15 @@ import java.util.UUID;
 /**
  * A {@link IEntry} represents some property snapshot of a {@link Document} or {@link Bundle}
  * which can be a string, number, document, bundle, ...
- *
+ * <p>
  * A {@link IEntry} is immutable, when the value is changed in the {@link Document} or {@link Bundle},
  * this {@link IEntry} will not be effected.
  *
+ * @author anweisen | https://github.com/anweisen
  * @see Document#getEntry(String)
  * @see Bundle#getEntry(int)
- *
  * @see Document#entries()
  * @see Bundle#entries()
- *
- * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
 public interface IEntry extends JsonConvertable {
@@ -86,9 +84,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as long, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a long
+	 * @throws IllegalStateException If this entry cannot be converted to a long
 	 */
 	long toLong(long def);
 
@@ -98,9 +94,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as int, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to an int
+	 * @throws IllegalStateException If this entry cannot be converted to an int
 	 */
 	int toInt(int def);
 
@@ -110,9 +104,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as short, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a short
+	 * @throws IllegalStateException If this entry cannot be converted to a short
 	 */
 	short toShort(short def);
 
@@ -122,9 +114,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as byte, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a byte
+	 * @throws IllegalStateException If this entry cannot be converted to a byte
 	 */
 	byte toByte(byte def);
 
@@ -134,9 +124,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as float, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a float
+	 * @throws IllegalStateException If this entry cannot be converted to a float
 	 */
 	float toFloat(float def);
 
@@ -146,9 +134,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as double, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a double
+	 * @throws IllegalStateException If this entry cannot be converted to a double
 	 */
 	double toDouble(double def);
 
@@ -158,9 +144,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as char, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a char
+	 * @throws IllegalStateException If this entry cannot be converted to a char
 	 */
 	char toChar(char def);
 
@@ -179,33 +163,25 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as number
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a number
+	 * @throws IllegalStateException If this entry cannot be converted to a number
 	 */
 	Number toNumber();
 
 	/**
 	 * @return this entry as {@link Document}, could be {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link Document}
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link Document}
 	 */
 	Document toDocument();
 
 	/**
 	 * @return this entry as {@link Bundle}, could be {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link Bundle}
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link Bundle}
 	 */
 	Bundle toBundle();
 
 	/**
 	 * @return this entry as {@link UUID}, could be {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to an {@link UUID}
+	 * @throws IllegalStateException If this entry cannot be converted to an {@link UUID}
 	 */
 	default UUID toUniqueId() {
 		return toInstance(UUID.class);
@@ -213,9 +189,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as {@link OffsetDateTime}, could be {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to an {@link OffsetDateTime}
+	 * @throws IllegalStateException If this entry cannot be converted to an {@link OffsetDateTime}
 	 */
 	default OffsetDateTime toOffsetDateTime() {
 		return toInstance(OffsetDateTime.class);
@@ -223,9 +197,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as {@link Date}, could be {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link Date}
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link Date}
 	 */
 	default Date toDate() {
 		return toInstance(Date.class);
@@ -233,9 +205,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as {@link Color}, could be {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link Color}
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link Color}
 	 */
 	default Color toColor() {
 		return toInstance(Color.class);
@@ -243,9 +213,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as {@link Class}, or {@code null} if the class is not found, or this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link String}
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link String}
 	 */
 	default Class<?> toClass() {
 		return toInstance(Class.class);
@@ -253,9 +221,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as {@link Enum EnumConstant} of the given class, or {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link Enum EnumConstant} of the given class
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link Enum EnumConstant} of the given class
 	 */
 	default <E extends Enum<?>> E toEnum(@Nonnull Class<E> enumClass) {
 		return toInstance(enumClass);
@@ -263,9 +229,7 @@ public interface IEntry extends JsonConvertable {
 
 	/**
 	 * @return this entry as {@link Enum EnumConstant} of the given class, or {@code def} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If this entry cannot be converted to a {@link Enum EnumConstant} of the given class
+	 * @throws IllegalStateException If this entry cannot be converted to a {@link Enum EnumConstant} of the given class
 	 */
 	@SuppressWarnings("unchecked")
 	default <E extends Enum<?>> E toEnum(@Nonnull E def) {
@@ -276,9 +240,7 @@ public interface IEntry extends JsonConvertable {
 	/**
 	 * @param classOfT the class this entry should be converted to
 	 * @return this entry converted to the given class, or {@code null} if this is {@link #isNull() null}
-	 *
-	 * @throws IllegalStateException
-	 *         If the value cannot be converted to the given instance class by the underlying library
+	 * @throws IllegalStateException If the value cannot be converted to the given instance class by the underlying library
 	 */
 	<T> T toInstance(@Nonnull Class<T> classOfT);
 

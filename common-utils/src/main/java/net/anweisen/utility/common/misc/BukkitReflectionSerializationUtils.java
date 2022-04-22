@@ -14,7 +14,8 @@ import java.util.Map;
  */
 public final class BukkitReflectionSerializationUtils {
 
-	private BukkitReflectionSerializationUtils() {}
+	private BukkitReflectionSerializationUtils() {
+	}
 
 	private static final ILogger logger = ILogger.forThisClass();
 
@@ -72,7 +73,8 @@ public final class BukkitReflectionSerializationUtils {
 			method.setAccessible(true);
 			Object object = method.invoke(null, map);
 
-			if (!classOfT.isInstance(object)) throw new IllegalStateException("Deserialization of " + classOfT.getName() + " failed: returned " + (object == null ? null : object.getClass().getName()));
+			if (!classOfT.isInstance(object))
+				throw new IllegalStateException("Deserialization of " + classOfT.getName() + " failed: returned " + (object == null ? null : object.getClass().getName()));
 			return classOfT.cast(object);
 
 		} catch (Throwable ex) {

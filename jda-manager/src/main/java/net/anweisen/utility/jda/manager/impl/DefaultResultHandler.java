@@ -64,9 +64,9 @@ public class DefaultResultHandler implements CommandResultHandler {
 		if (result.getType() == CommandProcessResult.INVALID_SCOPE) {
 			defaultMessageName += "-" + (result.getCommand().getOptions().getScope() == CommandScope.GUILD ? "guild" : "private");
 		} else if (result.getType() == CommandProcessResult.COOLDOWN) {
-			arguments = new Object[] { NumberFormatter.TIME.format(result.getCoolDown() +  0.1) };
+			arguments = new Object[]{NumberFormatter.TIME.format(result.getCoolDown() + 0.1)};
 		} else if (result.getType() == CommandProcessResult.UNKNOWN_COMMAND) {
-			arguments = new Object[] { CommandHelper.removeMarkdown(result.getCommandName(), true) };
+			arguments = new Object[]{CommandHelper.removeMarkdown(result.getCommandName(), true)};
 		}
 
 		sendMessage(event, defaultMessageName, arguments);

@@ -16,7 +16,8 @@ import java.util.Collections;
  */
 public final class SearchHelper {
 
-	private SearchHelper() {}
+	private SearchHelper() {
+	}
 
 	@Nullable
 	@CheckReturnValue
@@ -33,23 +34,27 @@ public final class SearchHelper {
 			Role role = guild.getRoleById(id);
 			if (role != null)
 				return role;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			String id = search.substring(2).substring(0, 18);
 			Role role = guild.getRoleById(id);
 			if (role != null)
 				return role;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			Role role = guild.getRoleById(search);
 			if (role != null)
 				return role;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			Role role = guild.getRolesByName(search, true).get(0);
 			if (role != null)
 				return role;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -68,23 +73,27 @@ public final class SearchHelper {
 			TextChannel channel = guild.getTextChannelById(id);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			String id = search.substring(2).substring(0, 18);
 			TextChannel channel = guild.getTextChannelById(id);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			TextChannel channel = guild.getTextChannelById(search);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			TextChannel channel = guild.getTextChannelsByName(search, true).get(0);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -102,12 +111,14 @@ public final class SearchHelper {
 			VoiceChannel channel = guild.getVoiceChannelById(search);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			VoiceChannel channel = guild.getVoiceChannelsByName(search, true).get(0);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -123,10 +134,12 @@ public final class SearchHelper {
 		search = search.trim();
 		try {
 			return guild.getCategoryById(search);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return guild.getCategoriesByName(search, true).get(0);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -144,25 +157,31 @@ public final class SearchHelper {
 			String id = search.substring(3).substring(0, 18);
 			Member member = guild.retrieveMemberById(id).complete();
 			if (member != null) return member;
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 		try {
 			String id = search.substring(2).substring(0, 18);
 			Member member = guild.retrieveMemberById(id).complete();
 			if (member != null) return member;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			Member member = guild.retrieveMemberById(search).complete();
 			if (member != null) return member;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return guild.getMemberByTag(search);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return guild.getMembersByName(search, true).get(0);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return guild.getMembersByEffectiveName(search, true).get(0);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -181,24 +200,28 @@ public final class SearchHelper {
 			GuildChannel channel = guild.getGuildChannelById(id);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			String id = search.substring(2).substring(0, 18);
 			GuildChannel channel = guild.getGuildChannelById(id);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			GuildChannel channel = guild.getGuildChannelById(search);
 			if (channel != null)
 				return channel;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			for (GuildChannel channel : guild.getChannels()) {
 				if (channel.getName().equalsIgnoreCase(search))
 					return channel;
 			}
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -210,22 +233,27 @@ public final class SearchHelper {
 			String id = search.substring(3).substring(0, 18);
 			User user = bot.retrieveUserById(id).complete();
 			if (user != null) return user;
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 		try {
 			String id = search.substring(2).substring(0, 18);
 			User user = bot.retrieveUserById(id).complete();
 			if (user != null) return user;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			User user = bot.retrieveUserById(search).complete();
 			if (user != null) return user;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return bot.getUserByTag(search);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return bot.getUsersByName(search, true).get(0);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 
@@ -236,29 +264,34 @@ public final class SearchHelper {
 			String id = search.substring(3).substring(0, 18);
 			User user = bot.retrieveUserById(id).complete();
 			if (user != null) return user;
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 		try {
 			String id = search.substring(2).substring(0, 18);
 			User user = bot.retrieveUserById(id).complete();
 			if (user != null) return user;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			User user = bot.retrieveUserById(search).complete();
 			if (user != null) return user;
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			return bot.getUserByTag(search);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			// TODO: Shortcut is not implemented in ShardManager yet.. (status jda ver 4.2.1)
 			return bot.getShardCache().applyStream(stream ->
-					stream.map(jda -> jda.getUsersByName(search, true))
-							.filter(list -> !list.isEmpty())
-							.findFirst()
-							.orElse(Collections.emptyList())
-							.get(0)
+				stream.map(jda -> jda.getUsersByName(search, true))
+					.filter(list -> !list.isEmpty())
+					.findFirst()
+					.orElse(Collections.emptyList())
+					.get(0)
 			);
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		return null;
 	}
 

@@ -54,7 +54,7 @@ public class BsonEntry implements IEntry {
 
 	@Override
 	public boolean isChar() {
-		return value instanceof String && ((String)value).length() == 1
+		return value instanceof String && ((String) value).length() == 1
 			|| value instanceof Character
 			|| bsonValue != null && bsonValue.isString() && bsonValue.asString().getValue().length() == 1;
 	}
@@ -68,9 +68,9 @@ public class BsonEntry implements IEntry {
 	public String toString(@Nullable String def) {
 		return isNull() ? def :
 			bsonValue == null ? value.toString() :
-			bsonValue.isString() ? bsonValue.asString().getValue() :
-			bsonValue.isSymbol() ? bsonValue.asSymbol().getSymbol() :
-			toJson();
+				bsonValue.isString() ? bsonValue.asString().getValue() :
+					bsonValue.isSymbol() ? bsonValue.asSymbol().getSymbol() :
+						toJson();
 	}
 
 	@Override
@@ -119,11 +119,11 @@ public class BsonEntry implements IEntry {
 	public boolean toBoolean(boolean def) {
 		return isNull() ? def :
 			value instanceof Boolean ? (boolean) value :
-			value instanceof String ? Boolean.parseBoolean((String) value) :
-			bsonValue == null ? false :
-			bsonValue.isBoolean() ? bsonValue.asBoolean().getValue() :
-			bsonValue.isString() ? Boolean.parseBoolean(bsonValue.asString().getValue())
-			: def;
+				value instanceof String ? Boolean.parseBoolean((String) value) :
+					bsonValue == null ? false :
+						bsonValue.isBoolean() ? bsonValue.asBoolean().getValue() :
+							bsonValue.isString() ? Boolean.parseBoolean(bsonValue.asString().getValue())
+								: def;
 	}
 
 	@Override
@@ -131,10 +131,10 @@ public class BsonEntry implements IEntry {
 		if (!isNumber()) DocumentHelper.throwNotNumber();
 		return value instanceof Number ? (Number) value :
 			bsonValue.isInt32() ? bsonValue.asInt32().getValue() :
-			bsonValue.isInt64() ? bsonValue.asInt64().getValue() :
-			bsonValue.isDecimal128() ? bsonValue.asDecimal128().getValue() :
-			bsonValue.isDouble() ? bsonValue.asDouble().getValue() :
-			bsonValue.asNumber().doubleValue();
+				bsonValue.isInt64() ? bsonValue.asInt64().getValue() :
+					bsonValue.isDecimal128() ? bsonValue.asDecimal128().getValue() :
+						bsonValue.isDouble() ? bsonValue.asDouble().getValue() :
+							bsonValue.asNumber().doubleValue();
 	}
 
 	@Override

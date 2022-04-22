@@ -69,5 +69,6 @@ public final class DocumentHelper {
 		}
 	}
 
-	private DocumentHelper() {}
+	private DocumentHelper() {
+	}
 }

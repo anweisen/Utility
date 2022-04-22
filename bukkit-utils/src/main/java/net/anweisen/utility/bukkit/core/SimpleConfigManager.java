@@ -39,10 +39,13 @@ public class SimpleConfigManager {
 	@Nonnull
 	public static Class<? extends Document> resolveType(@Nonnull String extension) {
 		switch (extension.toLowerCase()) {
-			case "json":    return GsonDocument.class;
+			case "json":
+				return GsonDocument.class;
 			case "yml":
-			case "yaml":    return YamlDocument.class;
-			default:        throw new IllegalArgumentException("Unknown document file extension '" + extension + "'");
+			case "yaml":
+				return YamlDocument.class;
+			default:
+				throw new IllegalArgumentException("Unknown document file extension '" + extension + "'");
 		}
 	}
 

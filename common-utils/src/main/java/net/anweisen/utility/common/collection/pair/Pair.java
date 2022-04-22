@@ -5,12 +5,11 @@ import javax.annotation.Nonnull;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Wrap
  * @see Tuple
  * @see Triple
  * @see Quadro
+ * @since 1.0
  */
 public interface Pair {
 

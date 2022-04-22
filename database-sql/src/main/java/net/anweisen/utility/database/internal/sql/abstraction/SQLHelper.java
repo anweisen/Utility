@@ -17,7 +17,8 @@ import java.util.Map;
  */
 public final class SQLHelper {
 
-	private SQLHelper() {}
+	private SQLHelper() {
+	}
 
 	public static void fillParams(@Nonnull PreparedStatement statement, @Nonnull Object... params) throws SQLException {
 		for (int i = 0; i < params.length; i++) {
@@ -29,14 +30,14 @@ public final class SQLHelper {
 	@Nullable
 	@SuppressWarnings("unchecked")
 	public static Object serializeObject(@Nullable Object object) {
-		if (object == null)                     return null;
-		if (object instanceof Number)           return object;
-		if (object instanceof Boolean)          return object;
-		if (object instanceof Enum<?>)          return ((Enum<?>)object).name();
-		if (object instanceof JsonConvertable)  return ((JsonConvertable)object).toJson();
-		if (object instanceof Map)              return new GsonDocument((Map<String, Object>) object).toJson();
-		if (object instanceof Iterable)         return GsonUtils.convertIterableToJsonArray(GsonHelper.DEFAULT_GSON, (Iterable<?>) object).toString();
-		if (object.getClass().isArray())        return GsonUtils.convertArrayToJsonArray(GsonHelper.DEFAULT_GSON, object).toString();
+		if (object == null) return null;
+		if (object instanceof Number) return object;
+		if (object instanceof Boolean) return object;
+		if (object instanceof Enum<?>) return ((Enum<?>) object).name();
+		if (object instanceof JsonConvertable) return ((JsonConvertable) object).toJson();
+		if (object instanceof Map) return new GsonDocument((Map<String, Object>) object).toJson();
+		if (object instanceof Iterable) return GsonUtils.convertIterableToJsonArray(GsonHelper.DEFAULT_GSON, (Iterable<?>) object).toString();
+		if (object.getClass().isArray()) return GsonUtils.convertArrayToJsonArray(GsonHelper.DEFAULT_GSON, object).toString();
 		return object.toString();
 	}
 

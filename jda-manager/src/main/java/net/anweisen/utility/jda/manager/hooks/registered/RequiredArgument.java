@@ -38,7 +38,7 @@ public final class RequiredArgument {
 		int endInfoIndex = argument.indexOf(')');
 
 		if (startInfoIndex != -1 && endInfoIndex == -1
-		 || startInfoIndex == -1 && endInfoIndex != -1)
+			|| startInfoIndex == -1 && endInfoIndex != -1)
 			throw new IllegalArgumentException("Started info container with '(' but did not find end with ')' in '" + argument + "'");
 
 		if (startLengthIndex != -1) {
@@ -119,10 +119,10 @@ public final class RequiredArgument {
 	@Override
 	public String toString() {
 		return "Argument{" +
-				"length=" + givenLength +
-				", key='" + key + "'" +
-				", classOfArgument=" + classOfArgument.getName() +
-				'}';
+			"length=" + givenLength +
+			", key='" + key + "'" +
+			", classOfArgument=" + classOfArgument.getName() +
+			'}';
 	}
 
 }

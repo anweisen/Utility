@@ -1,6 +1,7 @@
 package net.anweisen.utility.document.map;
 
 import net.anweisen.utility.common.misc.CollectionUtils;
+import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.AbstractBundle;
 import net.anweisen.utility.document.gson.GsonHelper;
@@ -29,7 +30,7 @@ public class MapBundle extends AbstractBundle {
 	}
 
 	public MapBundle(@Nonnull Collection<?> values) {
-		this(new AtomicBoolean(false), values);
+		this(new AtomicBoolean(true), values);
 	}
 
 	public MapBundle() {
@@ -104,5 +105,11 @@ public class MapBundle extends AbstractBundle {
 	@Override
 	public void write(@Nonnull Writer writer) {
 		throw new UnsupportedOperationException("Cannot write a MapBundle");
+	}
+
+	@Nonnull
+	@Override
+	public Bundle clone() {
+		return new MapBundle(new ArrayList<>(values));
 	}
 }

@@ -1,18 +1,15 @@
 package net.anweisen.utility.database.exception;
 
 import net.anweisen.utility.database.action.DatabaseAction;
-
 import javax.annotation.Nonnull;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see DatabaseAlreadyConnectedException
  * @see DatabaseConnectionClosedException
  * @see DatabaseUnsupportedFeatureException
- *
  * @see DatabaseAction#execute()
+ * @since 1.0
  */
 public class DatabaseException extends Exception {
 

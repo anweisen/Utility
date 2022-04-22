@@ -9,14 +9,14 @@ import java.util.logging.Level;
  */
 public enum LogLevel {
 
-	TRACE   (0,     "TRACE",    "trace",    Level.FINEST,   false),
-	DEBUG   (2,     "DEBUG",    "debug",    Level.FINER,    false),
-	EXTENDED(5,     "EXTENDED", "extended", Level.FINE,     false),
-	STATUS  (7,     "STATUS",   "status",   Level.CONFIG,   false),
-	INFO    (10,    "INFO",     "info",     Level.INFO,     false),
-	WARN    (15,    "WARN",     "warn",     Level.WARNING,  true),
-	ERROR   (25,    "ERROR",    "error",    Level.SEVERE,   true),
-	FATAL   (30,    "FATAL",    "fatal",    Level.SEVERE,   true);
+	TRACE(0, "TRACE", "trace", Level.FINEST, false),
+	DEBUG(2, "DEBUG", "debug", Level.FINER, false),
+	EXTENDED(5, "EXTENDED", "extended", Level.FINE, false),
+	STATUS(7, "STATUS", "status", Level.CONFIG, false),
+	INFO(10, "INFO", "info", Level.INFO, false),
+	WARN(15, "WARN", "warn", Level.WARNING, true),
+	ERROR(25, "ERROR", "error", Level.SEVERE, true),
+	FATAL(30, "FATAL", "fatal", Level.SEVERE, true);
 
 	private final String uppercaseName, lowercaseName;
 	private final Level javaLevel;

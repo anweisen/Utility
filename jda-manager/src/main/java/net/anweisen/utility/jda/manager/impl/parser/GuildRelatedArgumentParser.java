@@ -56,8 +56,8 @@ public class GuildRelatedArgumentParser<T> implements ArgumentParser<T, Options>
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.nullable(true)
-				.withScopes(CommandScope.GUILD);
+			.nullable(true)
+			.withScopes(CommandScope.GUILD);
 	}
 
 }

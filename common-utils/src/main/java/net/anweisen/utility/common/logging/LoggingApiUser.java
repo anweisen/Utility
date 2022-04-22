@@ -24,7 +24,7 @@ public interface LoggingApiUser {
 		getTargetLogger().warn(message, args);
 	}
 
-	default void info(@Nullable Object message, @Nonnull Object... args)  {
+	default void info(@Nullable Object message, @Nonnull Object... args) {
 		getTargetLogger().info(message, args);
 	}
 

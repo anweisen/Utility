@@ -30,7 +30,7 @@ public interface CommandTask {
 			method.invoke(staticMethod ? null : holder, event, args);
 		};
 	}
-	
+
 	@Nonnull
 	static CommandTask debug() {
 		return (event, args) -> {

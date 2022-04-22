@@ -6,13 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="database-sql" />
         <module name="bukkit-utils" />
+        <module name="documents" />
+        <module name="database-sql" />
         <module name="jda-manager" />
         <module name="common-utils" />
         <module name="database-api" />
         <module name="database-mongodb" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="bukkit-utils" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

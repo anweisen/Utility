@@ -70,7 +70,7 @@ public class MessageReplyMessageAction extends AbstractReplyMessageAction<Messag
 	@Nonnull
 	@Override
 	public ReplyMessageAction setEmbed(@Nonnull MessageEmbed embed) {
-		action.embed(embed);
+		action.setEmbeds(embed);
 		return this;
 	}
 

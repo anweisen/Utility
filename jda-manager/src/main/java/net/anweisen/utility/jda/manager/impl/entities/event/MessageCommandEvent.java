@@ -3,6 +3,7 @@ package net.anweisen.utility.jda.manager.impl.entities.event;
 import net.anweisen.utility.common.misc.StringUtils;
 import net.anweisen.utility.jda.manager.CommandManager;
 import net.anweisen.utility.jda.manager.hooks.event.ReplyMessageAction;
+import net.anweisen.utility.jda.manager.hooks.option.CommandOptions;
 import net.anweisen.utility.jda.manager.utils.Embeds;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -23,8 +24,8 @@ public class MessageCommandEvent extends AbstractCommandEvent {
 
 	protected final Message message;
 
-	public MessageCommandEvent(@Nonnull CommandManager manager, @Nonnull Message message, @Nullable Member member, boolean disableMentions, boolean embeds) {
-		super(manager, message.getChannel(), member, disableMentions, embeds);
+	public MessageCommandEvent(@Nonnull CommandManager manager, @Nonnull CommandOptions commandOptions, @Nonnull Message message, @Nullable Member member, boolean disableMentions, boolean embeds) {
+		super(manager, commandOptions, message.getChannel(), member, disableMentions, embeds);
 		this.message = message;
 	}
 
@@ -55,7 +56,7 @@ public class MessageCommandEvent extends AbstractCommandEvent {
 	@Nonnull
 	@Override
 	public ReplyMessageAction reply(@Nonnull MessageEmbed content) {
-		return wrap(applySettings(message.reply(content)));
+		return wrap(applySettings(message.replyEmbeds(content)));
 	}
 
 	@Nonnull

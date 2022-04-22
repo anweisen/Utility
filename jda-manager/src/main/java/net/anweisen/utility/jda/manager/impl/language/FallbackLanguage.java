@@ -12,7 +12,7 @@ public class FallbackLanguage extends LanguageImpl {
 
 	public FallbackLanguage() {
 		super("fallback");
-		names = new String[] { "Fallback (English)" };
+		names = new String[]{"Fallback (English)"};
 
 		getMessage("error-error").setValue("Something went wrong");
 		getMessage("error-incorrect-arguments").setValue("Please use `{0}`");

@@ -17,7 +17,8 @@ import java.util.Map.Entry;
 @SuppressWarnings("unchecked")
 public final class GsonUtils { // TODO move to GsonHelper
 
-	private GsonUtils() {}
+	private GsonUtils() {
+	}
 
 	@Nullable
 	public static Object unpackJsonElement(@Nullable JsonElement element) {

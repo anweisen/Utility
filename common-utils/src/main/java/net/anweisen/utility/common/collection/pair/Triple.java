@@ -7,12 +7,11 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * @author anweisen | https://github.com/anweisen
- * @since 1.1
- *
  * @param <F> The type of the first value
  * @param <S> The type of the second value
  * @param <T> The type of the third value
+ * @author anweisen | https://github.com/anweisen
+ * @since 1.1
  */
 public class Triple<F, S, T> implements Pair {
 
@@ -37,7 +36,7 @@ public class Triple<F, S, T> implements Pair {
 	@Nonnull
 	@Override
 	public final Object[] values() {
-		return new Object[] { first, second, third };
+		return new Object[]{first, second, third};
 	}
 
 	public F getFirst() {

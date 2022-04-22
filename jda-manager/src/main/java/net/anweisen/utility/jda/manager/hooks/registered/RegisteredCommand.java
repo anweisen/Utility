@@ -92,9 +92,9 @@ public final class RegisteredCommand {
 	@Override
 	public String toString() {
 		return "RegisteredCommand{" +
-				"options=" + options +
-				", arguments=" + Arrays.toString(arguments) +
-				'}';
+			"options=" + options +
+			", arguments=" + Arrays.toString(arguments) +
+			'}';
 	}
 
 	protected void parseArguments(@Nonnull String usage, @Nonnull CommandManager manager, @Nonnull Collection<RequiredArgument> arguments) {

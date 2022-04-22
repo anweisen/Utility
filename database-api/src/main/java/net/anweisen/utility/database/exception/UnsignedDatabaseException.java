@@ -2,16 +2,13 @@ package net.anweisen.utility.database.exception;
 
 import net.anweisen.utility.common.collection.WrappedException;
 import net.anweisen.utility.database.action.DatabaseAction;
-
 import javax.annotation.Nonnull;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see DatabaseException
- *
  * @see DatabaseAction#executeUnsigned()
+ * @since 1.0
  */
 public class UnsignedDatabaseException extends WrappedException {
 

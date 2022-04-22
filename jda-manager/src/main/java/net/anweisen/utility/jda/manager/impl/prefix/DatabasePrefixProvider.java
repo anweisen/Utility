@@ -25,7 +25,7 @@ public class DatabasePrefixProvider implements PrefixProvider {
 	}
 
 	public DatabasePrefixProvider(@Nonnull String defaultPrefix, @Nonnull Database database, @Nonnull String table, @Nonnull String keyField, @Nonnull String valueField) {
-		this(defaultPrefix, CachedDatabaseAccess.newStringAccess(database, new DatabaseAccessConfig(table, keyField, valueField)));
+		this(defaultPrefix, CachedDatabaseAccess.forString(database, new DatabaseAccessConfig(table, keyField, valueField)));
 	}
 
 	@Nonnull

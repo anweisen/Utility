@@ -1,11 +1,11 @@
 package net.anweisen.utility.database.internal.mongodb.insertorupdate;
 
-import net.anweisen.utility.document.bson.BsonHelper;
 import net.anweisen.utility.database.action.DatabaseInsertionOrUpdate;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.internal.mongodb.MongoDBDatabase;
 import net.anweisen.utility.database.internal.mongodb.update.MongoDBUpdate;
 import net.anweisen.utility.database.internal.mongodb.where.MongoDBWhere;
+import net.anweisen.utility.document.bson.BsonHelper;
 import org.bson.BsonDocument;
 import org.bson.Document;
 

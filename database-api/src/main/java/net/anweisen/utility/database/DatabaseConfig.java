@@ -1,7 +1,6 @@
 package net.anweisen.utility.database;
 
 import net.anweisen.utility.document.Document;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -18,26 +17,29 @@ public final class DatabaseConfig {
 	private final String file;
 	private final int port;
 	private final boolean portIsSet;
+	private final String encoding;
 
 	public DatabaseConfig(String host, String database, String password, String user, int port) {
-		this(host, database, null, password, user, port, true, null);
+		this(host, database, null, password, user, port, true, null, null);
 	}
+
 	public DatabaseConfig(String host, String database, String password, String user) {
-		this(host, database, null, password, user, 0, false, null);
+		this(host, database, null, password, user, 0, false, null, null);
 	}
 
 	public DatabaseConfig(String host, String database, String authDatabase, String password, String user, int port) {
-		this(host, database, authDatabase, password, user, port, true, null);
+		this(host, database, authDatabase, password, user, port, true, null, null);
 	}
+
 	public DatabaseConfig(String host, String database, String authDatabase, String password, String user) {
-		this(host, database, authDatabase, password, user, 0, false, null);
+		this(host, database, authDatabase, password, user, 0, false, null, null);
 	}
 
 	public DatabaseConfig(String database, String file) {
-		this(null, database, null, null, null, 0, false, file);
+		this(null, database, null, null, null, 0, false, file, null);
 	}
 
-	public DatabaseConfig(String host, String database, String authDatabase, String password, String user, int port, boolean portIsSet, String file) {
+	public DatabaseConfig(String host, String database, String authDatabase, String password, String user, int port, boolean portIsSet, String file, String encoding) {
 		this.host = host;
 		this.database = database;
 		this.authDatabase = authDatabase;
@@ -46,6 +48,7 @@ public final class DatabaseConfig {
 		this.port = port;
 		this.portIsSet = portIsSet;
 		this.file = file;
+		this.encoding = encoding;
 	}
 
 	public DatabaseConfig(@Nonnull Document document) {
@@ -57,7 +60,8 @@ public final class DatabaseConfig {
 			document.getString("user"),
 			document.getInt("port"),
 			document.contains("port"),
-			document.getString("file")
+			document.getString("file"),
+			document.getString("encoding")
 		);
 	}
 
@@ -93,17 +97,23 @@ public final class DatabaseConfig {
 		return file;
 	}
 
+
+	public String getEncoding() {
+		return encoding;
+	}
+
 	@Override
 	public String toString() {
 		return "DatabaseConfig{" +
-				"host='" + host + '\'' +
-				", database='" + database + '\'' +
-				", authDatabase='" + authDatabase + '\'' +
-				", user='" + user + '\'' +
-				", file='" + file + '\'' +
-				", port=" + port +
-				", portIsSet=" + portIsSet +
-				'}';
+			"host='" + host + '\'' +
+			", database='" + database + '\'' +
+			", authDatabase='" + authDatabase + '\'' +
+			", user='" + user + '\'' +
+			", file='" + file + '\'' +
+			", port=" + port +
+			", portIsSet=" + portIsSet +
+			", encoding='" + encoding + "'" +
+			'}';
 	}
 
 }

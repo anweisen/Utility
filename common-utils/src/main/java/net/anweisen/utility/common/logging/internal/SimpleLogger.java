@@ -103,17 +103,17 @@ public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 
 	@Override
 	public void trace(String format, Object arg) {
-		trace(format, new Object[] { arg });
+		trace(format, new Object[]{arg});
 	}
 
 	@Override
 	public void trace(String format, Object arg1, Object arg2) {
-		trace(format, new Object[] { arg1, arg2 });
+		trace(format, new Object[]{arg1, arg2});
 	}
 
 	@Override
 	public void trace(String msg, Throwable t) {
-		trace(msg, new Object[] { t });
+		trace(msg, new Object[]{t});
 	}
 
 	@Override
@@ -158,17 +158,17 @@ public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 
 	@Override
 	public void debug(String format, Object arg) {
-		debug(format, new Object[] { arg });
+		debug(format, new Object[]{arg});
 	}
 
 	@Override
 	public void debug(String format, Object arg1, Object arg2) {
-		debug(format, new Object[] { arg1, arg2 });
+		debug(format, new Object[]{arg1, arg2});
 	}
 
 	@Override
 	public void debug(String msg, Throwable t) {
-		debug(msg, new Object[] { t });
+		debug(msg, new Object[]{t});
 	}
 
 	@Override
@@ -213,17 +213,17 @@ public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 
 	@Override
 	public void info(String format, Object arg) {
-		info(format, new Object[] { arg });
+		info(format, new Object[]{arg});
 	}
 
 	@Override
 	public void info(String format, Object arg1, Object arg2) {
-		info(format, new Object[] { arg1, arg2 });
+		info(format, new Object[]{arg1, arg2});
 	}
 
 	@Override
 	public void info(String msg, Throwable t) {
-		info(msg, new Object[] { t });
+		info(msg, new Object[]{t});
 	}
 
 	@Override
@@ -268,17 +268,17 @@ public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 
 	@Override
 	public void warn(String format, Object arg) {
-		warn(format, new Object[] { arg });
+		warn(format, new Object[]{arg});
 	}
 
 	@Override
 	public void warn(String format, Object arg1, Object arg2) {
-		warn(format, new Object[] { arg1, arg2 });
+		warn(format, new Object[]{arg1, arg2});
 	}
 
 	@Override
 	public void warn(String msg, Throwable t) {
-		warn(msg, new Object[] { t });
+		warn(msg, new Object[]{t});
 	}
 
 	@Override
@@ -323,17 +323,17 @@ public class SimpleLogger extends FallbackLogger implements Slf4jILogger {
 
 	@Override
 	public void error(String format, Object arg) {
-		error(format, new Object[] { arg });
+		error(format, new Object[]{arg});
 	}
 
 	@Override
 	public void error(String format, Object arg1, Object arg2) {
-		error(format, new Object[] { arg1, arg2 });
+		error(format, new Object[]{arg1, arg2});
 	}
 
 	@Override
 	public void error(String msg, Throwable t) {
-		error(msg, new Object[] { t });
+		error(msg, new Object[]{t});
 	}
 
 	@Override

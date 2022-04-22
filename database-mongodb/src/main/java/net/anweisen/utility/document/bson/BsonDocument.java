@@ -42,6 +42,11 @@ public class BsonDocument extends AbstractDocument {
 		this.bsonDocument = bsonDocument;
 	}
 
+	public BsonDocument(@Nonnull org.bson.Document bsonDocument) {
+		super(true);
+		this.bsonDocument = bsonDocument;
+	}
+
 	@Nonnull
 	@Override
 	public Map<String, Object> toMap() {
@@ -130,5 +135,11 @@ public class BsonDocument extends AbstractDocument {
 	@Override
 	public String toString() {
 		return toJson();
+	}
+
+	@Nonnull
+	@Override
+	public Document clone() {
+		return new BsonDocument(org.bson.Document.parse(bsonDocument.toJson()));
 	}
 }

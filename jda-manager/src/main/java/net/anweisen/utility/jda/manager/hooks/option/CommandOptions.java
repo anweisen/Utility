@@ -58,8 +58,8 @@ public final class CommandOptions {
 
 	public CommandOptions(@Nonnull Command command) {
 		this(command.name(), command.usage(), command.scope(), command.permission(),
-			 command.team(), command.async(), command.allowBots(), command.allowWebHooks(), command.allowEdits(), command.allowSlashCommands(), command.disableMentions(), command.typing(),
-			 command.cooldownScope(), command.cooldownSeconds());
+			command.team(), command.async(), command.allowBots(), command.allowWebHooks(), command.allowEdits(), command.allowSlashCommands(), command.disableMentions(), command.typing(),
+			command.cooldownScope(), command.cooldownSeconds());
 	}
 
 	@Nonnull

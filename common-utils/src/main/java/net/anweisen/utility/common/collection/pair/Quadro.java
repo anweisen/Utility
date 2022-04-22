@@ -7,13 +7,12 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
+ * @param <F>  The type of the first value
+ * @param <S>  The type of the second value
+ * @param <T>  The type of the third value
+ * @param <FF> The type of the fourth value
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
- *
- * @param <F> The type of the first value
- * @param <S> The type of the second value
- * @param <T> The type of the third value
- * @param <FF> The type of the fourth value
  */
 public class Quadro<F, S, T, FF> implements Pair {
 
@@ -40,7 +39,7 @@ public class Quadro<F, S, T, FF> implements Pair {
 	@Nonnull
 	@Override
 	public final Object[] values() {
-		return new Object[] { first, second, third, first };
+		return new Object[]{first, second, third, first};
 	}
 
 	public F getFirst() {

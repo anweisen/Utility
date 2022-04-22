@@ -1,7 +1,6 @@
 package net.anweisen.utility.document;
 
 import net.anweisen.utility.common.misc.FileUtils;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedWriter;
@@ -9,19 +8,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Bundle
  * @see IEntry
+ * @since 1.0
  */
 public interface Document extends JsonConvertable {
 
@@ -46,10 +42,7 @@ public interface Document extends JsonConvertable {
 	/**
 	 * @param classOfT the class this entry should be converted to
 	 * @return this document converted to the given class, or {@code null} if this is {@link #isEmpty() empty}
-	 *
-	 * @throws IllegalStateException
-	 *         If the value cannot be converted to the given instance class by the underlying library
-	 *
+	 * @throws IllegalStateException If the value cannot be converted to the given instance class by the underlying library
 	 * @see IEntry#toInstance(Class)
 	 */
 	<T> T toInstance(@Nonnull Class<T> classOfT);
@@ -86,6 +79,9 @@ public interface Document extends JsonConvertable {
 	@Nonnull
 	Collection<IEntry> entries();
 
+	@Nonnull
+	Optional<IEntry> firstEntry();
+
 	/**
 	 * @param path the path of the target object
 	 * @return the object at the given path wrapped as {@link IEntry}
@@ -96,9 +92,7 @@ public interface Document extends JsonConvertable {
 	/**
 	 * @param path the path of the target object
 	 * @return the object at the given path as {@link Bundle} or a new created empty {@link Bundle} if {@code null}
-	 *
-	 * @throws IllegalStateException
-	 *         If the object at the given path cannot be converted to a {@link Bundle}
+	 * @throws IllegalStateException If the object at the given path cannot be converted to a {@link Bundle}
 	 */
 	@Nonnull
 	Bundle getBundle(@Nonnull String path);
@@ -106,9 +100,7 @@ public interface Document extends JsonConvertable {
 	/**
 	 * @param path the path of the target object
 	 * @return the object at the given path as {@link Document} or a new created empty {@link Document} if {@code null}
-	 *
-	 * @throws IllegalStateException
-	 *         If the object at the given path cannot be converted to a {@link Document}
+	 * @throws IllegalStateException If the object at the given path cannot be converted to a {@link Document}
 	 */
 	@Nonnull
 	Document getDocument(@Nonnull String path);
@@ -264,6 +256,9 @@ public interface Document extends JsonConvertable {
 	boolean canEdit();
 
 	@Nonnull
+	Document clone();
+
+	@Nonnull
 	Document markUneditable();
 
 	@Nonnull
@@ -275,11 +270,9 @@ public interface Document extends JsonConvertable {
 	 * Sets the entry at given path to the given object.
 	 * Setting something to {@code null} has the same effect as {@link #remove(String) removing} it.
 	 *
-	 * @param path the path of the target object
+	 * @param path  the path of the target object
 	 * @param value the new value
-	 *
-	 * @throws IllegalStateException
-	 *         If this document cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this document cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Document set(@Nonnull String path, @Nullable Object value);
@@ -289,9 +282,7 @@ public interface Document extends JsonConvertable {
 	 * and applies the properties to this document.
 	 *
 	 * @param values the new values object
-	 *
-	 * @throws IllegalStateException
-	 *         If this document cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this document cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Document set(@Nonnull Object values);
@@ -301,9 +292,7 @@ public interface Document extends JsonConvertable {
 	 * This has the same effect as {@link #set(String, Object) setting} it to {@code null}.
 	 *
 	 * @param path the path of the target object
-	 *
-	 * @throws IllegalStateException
-	 *         If this document cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this document cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Document remove(@Nonnull String path);
@@ -311,8 +300,7 @@ public interface Document extends JsonConvertable {
 	/**
 	 * Clears all entries of this document
 	 *
-	 * @throws IllegalStateException
-	 *         If this document cannot {@link #canEdit() be edited}
+	 * @throws IllegalStateException If this document cannot {@link #canEdit() be edited}
 	 */
 	@Nonnull
 	Document clear();
@@ -335,6 +323,17 @@ public interface Document extends JsonConvertable {
 		write(writer);
 		writer.flush();
 		writer.close();
+	}
+
+	default boolean setDefaults(@Nonnull Document defaults) {
+		AtomicBoolean changed = new AtomicBoolean();
+		defaults.forEach((key, value) -> {
+			if (getObject(key) == null) {
+				changed.set(true);
+				set(key, value);
+			}
+		});
+		return changed.get();
 	}
 
 	@Nonnull

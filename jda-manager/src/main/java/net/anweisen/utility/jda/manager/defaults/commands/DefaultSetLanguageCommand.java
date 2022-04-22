@@ -17,12 +17,12 @@ import javax.annotation.Nonnull;
 public class DefaultSetLanguageCommand {
 
 	@Command(
-			name = { "setlanguage", "setlang", "lang", "language" },
-			usage = "[string language]",
-			scope = CommandScope.GUILD,
-			permission = Permission.ADMINISTRATOR,
-			cooldownScope = CoolDownScope.GUILD,
-			cooldownSeconds = 5
+		name = {"setlanguage", "setlang", "lang", "language"},
+		usage = "[string language]",
+		scope = CommandScope.GUILD,
+		permission = Permission.ADMINISTRATOR,
+		cooldownScope = CoolDownScope.GUILD,
+		cooldownSeconds = 5
 	)
 	public void onCommand(@Nonnull CommandEvent event, @Nonnull CommandArguments args) throws Exception {
 		Language language = event.getManager().getLanguageManager().getLanguageByName(args.get(0));

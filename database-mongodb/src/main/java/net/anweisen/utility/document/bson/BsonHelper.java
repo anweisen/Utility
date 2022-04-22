@@ -2,8 +2,8 @@ package net.anweisen.utility.document.bson;
 
 import com.mongodb.MongoClient;
 import net.anweisen.utility.common.misc.ReflectionUtils;
-import org.bson.*;
 import org.bson.BsonDocument;
+import org.bson.*;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.conversions.Bson;
@@ -107,5 +107,6 @@ public final class BsonHelper {
 		return bsonArray;
 	}
 
-	private BsonHelper() {}
+	private BsonHelper() {
+	}
 }

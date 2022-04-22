@@ -3,7 +3,6 @@ package net.anweisen.utility.database.access;
 import net.anweisen.utility.database.Database;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.document.Document;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -21,6 +20,31 @@ public class CachedDatabaseAccess<V> extends DirectDatabaseAccess<V> {
 
 	public CachedDatabaseAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config, @Nonnull BiFunction<? super Document, ? super String, ? extends V> mapper) {
 		super(database, config, mapper);
+	}
+
+	@Nonnull
+	public static CachedDatabaseAccess<String> forString(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+		return new CachedDatabaseAccess<>(database, config, Document::getString);
+	}
+
+	@Nonnull
+	public static CachedDatabaseAccess<Integer> forInt(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+		return new CachedDatabaseAccess<>(database, config, Document::getInt);
+	}
+
+	@Nonnull
+	public static CachedDatabaseAccess<Long> forLong(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+		return new CachedDatabaseAccess<>(database, config, Document::getLong);
+	}
+
+	@Nonnull
+	public static CachedDatabaseAccess<Double> forDouble(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+		return new CachedDatabaseAccess<>(database, config, Document::getDouble);
+	}
+
+	@Nonnull
+	public static CachedDatabaseAccess<Document> forDocument(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
+		return new CachedDatabaseAccess<>(database, config, Document::getDocument);
 	}
 
 	@Nullable
@@ -58,31 +82,6 @@ public class CachedDatabaseAccess<V> extends DirectDatabaseAccess<V> {
 	public void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException {
 		cache.put(key, value);
 		super.setValue(key, value);
-	}
-
-	@Nonnull
-	public static CachedDatabaseAccess<String> newStringAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
-		return new CachedDatabaseAccess<>(database, config, Document::getString);
-	}
-
-	@Nonnull
-	public static CachedDatabaseAccess<Integer> newIntAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
-		return new CachedDatabaseAccess<>(database, config, Document::getInt);
-	}
-
-	@Nonnull
-	public static CachedDatabaseAccess<Long> newLongAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
-		return new CachedDatabaseAccess<>(database, config, Document::getLong);
-	}
-
-	@Nonnull
-	public static CachedDatabaseAccess<Double> newDoubleAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
-		return new CachedDatabaseAccess<>(database, config, Document::getDouble);
-	}
-
-	@Nonnull
-	public static CachedDatabaseAccess<Document> newDocumentAccess(@Nonnull Database database, @Nonnull DatabaseAccessConfig config) {
-		return new CachedDatabaseAccess<>(database, config, Document::getDocument);
 	}
 
 }

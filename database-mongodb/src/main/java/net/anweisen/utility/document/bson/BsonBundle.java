@@ -1,6 +1,7 @@
 package net.anweisen.utility.document.bson;
 
 import net.anweisen.utility.common.misc.CollectionUtils;
+import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.AbstractBundle;
 import org.bson.BsonArray;
@@ -22,6 +23,11 @@ public class BsonBundle extends AbstractBundle {
 
 	public BsonBundle(@Nonnull BsonArray array, @Nonnull AtomicBoolean editable) {
 		super(editable);
+		this.array = array;
+	}
+
+	public BsonBundle(@Nonnull BsonArray array) {
+		super(true);
 		this.array = array;
 	}
 
@@ -93,5 +99,11 @@ public class BsonBundle extends AbstractBundle {
 	@Override
 	public String toString() {
 		return toJson();
+	}
+
+	@Nonnull
+	@Override
+	public Bundle clone() {
+		return new BsonBundle(array.clone());
 	}
 }

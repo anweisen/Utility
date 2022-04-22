@@ -17,7 +17,7 @@ public abstract class CustomChart {
 	}
 
 	public JsonObject getRequestJsonObject(
-			BiConsumer<String, Throwable> errorLogger, boolean logErrors) {
+		BiConsumer<String, Throwable> errorLogger, boolean logErrors) {
 		JsonObjectBuilder builder = new JsonObjectBuilder();
 		builder.appendField("chartId", chartId);
 		try {

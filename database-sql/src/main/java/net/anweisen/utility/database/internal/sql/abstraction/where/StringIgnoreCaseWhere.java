@@ -20,7 +20,7 @@ public class StringIgnoreCaseWhere implements SQLWhere {
 	@Nonnull
 	@Override
 	public Object[] getArgs() {
-		return new Object[] { value };
+		return new Object[]{value};
 	}
 
 	@Nonnull

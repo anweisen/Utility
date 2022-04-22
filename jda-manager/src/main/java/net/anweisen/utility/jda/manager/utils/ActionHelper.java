@@ -11,11 +11,14 @@ import java.util.function.Supplier;
  */
 public final class ActionHelper {
 
-	private ActionHelper() {}
+	private ActionHelper() {
+	}
 
 	public static void tryAction(@Nonnull Supplier<? extends RestAction<?>> action) {
 		try {
-			action.get().queue(success -> {}, failure -> {});
+			action.get().queue(success -> {
+			}, failure -> {
+			});
 		} catch (Exception ex) {
 		}
 	}

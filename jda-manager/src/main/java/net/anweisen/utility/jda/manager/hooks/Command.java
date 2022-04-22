@@ -14,9 +14,8 @@ import java.lang.annotation.Target;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see net.anweisen.utility.jda.manager.CommandManager
+ * @since 1.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

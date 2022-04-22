@@ -7,7 +7,6 @@ import net.anweisen.utility.common.misc.CollectionUtils;
 import net.anweisen.utility.common.misc.GsonUtils;
 import net.anweisen.utility.document.Bundle;
 import net.anweisen.utility.document.Document;
-import net.anweisen.utility.document.Documents;
 import net.anweisen.utility.document.IEntry;
 import net.anweisen.utility.document.abstraction.AbstractDocument;
 
@@ -216,6 +215,12 @@ public class GsonDocument extends AbstractDocument {
 	@Override
 	public void write(@Nonnull Writer writer) {
 		GsonHelper.PRETTY_GSON.toJson(object, writer);
+	}
+
+	@Nonnull
+	@Override
+	public Document clone() {
+		return new GsonDocument(object.deepCopy());
 	}
 
 	@Override

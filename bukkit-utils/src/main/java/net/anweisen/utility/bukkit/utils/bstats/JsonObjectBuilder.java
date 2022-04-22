@@ -84,9 +84,9 @@ public class JsonObjectBuilder {
 			throw new IllegalArgumentException("JSON values must not be null");
 		}
 		String escapedValues =
-				Arrays.stream(values)
-						.map(value -> "\"" + escape(value) + "\"")
-						.collect(Collectors.joining(","));
+			Arrays.stream(values)
+				.map(value -> "\"" + escape(value) + "\"")
+				.collect(Collectors.joining(","));
 		appendFieldUnescaped(key, "[" + escapedValues + "]");
 		return this;
 	}
@@ -103,7 +103,7 @@ public class JsonObjectBuilder {
 			throw new IllegalArgumentException("JSON values must not be null");
 		}
 		String escapedValues =
-				Arrays.stream(values).mapToObj(String::valueOf).collect(Collectors.joining(","));
+			Arrays.stream(values).mapToObj(String::valueOf).collect(Collectors.joining(","));
 		appendFieldUnescaped(key, "[" + escapedValues + "]");
 		return this;
 	}
@@ -120,7 +120,7 @@ public class JsonObjectBuilder {
 			throw new IllegalArgumentException("JSON values must not be null");
 		}
 		String escapedValues =
-				Arrays.stream(values).map(JsonObject::toString).collect(Collectors.joining(","));
+			Arrays.stream(values).map(JsonObject::toString).collect(Collectors.joining(","));
 		appendFieldUnescaped(key, "[" + escapedValues + "]");
 		return this;
 	}

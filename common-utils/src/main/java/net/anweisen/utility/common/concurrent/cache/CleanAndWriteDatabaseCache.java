@@ -51,7 +51,7 @@ public class CleanAndWriteDatabaseCache<K, V> implements DatabaseCache<K, V> {
 	}
 
 	public void writeCache() {
-		if (logger != null ) logger.debug("Writing & Cleaning cache");
+		if (logger != null) logger.debug("Writing & Cleaning cache");
 		cleanAndWrite(cache, unusedTimeBeforeClean, logger, check, writer);
 	}
 
@@ -66,11 +66,11 @@ public class CleanAndWriteDatabaseCache<K, V> implements DatabaseCache<K, V> {
 
 		try {
 			V data = query.apply(key);
-			if (logger != null ) logger.trace("Queried data {} for {}", data, key);
+			if (logger != null) logger.trace("Queried data {} for {}", data, key);
 			cache.put(key, new Tuple<>(System.currentTimeMillis(), data));
 			return data;
 		} catch (Exception ex) {
-			if (logger != null ) logger.error("Could not get data for {}", key, ex);
+			if (logger != null) logger.error("Could not get data for {}", key, ex);
 			return fallback.apply(key);
 		}
 	}
@@ -97,17 +97,17 @@ public class CleanAndWriteDatabaseCache<K, V> implements DatabaseCache<K, V> {
 		cache.forEach((key, pair) -> {
 			try {
 				if (now - pair.getFirst() > unusedTimeBeforeClean) {
-					if (logger != null ) logger.trace("Removing {} from cache, last usage was {}s ago", key, (now - pair.getFirst()) / 1000);
+					if (logger != null) logger.trace("Removing {} from cache, last usage was {}s ago", key, (now - pair.getFirst()) / 1000);
 					remove.add(key);
 				}
 
 				V value = pair.getSecond();
 				if (!check.test(value)) return;
 
-				if (logger != null ) logger.trace("Writing {}", value);
+				if (logger != null) logger.trace("Writing {}", value);
 				writer.accept(key, value);
 			} catch (Exception ex) {
-				if (logger != null ) logger.error("Unable to write cache for {}", key, ex);
+				if (logger != null) logger.error("Unable to write cache for {}", key, ex);
 			}
 		});
 		remove.forEach(cache::remove);

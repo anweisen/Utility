@@ -1,8 +1,7 @@
 package net.anweisen.utility.database.internal.abstraction;
 
-import net.anweisen.utility.database.action.ExecutedQuery;
+import net.anweisen.utility.database.action.result.ExecutedQuery;
 import net.anweisen.utility.document.Document;
-
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
 import java.util.*;
@@ -20,7 +19,7 @@ public class DefaultExecutedQuery implements ExecutedQuery {
 	protected final List<Document> results;
 
 	public DefaultExecutedQuery(@Nonnull List<Document> results) {
-		this.results = results;
+		this.results = Collections.unmodifiableList(results);
 	}
 
 	@Nonnull
@@ -39,8 +38,14 @@ public class DefaultExecutedQuery implements ExecutedQuery {
 
 	@Nonnull
 	@Override
-	public Stream<Document> all() {
+	public Stream<Document> stream() {
 		return results.stream();
+	}
+
+	@Nonnull
+	@Override
+	public List<Document> list() {
+		return results;
 	}
 
 	@Nonnull
@@ -63,7 +68,7 @@ public class DefaultExecutedQuery implements ExecutedQuery {
 
 	@Nonnull
 	@Override
-	public  <K, V> Map<K, V> toMap(@Nonnull Function<? super Document, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper) {
+	public <K, V> Map<K, V> toMap(@Nonnull Function<? super Document, ? extends K> keyMapper, @Nonnull Function<? super Document, ? extends V> valueMapper) {
 		Map<K, V> map = new LinkedHashMap<>();
 		for (Document document : results) {
 			map.put(keyMapper.apply(document), valueMapper.apply(document));
@@ -129,7 +134,7 @@ public class DefaultExecutedQuery implements ExecutedQuery {
 
 	@Override
 	public Iterator<Document> iterator() {
-		return Collections.unmodifiableCollection(results).iterator();
+		return results.iterator();
 	}
 
 	@Override

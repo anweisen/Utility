@@ -3,7 +3,6 @@ package net.anweisen.utility.database.access;
 import net.anweisen.utility.database.Database;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.document.Document;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -46,17 +45,17 @@ public class DirectDatabaseAccess<V> implements DatabaseAccess<V> {
 	@Nonnull
 	protected Optional<V> getValue0(@Nonnull String key) throws DatabaseException {
 		return database.query(config.getTable())
-				.where(config.getKeyField(), key)
-				.execute().first()
-				.map(document -> mapper.apply(document, config.getValueField()));
+			.where(config.getKeyField(), key)
+			.execute().first()
+			.map(document -> mapper.apply(document, config.getValueField()));
 	}
 
 	@Override
 	public void setValue(@Nonnull String key, @Nullable V value) throws DatabaseException {
 		database.insertOrUpdate(config.getTable())
-				.set(config.getValueField(), value)
-				.where(config.getKeyField(), key)
-				.execute();
+			.set(config.getValueField(), value)
+			.where(config.getKeyField(), key)
+			.execute();
 	}
 
 	@Nonnull

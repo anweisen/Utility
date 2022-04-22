@@ -2,12 +2,10 @@ package net.anweisen.utility.database.internal.abstraction;
 
 import net.anweisen.utility.database.Database;
 import net.anweisen.utility.database.DatabaseConfig;
-import net.anweisen.utility.database.SQLColumn;
 import net.anweisen.utility.database.SpecificDatabase;
 import net.anweisen.utility.database.exception.DatabaseAlreadyConnectedException;
 import net.anweisen.utility.database.exception.DatabaseConnectionClosedException;
 import net.anweisen.utility.database.exception.DatabaseException;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -37,7 +35,7 @@ public abstract class AbstractDatabase implements Database {
 	@Override
 	public void disconnect() throws DatabaseException {
 		checkConnection();
-		try  {
+		try {
 			disconnect0();
 		} catch (Exception ex) {
 			throw new DatabaseException(ex);
@@ -71,14 +69,14 @@ public abstract class AbstractDatabase implements Database {
 
 	protected abstract void connect0() throws Exception;
 
-	@Override
-	public void createTableSafely(@Nonnull String name, @Nonnull SQLColumn... columns) {
-		try {
-			createTable(name, columns);
-		} catch (DatabaseException ex) {
-			LOGGER.error("Could not create table (" + this.getClass().getSimpleName() + ")", ex);
-		}
-	}
+//	@Override
+//	public void createTableSafely(@Nonnull String name, @Nonnull SqlColumn... columns) {
+//		try {
+//			createTable(name, columns);
+//		} catch (DatabaseException ex) {
+//			LOGGER.error("Could not create table (" + this.getClass().getSimpleName() + ")", ex);
+//		}
+//	}
 
 	@Nonnull
 	@Override

@@ -21,7 +21,8 @@ public final class GameProfileUtils {
 
 	protected static final ILogger logger = ILogger.forThisClass();
 
-	private GameProfileUtils() {}
+	private GameProfileUtils() {
+	}
 
 	@Nonnull
 	public static GameProfile getGameProfile(@Nonnull Player player) {

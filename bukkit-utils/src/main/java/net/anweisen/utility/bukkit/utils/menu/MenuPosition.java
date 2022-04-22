@@ -18,7 +18,8 @@ public interface MenuPosition {
 
 	final class Holder {
 
-		private Holder() {}
+		private Holder() {
+		}
 
 		private static final Map<Player, MenuPosition> positions = new ConcurrentHashMap<>();
 

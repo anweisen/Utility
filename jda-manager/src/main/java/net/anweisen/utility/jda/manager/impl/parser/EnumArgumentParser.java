@@ -38,6 +38,6 @@ public class EnumArgumentParser implements ArgumentParser<Object, Class<Enum<?>>
 	@Override
 	public ParserOptions options() {
 		return ArgumentParser.super.options()
-				.requireExtraInfo();
+			.requireExtraInfo();
 	}
 }

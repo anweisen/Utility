@@ -2,7 +2,6 @@ package net.anweisen.utility.database.access;
 
 import net.anweisen.utility.database.Database;
 import net.anweisen.utility.database.exception.DatabaseException;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;

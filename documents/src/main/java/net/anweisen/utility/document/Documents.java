@@ -22,11 +22,10 @@ import java.nio.file.Path;
 
 /**
  * @author anweisen | https://github.com/anweisen
- * @since 1.0
- *
  * @see Document
  * @see Bundle
  * @see IEntry
+ * @since 1.0
  */
 public final class Documents {
 
@@ -92,7 +91,11 @@ public final class Documents {
 	@Nonnull
 	@CheckReturnValue
 	public static Document newJsonDocument(@Nonnull InputStream input) {
-		return newJsonDocument(new InputStreamReader(input, StandardCharsets.UTF_8));
+		try (Reader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+			return newJsonDocument(reader);
+		} catch (IOException ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 	@Nonnull
@@ -170,7 +173,11 @@ public final class Documents {
 	@Nonnull
 	@CheckReturnValue
 	public static Bundle newJsonBundle(@Nonnull InputStream input) {
-		return newJsonBundle(new InputStreamReader(input, StandardCharsets.UTF_8));
+		try (Reader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+			return newJsonBundle(reader);
+		} catch (IOException ex) {
+			throw new WrappedException(ex);
+		}
 	}
 
 	@Nonnull
@@ -251,11 +258,34 @@ public final class Documents {
 	@CheckReturnValue
 	public static StorableDocument newStorableDocument(@Nonnull Document document, @Nonnull Path file) {
 		class DocumentClass implements WrappedDocument, StorableDocument {
-			@Nonnull public Path getPath() { return file; }
-			@Nonnull public File getFile() { return file.toFile(); }
-			@Nonnull public Document getTargetDocument() { return document; }
-			public void saveExceptionally() throws Exception { saveToFile(file); }
-			@Nonnull public String toString() { return toJson(); }
+			@Nonnull
+			public Path getPath() {
+				return file;
+			}
+
+			@Nonnull
+			public File getFile() {
+				return file.toFile();
+			}
+
+			@Nonnull
+			public Document getTargetDocument() {
+				return document;
+			}
+
+			public void saveExceptionally() throws Exception {
+				saveToFile(file);
+			}
+
+			@Nonnull
+			public String toString() {
+				return toJson();
+			}
+
+			@Nonnull
+			public Document clone() {
+				return newStorableDocument(document.clone(), file);
+			}
 		}
 		return new DocumentClass();
 	}
@@ -270,11 +300,34 @@ public final class Documents {
 	@CheckReturnValue
 	public static StorableBundle newStorableBundle(@Nonnull Bundle bundle, @Nonnull Path file) {
 		class BundleClass implements WrappedBundle, StorableBundle {
-			@Nonnull public Path getPath() { return file; }
-			@Nonnull public File getFile() { return file.toFile(); }
-			@Nonnull public Bundle getTargetBundle() { return bundle; }
-			public void saveExceptionally() throws Exception { saveToFile(file); }
-			@Nonnull public String toString() { return toJson(); }
+			@Nonnull
+			public Path getPath() {
+				return file;
+			}
+
+			@Nonnull
+			public File getFile() {
+				return file.toFile();
+			}
+
+			@Nonnull
+			public Bundle getTargetBundle() {
+				return bundle;
+			}
+
+			public void saveExceptionally() throws Exception {
+				saveToFile(file);
+			}
+
+			@Nonnull
+			public String toString() {
+				return toJson();
+			}
+
+			@Nonnull
+			public Bundle clone() {
+				return newStorableBundle(bundle.clone(), file);
+			}
 		}
 		return new BundleClass();
 	}
@@ -289,9 +342,24 @@ public final class Documents {
 	@CheckReturnValue
 	public static WrappedDocument newWrappedDocument(@Nonnull Document document, @Nullable Boolean overwriteEditable) {
 		return new WrappedDocument() {
-			@Nonnull public Document getTargetDocument() { return document; }
-			public boolean canEdit() { return overwriteEditable != null ? overwriteEditable : WrappedDocument.super.canEdit(); }
-			@Nonnull public String toString() { return toJson(); }
+			@Nonnull
+			public Document getTargetDocument() {
+				return document;
+			}
+
+			public boolean canEdit() {
+				return overwriteEditable != null ? overwriteEditable : WrappedDocument.super.canEdit();
+			}
+
+			@Nonnull
+			public String toString() {
+				return toJson();
+			}
+
+			@Nonnull
+			public Document clone() {
+				return newWrappedDocument(document, true);
+			}
 		};
 	}
 
@@ -299,11 +367,27 @@ public final class Documents {
 	@CheckReturnValue
 	public static WrappedBundle newWrappedBundle(@Nonnull Bundle bundle, @Nullable Boolean overwriteEditable) {
 		return new WrappedBundle() {
-			@Nonnull public Bundle getTargetBundle() { return bundle; }
-			public boolean canEdit() { return overwriteEditable != null ? overwriteEditable : WrappedBundle.super.canEdit(); }
-			@Nonnull public String toString() { return toJson(); }
+			@Nonnull
+			public Bundle getTargetBundle() {
+				return bundle;
+			}
+
+			public boolean canEdit() {
+				return overwriteEditable != null ? overwriteEditable : WrappedBundle.super.canEdit();
+			}
+
+			@Nonnull
+			public String toString() {
+				return toJson();
+			}
+
+			@Nonnull
+			public Bundle clone() {
+				return newWrappedBundle(bundle, true);
+			}
 		};
 	}
 
-	private Documents() {}
+	private Documents() {
+	}
 }

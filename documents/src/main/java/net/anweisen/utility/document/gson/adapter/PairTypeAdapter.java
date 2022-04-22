@@ -29,11 +29,16 @@ public class PairTypeAdapter implements GsonTypeAdapter<Pair> {
 		JsonArray array = gson.fromJson(reader, JsonArray.class);
 		int size = array.size();
 		switch (size) {
-			case 1: return Wrap.of(array.get(0));
-			case 2: return Tuple.of(array.get(0), array.get(1));
-			case 3: return Triple.of(array.get(0), array.get(1), array.get(2));
-			case 4: return Quadro.of(array.get(0), array.get(1), array.get(2), array.get(3));
-			default:throw new IllegalStateException("No Pair known for amount of " + size);
+			case 1:
+				return Wrap.of(array.get(0));
+			case 2:
+				return Tuple.of(array.get(0), array.get(1));
+			case 3:
+				return Triple.of(array.get(0), array.get(1), array.get(2));
+			case 4:
+				return Quadro.of(array.get(0), array.get(1), array.get(2), array.get(3));
+			default:
+				throw new IllegalStateException("No Pair known for amount of " + size);
 		}
 	}
 }

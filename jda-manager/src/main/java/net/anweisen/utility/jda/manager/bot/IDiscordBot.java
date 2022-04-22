@@ -28,36 +28,28 @@ public interface IDiscordBot {
 
 	/**
 	 * @return the {@link Database} of this bot
-	 *
-	 * @throws IllegalStateException
-	 *         If the bot has not been initialized yet
+	 * @throws IllegalStateException If the bot has not been initialized yet
 	 */
 	@Nonnull
 	Database getDatabase();
 
 	/**
 	 * @return the {@link ApplicationInfo} of this bot
-	 *
-	 * @throws IllegalStateException
-	 *         If no info was received yet
+	 * @throws IllegalStateException If no info was received yet
 	 */
 	@Nonnull
 	ApplicationInfo getApplicationInfo();
 
 	/**
 	 * @return the {@link CommandManager} of this bot
-	 *
-	 * @throws IllegalStateException
-	 *         If the bot has not been initialized yet
+	 * @throws IllegalStateException If the bot has not been initialized yet
 	 */
 	@Nonnull
 	CommandManager getCommandManager();
 
 	/**
 	 * @return the {@link ShardManager} of this bot
-	 *
-	 * @throws IllegalStateException
-	 *         If the bot has not been initialized yet
+	 * @throws IllegalStateException If the bot has not been initialized yet
 	 */
 	@Nonnull
 	ShardManager getShardManager();
@@ -67,9 +59,7 @@ public interface IDiscordBot {
 	 * If you are using multiple shards you should NOT use this but {@link #getShardManager()}.
 	 *
 	 * @return The first shard of this shardmanager
-	 *
-	 * @throws IllegalStateException
-	 *         If no shard is built yet
+	 * @throws IllegalStateException If no shard is built yet
 	 */
 	@Nonnull
 	JDA getJDA();

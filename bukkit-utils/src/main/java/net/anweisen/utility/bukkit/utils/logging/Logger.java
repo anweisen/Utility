@@ -13,7 +13,8 @@ import javax.annotation.Nullable;
  */
 public final class Logger {
 
-	private Logger() {}
+	private Logger() {
+	}
 
 	@Nonnull
 	public static ILogger getInstance() {
