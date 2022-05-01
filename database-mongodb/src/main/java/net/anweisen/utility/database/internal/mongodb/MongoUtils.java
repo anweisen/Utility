@@ -36,8 +36,14 @@ public final class MongoUtils {
 	public static void applyOrder(@Nonnull FindIterable<Document> iterable, @Nullable String orderBy, @Nullable Order order) {
 		if (order == null || orderBy == null) return;
 		switch (order) {
-			case HIGHEST -> iterable.sort(Sorts.descending(orderBy));
-			case LOWEST -> iterable.sort(Sorts.ascending(orderBy));
+			case HIGHEST: {
+				iterable.sort(Sorts.descending(orderBy));
+				break;
+			}
+			case LOWEST: {
+				iterable.sort(Sorts.ascending(orderBy));
+				break;
+			}
 		}
 	}
 

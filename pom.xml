@@ -10,8 +10,8 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<java.source>16</java.source>
-		<java.target>16</java.target>
+		<java.source>8</java.source>
+		<java.target>8</java.target>
 	</properties>
 
 	<build>
