@@ -258,6 +258,12 @@ public final class Documents {
 	@CheckReturnValue
 	public static StorableDocument newStorableDocument(@Nonnull Document document, @Nonnull Path file) {
 		class DocumentClass implements WrappedDocument, StorableDocument {
+			private Document document;
+
+			public DocumentClass(Document document) {
+				this.document = document;
+			}
+
 			@Nonnull
 			public Path getPath() {
 				return file;
@@ -277,6 +283,11 @@ public final class Documents {
 				saveToFile(file);
 			}
 
+			@Override
+			public void reloadExceptionally() throws Exception {
+				document = newJsonDocument(file);
+			}
+
 			@Nonnull
 			public String toString() {
 				return toJson();
@@ -287,7 +298,7 @@ public final class Documents {
 				return newStorableDocument(document.clone(), file);
 			}
 		}
-		return new DocumentClass();
+		return new DocumentClass(document);
 	}
 
 	@Nonnull
@@ -300,6 +311,12 @@ public final class Documents {
 	@CheckReturnValue
 	public static StorableBundle newStorableBundle(@Nonnull Bundle bundle, @Nonnull Path file) {
 		class BundleClass implements WrappedBundle, StorableBundle {
+			private Bundle bundle;
+
+			public BundleClass(Bundle bundle) {
+				this.bundle = bundle;
+			}
+
 			@Nonnull
 			public Path getPath() {
 				return file;
@@ -319,6 +336,11 @@ public final class Documents {
 				saveToFile(file);
 			}
 
+			@Override
+			public void reloadExceptionally() throws Exception {
+				bundle = newJsonBundle(file);
+			}
+
 			@Nonnull
 			public String toString() {
 				return toJson();
@@ -329,7 +351,7 @@ public final class Documents {
 				return newStorableBundle(bundle.clone(), file);
 			}
 		}
-		return new BundleClass();
+		return new BundleClass(bundle);
 	}
 
 	@Nonnull

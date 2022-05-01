@@ -30,6 +30,16 @@ public interface Storable {
 
 	void saveExceptionally() throws Exception;
 
+	default void reload() {
+		try {
+			reloadExceptionally();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	void reloadExceptionally() throws Exception;
+
 	@Nonnull
 	default Task<Void> saveAsync() {
 		return Task.asyncRunExceptionally(this::saveExceptionally);
