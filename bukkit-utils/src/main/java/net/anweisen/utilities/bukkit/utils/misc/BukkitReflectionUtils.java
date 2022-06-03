@@ -1,7 +1,6 @@
 package net.anweisen.utilities.bukkit.utils.misc;
 
 import com.google.common.base.Preconditions;
-import com.sun.istack.internal.NotNull;
 import net.anweisen.utilities.common.logging.ILogger;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
