@@ -64,11 +64,12 @@ public final class ItemUtils {
 			case "BUDDING_AMETHYST":
 			case "POWDER_SNOW":
 			case "LIGHT":
+			case "BUNDLE":
 				return false;
 		}
 
 		if (MinecraftVersion.current().isOlderThan(MinecraftVersion.V1_19)) {
-			if (name.equals("BUNDLE") || name.equals("SCULK_SENSOR")) {
+			if (name.equals("SCULK_SENSOR")) {
 				return false;
 			}
 		}
