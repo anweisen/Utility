@@ -107,7 +107,14 @@ public interface Database {
 
 	@Nonnull
 	@CheckReturnValue
-	DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table);
+	DatabaseUpsert upsert(@Nonnull String table);
+
+	@Deprecated
+	@Nonnull
+	@CheckReturnValue
+	default DatabaseUpsert insertOrUpdate(@Nonnull String table) {
+		return upsert(table);
+	}
 
 	@Nonnull
 	@CheckReturnValue
@@ -117,6 +124,9 @@ public interface Database {
 	@CheckReturnValue
 	SpecificDatabase getSpecificDatabase(@Nonnull String name);
 
+	/**
+	 * @throws IllegalStateException If the database config cannot be got on this type
+	 */
 	@Nonnull
 	DatabaseConfig getConfig();
 

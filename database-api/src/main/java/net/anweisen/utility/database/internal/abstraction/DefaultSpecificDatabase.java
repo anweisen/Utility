@@ -57,8 +57,8 @@ public class DefaultSpecificDatabase implements SpecificDatabase {
 
 	@Nonnull
 	@Override
-	public DatabaseInsertionOrUpdate insertOrUpdate() {
-		return parent.insertOrUpdate(name);
+	public DatabaseUpsert upsert() {
+		return parent.upsert(name);
 	}
 
 	@Nonnull

@@ -15,7 +15,7 @@ import net.anweisen.utility.database.internal.abstraction.AbstractDatabase;
 import net.anweisen.utility.database.internal.mongodb.count.MongoDBCountEntries;
 import net.anweisen.utility.database.internal.mongodb.deletion.MongoDBDeletion;
 import net.anweisen.utility.database.internal.mongodb.insertion.MongoDBInsertion;
-import net.anweisen.utility.database.internal.mongodb.insertorupdate.MongoDBInsertionOrUpdate;
+import net.anweisen.utility.database.internal.mongodb.upsert.MongoDBInsertionOrUpdate;
 import net.anweisen.utility.database.internal.mongodb.list.MongoDBListTables;
 import net.anweisen.utility.database.internal.mongodb.query.MongoDBQuery;
 import net.anweisen.utility.database.internal.mongodb.update.MongoDBUpdate;
@@ -134,7 +134,7 @@ public class MongoDBDatabase extends AbstractDatabase {
 
 	@Nonnull
 	@Override
-	public DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table) {
+	public DatabaseUpsert upsert(@Nonnull String table) {
 		return new MongoDBInsertionOrUpdate(this, table);
 	}
 

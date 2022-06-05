@@ -8,7 +8,7 @@ import net.anweisen.utility.database.internal.abstraction.AbstractDatabase;
 import net.anweisen.utility.database.internal.sql.abstraction.count.SQLCountEntries;
 import net.anweisen.utility.database.internal.sql.abstraction.deletion.SQLDeletion;
 import net.anweisen.utility.database.internal.sql.abstraction.insertion.SQLInsertion;
-import net.anweisen.utility.database.internal.sql.abstraction.insertorupdate.SQLInsertionOrUpdate;
+import net.anweisen.utility.database.internal.sql.abstraction.upsert.SQLInsertionOrUpdate;
 import net.anweisen.utility.database.internal.sql.abstraction.query.SQLQuery;
 import net.anweisen.utility.database.internal.sql.abstraction.update.SQLUpdate;
 import net.anweisen.utility.database.internal.sql.abstraction.where.SQLWhere;
@@ -131,7 +131,7 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 
 	@Nonnull
 	@Override
-	public DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table) {
+	public DatabaseUpsert upsert(@Nonnull String table) {
 		return new SQLInsertionOrUpdate(this, table);
 	}
 

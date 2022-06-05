@@ -1,10 +1,6 @@
 package net.anweisen.utility.database.action;
 
 import net.anweisen.utility.common.concurrent.task.Task;
-import net.anweisen.utility.database.action.hierarchy.OrderedAction;
-import net.anweisen.utility.database.action.hierarchy.SetAction;
-import net.anweisen.utility.database.action.hierarchy.TableAction;
-import net.anweisen.utility.database.action.hierarchy.WhereAction;
 import net.anweisen.utility.database.exception.DatabaseConnectionClosedException;
 import net.anweisen.utility.database.exception.DatabaseException;
 import net.anweisen.utility.database.exception.UnsignedDatabaseException;
@@ -33,7 +29,7 @@ import javax.annotation.Nonnull;
  * @see DatabaseDeletion
  * @see DatabaseUpdate
  * @see DatabaseInsertion
- * @see DatabaseInsertionOrUpdate
+ * @see DatabaseUpsert
  * @see DatabaseQuery
  * @since 1.0
  */

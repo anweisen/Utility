@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 public class DatabaseUnsupportedFeatureException extends DatabaseException {
 
 	public DatabaseUnsupportedFeatureException() {
+		super();
 	}
 
 	public DatabaseUnsupportedFeatureException(@Nonnull String message) {

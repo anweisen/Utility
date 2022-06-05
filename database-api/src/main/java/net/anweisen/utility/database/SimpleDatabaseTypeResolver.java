@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -12,9 +13,10 @@ import java.util.Map;
  */
 public final class SimpleDatabaseTypeResolver {
 
-	private static final Map<String, String> registry = new HashMap<>();
+	private static final Map<String, String> registry = new ConcurrentHashMap<>();
 
 	static {
+		// register default built-in database classes
 		registerType("mongodb", "net.anweisen.utility.database.internal.mongodb.MongoDBDatabase");
 		registerType("mysql", "net.anweisen.utility.database.internal.sql.mysql.MySQLDatabase");
 		registerType("sqlite", "net.anweisen.utility.database.internal.sql.sqlite.SQLiteDatabase");

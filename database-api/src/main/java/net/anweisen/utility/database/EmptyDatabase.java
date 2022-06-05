@@ -127,7 +127,7 @@ public class EmptyDatabase implements Database {
 
 	@Nonnull
 	@Override
-	public DatabaseInsertionOrUpdate insertOrUpdate(@Nonnull String table) {
+	public DatabaseUpsert upsert(@Nonnull String table) {
 		if (!silent)
 			throwException("Cannot inset or update into a NOP Database");
 
@@ -230,7 +230,7 @@ public class EmptyDatabase implements Database {
 
 	}
 
-	public static class EmptyVoidAction implements DatabaseDeletion, DatabaseInsertion, DatabaseUpdate, DatabaseInsertionOrUpdate {
+	public static class EmptyVoidAction implements DatabaseDeletion, DatabaseInsertion, DatabaseUpdate, DatabaseUpsert {
 
 		@Nonnull
 		@Override

@@ -51,10 +51,10 @@ public class DiscordBotExample extends DiscordBot {
 	@Override
 	protected DiscordBotBuilder builder() {
 		return newBuilder() // Shortcut for new DiscordBotBuilder()
-			.intents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS) // GUILD_MESSAGES is required for guild commands
+			.intents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS)
+			// GUILD_MESSAGES is required for guild commands
 			// DIRECT_MESSAGES            for private commands
-			// GUILD_MEMBERS              for MemberCachePolicy.ALL, see below
-			//                            (requires members intent)
+			// GUILD_MEMBERS              for MemberCachePolicy.ALL, see below (requires members intent)
 			.withCache(CacheFlag.ROLE_TAGS) // All other cache flags will be disabled and only the given are enabled
 			.defaultDatabaseConfig() // Default table and column names will be used, if you want use custom table and column names use databaseConfig(...)
 			// If no database config is set, no database managers (database team role management, database language management, ...) are setup

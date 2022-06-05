@@ -49,11 +49,11 @@ public interface SpecificDatabase {
 	DatabaseInsertion insert();
 
 	/**
-	 * @see Database#insertOrUpdate(String)
+	 * @see Database#upsert(String)
 	 */
 	@Nonnull
 	@CheckReturnValue
-	DatabaseInsertionOrUpdate insertOrUpdate();
+	DatabaseUpsert upsert();
 
 	/**
 	 * @see Database#delete(String)
