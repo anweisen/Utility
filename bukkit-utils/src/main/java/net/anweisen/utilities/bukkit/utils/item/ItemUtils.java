@@ -65,6 +65,8 @@ public final class ItemUtils {
 			case "POWDER_SNOW":
 			case "LIGHT":
 			case "BUNDLE":
+			case "REINFORCED_DEEPSLATE":
+			case "FROGSPAWN":
 				return false;
 		}
 
