@@ -1,5 +1,6 @@
 package net.anweisen.utilities.bukkit.utils.menu;
 
+import net.anweisen.utilities.bukkit.utils.misc.CompatibilityUtils;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +27,7 @@ public final class MenuPositionListener implements Listener {
 		Inventory inventory = event.getClickedInventory();
 		if (inventory == null) return;
 
-		if (inventory == event.getView().getTopInventory()) {
+		if (inventory == CompatibilityUtils.getTopInventory(event)) {
 
 			if (inventory.getHolder() != MenuPosition.HOLDER) return; // No menu inventory
 
