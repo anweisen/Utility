@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>net.anweisen.utilities</groupId>
 		<artifactId>root</artifactId>
-		<version>1.3.13</version>
+		<version>1.3.14</version>
 	</parent>
 
 	<artifactId>bukkit-utils</artifactId>
