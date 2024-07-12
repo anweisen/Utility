@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 public final class GameProfileUtils {
 
-	protected static final ILogger logger = ILogger.forThisClass();
+	private static final ILogger logger = ILogger.forThisClass();
 
 	private GameProfileUtils() {}
 
@@ -54,7 +54,7 @@ public final class GameProfileUtils {
 			setProfileMethod.setAccessible(true);
 			setProfileMethod.invoke(meta, profile);
 			return;
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		}
 
 		try {
@@ -67,11 +67,11 @@ public final class GameProfileUtils {
 				field = classOfMeta.getDeclaredField("serializedProfile");
 				field.setAccessible(true);
 				field.set(meta, profile);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 			}
 
 			return;
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		}
 
 		logger.warn("Unable to apply textures to item");

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  */
 public final class BukkitReflectionUtils {
 
-	protected static final ILogger logger = ILogger.forThisClass();
+	private static final ILogger logger = ILogger.forThisClass();
 
 	private BukkitReflectionUtils() {
 	}
@@ -34,7 +34,7 @@ public final class BukkitReflectionUtils {
 
 		try {
 			return player.getAbsorptionAmount();
-		} catch (Throwable ex) {
+		} catch (Throwable ignored) {
 		}
 
 		try {
@@ -47,7 +47,7 @@ public final class BukkitReflectionUtils {
 			Method getAbsorptionMethod = classOfHandle.getMethod("getAbsorptionHearts");
 			getAbsorptionMethod.setAccessible(true);
 			return (double) (float) getAbsorptionMethod.invoke(handle);
-		} catch (Throwable ex) {
+		} catch (Throwable ignored) {
 		}
 
 		logger.warn("Could not get absorption amount for player of class {}", classOfPlayer.getName());
@@ -57,7 +57,7 @@ public final class BukkitReflectionUtils {
 	public static boolean isAir(@Nonnull Material material) {
 		try {
 			return material.isAir();
-		} catch (Throwable ex) {
+		} catch (Throwable ignored) {
 		}
 
 		switch (material.name()) {
@@ -74,7 +74,7 @@ public final class BukkitReflectionUtils {
 	public static int getMinHeight(@Nonnull World world) {
 		try {
 			return world.getMinHeight();
-		} catch (Throwable ex) {
+		} catch (Throwable ignored) {
 		}
 
 		return 0;
@@ -88,7 +88,7 @@ public final class BukkitReflectionUtils {
 	public static boolean isInWater(@Nonnull Entity entity) {
 		try {
 			return entity.isInWater();
-		} catch (Throwable ex) {
+		} catch (Throwable ignored) {
 		}
 
 		return false;
