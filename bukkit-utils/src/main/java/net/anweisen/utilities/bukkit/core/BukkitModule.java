@@ -76,17 +76,17 @@ public abstract class BukkitModule extends JavaPlugin {
 			setFirstInstance(this);
 		}
 
-		ILogger.setConstantFactory(this.getLogger());
+		ILogger.setConstantFactory(this.getILogger());
 		trySaveDefaultConfig();
 		if (wasShutdown) isReloaded = true;
 		if (firstInstall = !getDataFolder().exists()) {
-			getLogger().info("Detected first install!");
+			getILogger().info("Detected first install!");
 		}
 		if (devMode = getConfigDocument().getBoolean("dev-mode") || getConfigDocument().getBoolean("dev-mode.enabled")) {
-			getLogger().setLevel(Level.ALL);
-			getLogger().debug("Devmode is enabled: Showing debug messages. This can be disabled in the plugin.yml ('dev-mode')");
+			getILogger().setLevel(Level.ALL);
+			getILogger().debug("Devmode is enabled: Showing debug messages. This can be disabled in the plugin.yml ('dev-mode')");
 		} else {
-			getLogger().setLevel(Level.INFO);
+			getILogger().setLevel(Level.INFO);
 		}
 
 		injectInstance();
@@ -167,8 +167,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	}
 
 	@Nonnull
-	@Override
-	public JavaILogger getLogger() {
+	public JavaILogger getILogger() {
 		return logger != null ? logger : (logger = new BukkitLoggerWrapper(super.getLogger()));
 	}
 
@@ -255,7 +254,7 @@ public abstract class BukkitModule extends JavaPlugin {
 	private void registerCommand0(@Nonnull CommandExecutor executor, @Nonnull String name) {
 		PluginCommand command = getCommand(name);
 		if (command == null) {
-			getLogger().warn("Tried to register invalid command '{}'", name);
+			getILogger().warn("Tried to register invalid command '{}'", name);
 		} else {
 			command.setExecutor(executor);
 		}
@@ -329,11 +328,11 @@ public abstract class BukkitModule extends JavaPlugin {
 	}
 
 	private void registerAsFirstInstance() {
-		getLogger().info(getName() + " was loaded as the first BukkitModule");
+		getILogger().info(getName() + " was loaded as the first BukkitModule");
 		registerListener(
 			new MenuPositionListener()
 		);
-		getLogger().info("Detected server version {} -> {}", getServerVersionExact(), getServerVersion());
+		getILogger().info("Detected server version {} -> {}", getServerVersionExact(), getServerVersion());
 	}
 
 	private void trySaveDefaultConfig() {

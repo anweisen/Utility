@@ -92,7 +92,7 @@ public final class RequirementsChecker {
 	}
 
 	private void log(@Nonnull String line, @Nonnull Object... args) {
-		module.getLogger().error(line, args);
+		module.getILogger().error(line, args);
 	}
 
 }

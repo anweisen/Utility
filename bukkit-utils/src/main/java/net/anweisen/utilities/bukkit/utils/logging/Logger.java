@@ -17,7 +17,7 @@ public final class Logger {
 
 	@Nonnull
 	public static ILogger getInstance() {
-		return BukkitModule.getProvidingModule(ReflectionUtils.getCaller()).getLogger();
+		return BukkitModule.getProvidingModule(ReflectionUtils.getCaller()).getILogger();
 	}
 
 	public static void error(@Nullable Object message, @Nonnull Object... args) {
